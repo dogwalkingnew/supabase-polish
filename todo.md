@@ -28,4 +28,4 @@
 - [x] Réécrire la page « Qui sommes-nous » pour retirer les statistiques, certifications, couverture, assistance, paiement et engagements non vérifiés découverts lors du contrôle final.
 - [x] Purger les promesses résiduelles des pages publiques de zones, d’aperçu de tableaux de bord, de messagerie, d’exports et de métadonnées de réservation.
 - [x] Revoir les libellés utilisateurs d’Accompagnateur « certifié » dans les parcours contrôlés, sans masquer les états de vérification réellement administrés.
-- [ ] Archiver et livrer les accès QA, sources et rapports de cette vague.
+- [x] Archiver et préparer la livraison des accès QA, sources et rapports de cette vague.
