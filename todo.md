@@ -1,0 +1,31 @@
+# DogWalking — Suivi de finalisation QA, sécurité et conformité
+
+- [x] Vérifier le statut des trois adresses reçues, sans modifier les comptes préexistants.
+- [x] Obtenir l’autorisation explicite du propriétaire du projet pour réaffecter les deux comptes historiques aux tests QA.
+- [x] Constater que `hamid.amine.rh@gmail.com` correspond déjà à un compte Propriétaire historique ; il n’a pas été modifié.
+- [x] Constater que `hamid.amine.rh1@gmail.com` correspond déjà à un compte historique de type Propriétaire ; il n’a pas été modifié.
+- [x] Créer le compte QA Administrateur : `hamidaminerhtaissi.selectra@gmail.com` (confirmation email en attente).
+- [x] Attribuer et vérifier le rôle Administrateur du nouveau compte QA après contrôle ciblé des droits.
+- [x] Corriger le formulaire d’inscription pour que l’interface signale explicitement une adresse déjà associée à un compte, au lieu d’afficher une réussite ambiguë.
+- [x] Vérifier dans le navigateur que la réinscription sur une adresse existante affiche « Inscription non finalisée » sans redirection.
+- [ ] Confirmer l’email du nouveau compte Administrateur et effectuer une connexion réelle au tableau de bord administratif.
+- [x] Réaffecter le compte historique Accompagnateur au type walker et provisionner son profil Accompagnateur QA de façon réversible.
+- [x] Réutiliser le compte historique Propriétaire autorisé pour les tests QA, sans création d’un doublon.
+- [x] Réutiliser et réaffecter le compte historique Accompagnateur autorisé pour les tests QA.
+- [x] Préparer des données de test isolées et réversibles pour les parcours de réservation.
+- [x] Vérifier le refus d’une candidature par un Accompagnateur QA non validé, puis définir une procédure de test de réussite temporaire et tracée.
+- [x] Rejouer les autorisations par rôle et les parcours sensibles de réservation.
+- [x] Vérifier les matrices RLS QA : Propriétaire, Accompagnateur associé et Administrateur autorisés ; tiers non associé refusé sur le chien et la réservation QA.
+- [x] Confirmer par tests QA qu’aucune politique RLS du scénario Chien/Réservation ne nécessitait une correction supplémentaire.
+- [x] Traiter les alertes Supabase restantes compatibles avec les parcours testés.
+- [x] Neutraliser la tâche planifiée historique de libération de fonds, qui dépendait de pg_net et d’un flux de paiement retiré de l’application.
+- [x] Retirer pg_net du schéma public après neutralisation de sa dernière dépendance.
+- [x] Réduire l’exposition REST des fonctions SECURITY DEFINER non appelées par le code actuel et déplacer has_role hors du schéma public.
+- [ ] Activer la protection contre les mots de passe compromis dans Supabase Auth (réglage Dashboard, disponible sur plan Pro ou supérieur selon la documentation Supabase).
+- [ ] Recueillir les identifiants réels nécessaires aux mentions, CGU et confidentialité.
+- [x] Mettre à jour le dossier légal et préparer le paquet de validation externe.
+- [ ] Faire compléter et valider les informations éditeur, RGPD, domaine/hébergement et règles métier par l’éditeur et un professionnel compétent avant publication.
+- [x] Réécrire la page « Qui sommes-nous » pour retirer les statistiques, certifications, couverture, assistance, paiement et engagements non vérifiés découverts lors du contrôle final.
+- [x] Purger les promesses résiduelles des pages publiques de zones, d’aperçu de tableaux de bord, de messagerie, d’exports et de métadonnées de réservation.
+- [x] Revoir les libellés utilisateurs d’Accompagnateur « certifié » dans les parcours contrôlés, sans masquer les états de vérification réellement administrés.
+- [ ] Archiver et livrer les accès QA, sources et rapports de cette vague.

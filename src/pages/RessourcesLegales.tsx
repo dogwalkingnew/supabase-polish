@@ -1,3 +1,7 @@
+/**
+ * Design DogWalking : page documentaire sobre, lisible et explicitement marquée comme brouillon tant que les données d’éditeur ne sont pas validées.
+ * Les contenus juridiques affichés doivent rester factuels et ne jamais inventer d’identité, de contact ou de prestation.
+ */
 import { Header } from "@/components/ui/header";
 import { Footer } from "@/components/ui/footer";
 import { SEOHead } from "@/components/seo/SEOHead";
@@ -19,7 +23,7 @@ const RessourcesLegales = () => {
   }, [searchParams]);
 
   return (
-    <div className="min-h-dvh bg-background">
+    <div className="min-h-dvh overflow-hidden bg-warm/45">
       <SEOHead
         title="Ressources Légales | DogWalking"
         description="Projet de mentions légales, conditions d’utilisation et politique de confidentialité à compléter et faire valider avant publication de DogWalking."
@@ -28,14 +32,15 @@ const RessourcesLegales = () => {
       />
       <Header />
 
-      <main className="container mx-auto px-4 py-24 max-w-5xl">
+      <main className="container relative mx-auto max-w-5xl px-4 py-24">
         <h1 className="text-4xl font-bold mb-2">Ressources Légales</h1>
         <p className="text-lg text-muted-foreground mb-8">
           Projet de documents à compléter avec les informations de l’éditeur et à faire valider avant publication.
         </p>
+        <div className="dogwalking-route mb-8" aria-hidden="true" />
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3 mb-8">
+          <TabsList className="grid w-full grid-cols-3 mb-8 border border-primary/10 bg-background/85 shadow-soft">
             <TabsTrigger value="mentions" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
               <span className="hidden sm:inline">Mentions légales</span>
@@ -61,7 +66,7 @@ const RessourcesLegales = () => {
                   <p className="mb-2"><strong>Éditeur :</strong> à compléter avec la raison sociale ou l’identité réelle de l’éditeur.</p>
                   <p className="mb-2"><strong>Adresse :</strong> à compléter avec le siège ou l’adresse professionnelle réelle.</p>
                   <p className="mb-2"><strong>Immatriculation :</strong> à compléter avec le numéro réel requis pour l’activité concernée.</p>
-                  <p><strong>Contact :</strong> contact@dogwalking.fr</p>
+                  <p><strong>Contact :</strong> à compléter avec une adresse de contact réellement administrée par l’éditeur.</p>
                 </div>
               </section>
 
@@ -83,9 +88,7 @@ const RessourcesLegales = () => {
               <section>
                 <h2 className="text-2xl font-semibold mb-4">4. Propriété intellectuelle</h2>
                 <p className="text-muted-foreground">
-                  L'ensemble du contenu de ce site est la propriété exclusive de DogWalking France 
-                  ou de ses partenaires, et est protégé par les lois françaises et internationales 
-                  relatives à la propriété intellectuelle.
+                  Les titulaires des droits sur les contenus, marques, visuels et développements doivent être identifiés par l’éditeur avant publication. Toute réutilisation non autorisée est interdite dans les limites prévues par la réglementation applicable.
                 </p>
               </section>
 
@@ -97,7 +100,7 @@ const RessourcesLegales = () => {
                 </p>
               </section>
 
-              <p className="text-sm text-muted-foreground mt-12 pt-8 border-t">Dernière mise à jour : Avril 2026</p>
+              <p className="text-sm text-muted-foreground mt-12 pt-8 border-t">Version de travail — informations éditeur à valider avant publication.</p>
             </div>
           </TabsContent>
 
@@ -107,9 +110,7 @@ const RessourcesLegales = () => {
               <section>
                 <h2 className="text-2xl font-semibold mb-4">Préambule</h2>
                 <p className="text-muted-foreground">
-                  Les présentes Conditions Générales d'Utilisation régissent l'utilisation de la plateforme 
-                  DogWalking accessible à l'adresse www.dogwalking.fr. En utilisant nos services, vous acceptez 
-                  sans réserve les présentes CGU.
+                  Le présent projet de Conditions Générales d’Utilisation régit l’utilisation de la plateforme DogWalking à l’URL de production qui sera confirmée par l’éditeur. Il doit être complété et validé avant toute publication.
                 </p>
               </section>
 
@@ -175,7 +176,7 @@ const RessourcesLegales = () => {
                 </p>
               </section>
 
-              <p className="text-sm text-muted-foreground mt-12 pt-8 border-t">Dernière mise à jour : Avril 2026</p>
+              <p className="text-sm text-muted-foreground mt-12 pt-8 border-t">Version de travail — validation juridique externe requise avant publication.</p>
             </div>
           </TabsContent>
 
@@ -213,7 +214,7 @@ const RessourcesLegales = () => {
                 </p>
               </section>
 
-              <p className="text-sm text-muted-foreground mt-12 pt-8 border-t">Dernière mise à jour : Avril 2026</p>
+              <p className="text-sm text-muted-foreground mt-12 pt-8 border-t">Version de travail — responsable du traitement et modalités à confirmer avant publication.</p>
             </div>
           </TabsContent>
         </Tabs>

@@ -68,7 +68,7 @@ const MyBookings = () => {
         const walker = walkerMap.get(booking.walker_id as string);
         return {
           ...booking,
-          walker_name: walker?.first_name || 'Accompagnateur Certifié',
+          walker_name: walker?.first_name || 'Accompagnateur non assigné',
           walker_city: walker?.city || ''
         };
       });
@@ -144,7 +144,7 @@ const MyBookings = () => {
           </div>
 
           <div className="mt-4 pt-4 border-t flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Prix total</span>
+            <span className="text-sm text-muted-foreground">Tarif renseigné</span>
             <span className="text-lg font-bold text-primary">{Number(booking.price || 0).toFixed(2)}€</span>
           </div>
         </CardContent>
@@ -222,7 +222,7 @@ const MyBookings = () => {
                   <Calendar className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
                   <h3 className="text-xl font-semibold mb-2">Aucune réservation à venir</h3>
                   <p className="text-muted-foreground">
-                    Trouvez un Accompagnateur Certifié pour réserver votre prochaine promenade
+                    Consultez les Accompagnateurs disponibles pour organiser votre prochaine demande
                   </p>
                 </motion.div>
               ) : (

@@ -61,9 +61,9 @@ export const Footer = () => {
           <div>
             <h3 className="font-semibold mb-3 text-sm uppercase tracking-wider">Contact</h3>
             <ul className="space-y-2 text-sm text-white/70">
-              <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                <a href="mailto:contact@dogwalking.fr" className="hover:text-white transition-colors">contact@dogwalking.fr</a>
+              <li className="flex items-start gap-2">
+                <Mail className="mt-0.5 h-4 w-4 shrink-0" />
+                <span>Coordonnées de publication à confirmer</span>
               </li>
             </ul>
           </div>
@@ -74,7 +74,7 @@ export const Footer = () => {
             <p>© {new Date().getFullYear()} DogWalking. Tous droits réservés.</p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link to="/ressources-legales?tab=mentions" className="hover:text-white transition-colors">Mentions légales</Link>
-              <Link to="/ressources-legales?tab=cgu" className="hover:text-white transition-colors">CGU/CGV</Link>
+              <Link to="/ressources-legales?tab=cgu" className="hover:text-white transition-colors">CGU</Link>
               <Link to="/ressources-legales?tab=confidentialite" className="hover:text-white transition-colors">Confidentialité</Link>
             </div>
           </div>

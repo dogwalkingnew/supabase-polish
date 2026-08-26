@@ -1,3 +1,7 @@
+/**
+ * Design DogWalking : parcours d’accès clair, accueillant et contrasté, avec les accents rose Propriétaire et vert Accompagnateur.
+ * Toute information de compte affichée ici doit provenir de l’état réel renvoyé par Supabase Auth.
+ */
 import { useState, useEffect } from 'react';
 import { SEOHead } from "@/components/seo/SEOHead";
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -187,7 +191,7 @@ const Auth = () => {
     }
     const { email, password, firstName, lastName, phone } = parsed.data;
     setLoading(true);
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email, password,
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback`,
@@ -198,8 +202,16 @@ const Auth = () => {
     if (error) {
       toast({ title: "Erreur d'inscription", description: error.message.includes("already registered") ? "Cet email est déjà utilisé." : error.message, variant: "destructive" });
       setLoading(false);
+    } else if (!data.user || data.user.identities?.length === 0) {
+      // Supabase peut retourner une réponse sans erreur pour ne pas révéler l’existence d’un email déjà inscrit.
+      toast({
+        title: "Inscription non finalisée",
+        description: "Cette adresse est déjà associée à un compte. Connectez-vous ou utilisez « Mot de passe oublié ? ».",
+        variant: "destructive",
+      });
+      setLoading(false);
     } else {
-      toast({ title: "Inscription réussie !", description: `Bienvenue en tant que ${selectedUserType === 'owner' ? 'Propriétaire' : 'Accompagnateur Certifié'} !` });
+      toast({ title: "Inscription réussie !", description: `Bienvenue en tant que ${selectedUserType === 'owner' ? 'Propriétaire' : 'Accompagnateur'} !` });
       navigate(selectedUserType === 'walker' ? '/walker/dashboard' : '/dashboard');
     }
   };
@@ -269,7 +281,7 @@ const Auth = () => {
     <>
       <SEOHead
         title="Connexion & Inscription | DogWalking"
-        description="Connectez-vous ou créez votre compte DogWalking. Propriétaire ou Accompagnateur Certifié, rejoignez la plateforme n°1 de promenade et garde d'animaux en France."
+        description="Connectez-vous ou créez votre compte DogWalking. Propriétaire ou Accompagnateur, accédez aux espaces proposés par DogWalking."
         canonical="https://dogwalking.fr/auth"
         noindex={true}
       />
@@ -386,7 +398,7 @@ const Auth = () => {
                       {selectedUserType === 'owner' ? <Heart className="h-4 w-4 text-heart" /> : <Dog className="h-4 w-4 text-stat-green" />}
                     </div>
                     <span className="text-sm font-semibold">
-                      Espace {selectedUserType === 'owner' ? 'Propriétaire' : 'Accompagnateur Certifié'}
+                      Espace {selectedUserType === 'owner' ? 'Propriétaire' : 'Accompagnateur'}
                     </span>
                     <CheckCircle className={`h-4 w-4 ${selectedUserType === 'owner' ? 'text-heart' : 'text-stat-green'}`} />
                   </div>

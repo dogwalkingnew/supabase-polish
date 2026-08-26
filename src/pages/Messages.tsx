@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   MessageCircle, Send, Search, 
-  ArrowLeft, Phone, Video, MoreVertical, Smile
+  ArrowLeft, Smile
 } from 'lucide-react';
 import { useNavigate, useLocation } from "react-router-dom";
 import { SEOHead } from "@/components/seo/SEOHead";
@@ -44,7 +44,7 @@ const Messages = () => {
     isUserOnline
   } = useRealtimeMessages(selectedConversation?.otherParticipant?.id);
 
-  // Anti-fraude (CDC §4.3) : restriction messagerie tant qu'aucun paiement séquestré
+  // Accès au texte libre seulement après une réservation confirmée.
   const { hasConfirmedBooking, prewrittenMessages } = useMessageGuard(
     selectedConversation?.otherParticipant?.id
   );
@@ -153,8 +153,8 @@ const Messages = () => {
   return (
     <div className="min-h-dvh bg-background">
       <SEOHead
-        title="Messagerie Sécurisée | DogWalking"
-        description="Communiquez avec vos Accompagnateurs Certifiés en temps réel. Messagerie sécurisée DogWalking pour organiser vos prestations."
+        title="Messagerie | DogWalking"
+        description="Échangez des informations de mission avec les personnes concernées par une réservation confirmée."
         canonical="https://dogwalking.fr/messages"
         noindex
       />
@@ -204,7 +204,7 @@ const Messages = () => {
                     <MessageCircle className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
                     <p className="text-muted-foreground">Aucune conversation</p>
                     <p className="text-sm text-muted-foreground mt-2">
-                      Vos conversations avec les Accompagnateurs Certifiés apparaîtront ici
+                      Vos conversations liées aux réservations apparaîtront ici
                     </p>
                     <Button 
                       variant="outline" 
@@ -294,17 +294,6 @@ const Messages = () => {
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Button variant="ghost" size="icon" className="text-muted-foreground">
-                          <Phone className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="text-muted-foreground">
-                          <Video className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="text-muted-foreground">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </div>
                     </div>
                   </CardHeader>
 
@@ -324,16 +313,15 @@ const Messages = () => {
                     </div>
                   </ScrollArea>
 
-                  {/* Message Input — restreint avant paiement (CDC §4.3) */}
+                  {/* Message libre accessible après une réservation confirmée. */}
                   <div className="p-4 border-t bg-background">
                     {!hasConfirmedBooking ? (
                       <div className="max-w-4xl mx-auto space-y-3">
                         <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900">
                           <Lock className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
                           <div className="text-xs text-amber-800 dark:text-amber-200">
-                            <strong>Messagerie sécurisée DogWalking.</strong> Tant qu'aucune réservation
-                            n'est confirmée, seuls les messages pré-enregistrés sont autorisés. Cela
-                            protège les deux parties contre la fraude.
+                            <strong>Échanges encadrés.</strong> Tant qu'aucune réservation
+                            n'est confirmée, seuls les messages pré-enregistrés sont disponibles.
                           </div>
                         </div>
                         <div className="flex flex-wrap gap-2">
@@ -360,7 +348,7 @@ const Messages = () => {
                       <>
                         <div className="flex items-center gap-2 mb-2 max-w-4xl mx-auto">
                           <Badge variant="secondary" className="gap-1 text-xs">
-                            <ShieldCheck className="h-3 w-3" /> Conversation sécurisée — paiement séquestré
+                            <ShieldCheck className="h-3 w-3" /> Conversation liée à une réservation confirmée
                           </Badge>
                         </div>
                         <div className="flex items-center gap-2 max-w-4xl mx-auto">
@@ -401,7 +389,7 @@ const Messages = () => {
                   </div>
                   <h3 className="text-xl font-bold mb-2">Vos Messages Sécurisés</h3>
                   <p className="text-muted-foreground max-w-sm">
-                    Sélectionnez une conversation pour discuter avec un Accompagnateur Certifié et organiser votre prestation.
+                    Sélectionnez une conversation pour organiser les informations liées à une réservation.
                   </p>
                 </motion.div>
               )}

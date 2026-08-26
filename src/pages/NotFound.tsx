@@ -17,7 +17,7 @@ const NotFound = () => {
     <div className="min-h-dvh bg-background flex flex-col">
       <Helmet>
         <title>Page non trouvée - DogWalking</title>
-        <meta name="description" content="Cette page n'existe pas. Retournez à l'accueil pour trouver le meilleur Accompagnateur Certifié de chien près de chez vous." />
+        <meta name="description" content="Cette page n'existe pas. Retournez à l’accueil ou consultez les profils Accompagnateur disponibles." />
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
       
@@ -52,9 +52,9 @@ const NotFound = () => {
               </Link>
             </Button>
             <Button variant="outline" asChild size="lg">
-              <Link to="/find-walkers">
+              <Link to="/walkers">
                 <Search className="h-4 w-4 mr-2" />
-                Trouver un Accompagnateur Certifié
+                Consulter les Accompagnateurs
               </Link>
             </Button>
           </div>
@@ -77,13 +77,10 @@ const NotFound = () => {
                 <Link to="/tarifs">Tarifs</Link>
               </Button>
               <Button variant="link" size="sm" asChild>
-                <Link to="/securite">Sécurité</Link>
+                <Link to="/walker/register">Devenir Accompagnateur</Link>
               </Button>
               <Button variant="link" size="sm" asChild>
-                <Link to="/walker/register">Devenir Accompagnateur Certifié</Link>
-              </Button>
-              <Button variant="link" size="sm" asChild>
-                <Link to="/find-walkers">Trouver un Accompagnateur Certifié</Link>
+                <Link to="/walkers">Consulter les Accompagnateurs</Link>
               </Button>
             </div>
           </div>

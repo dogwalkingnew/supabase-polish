@@ -19,7 +19,6 @@ import { MissionReport } from "@/components/dashboard/owner/MissionReport";
 import MissionStartButton from "@/components/dashboard/walker/MissionStartButton";
 import { ValidationCodeCard } from "@/components/booking/ValidationCodeCard";
 import { ValidateCodeInput } from "@/components/booking/ValidateCodeInput";
-import { SOSReleaseDialog } from "@/components/booking/SOSReleaseDialog";
 import { BookingContactCard } from "@/components/booking/BookingContactCard";
 
 const containerVariants = {
@@ -170,7 +169,7 @@ const BookingDetails = () => {
     <div className="min-h-dvh bg-background">
       <SEOHead
         title={`Réservation #${id?.slice(0, 8)} | DogWalking`}
-        description="Détails de votre réservation : chien, Accompagnateur Certifié, date, heure et prix."
+        description="Détails de votre réservation : animal, Accompagnateur, date, heure et conditions renseignées."
         noindex
       />
       
@@ -272,7 +271,7 @@ const BookingDetails = () => {
           <motion.div variants={itemVariants}>
             <Card className="shadow-card">
               <CardHeader>
-                <CardTitle>Accompagnateur Certifié</CardTitle>
+                <CardTitle>Accompagnateur</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
@@ -402,12 +401,6 @@ const BookingDetails = () => {
                         Signaler un incident
                       </Button>
                     )}
-                    {/* SOS exceptionnel — propriétaire seulement, mission en cours sans paiement libéré */}
-                    {currentUserId === booking.owner_id &&
-                      (booking.status === 'confirmed' || booking.status === 'in_progress') &&
-                      !booking.funds_released_at && (
-                        <SOSReleaseDialog bookingId={booking.id} onReleased={fetchBooking} />
-                      )}
                     {booking.status === 'completed' && (
                       <Button 
                         variant="outline" 
