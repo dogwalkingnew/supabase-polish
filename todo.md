@@ -32,3 +32,6 @@
 - [x] Vérifier la branche locale, la cible GitHub et les fichiers qui seraient transférés.
 - [x] Créer le commit de synchronisation puis effectuer le push forcé autorisé vers le dépôt GitHub sélectionné.
 - [x] Vérifier le commit et l’arbre de travail distants après transfert.
+- [x] Inventorier les scénarios Propriétaire et Accompagnateur, leurs règles de transition, validations, refus et notifications.
+- [x] Rédiger la matrice exhaustive des parcours contrôlés et des écarts entre flux actuels et flux pré-publication requis.
+- [ ] Ajouter la matrice finalisée au même dépôt GitHub, pousser puis vérifier le commit distant.
