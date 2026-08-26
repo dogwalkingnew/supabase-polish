@@ -273,7 +273,7 @@ const AnnoncesLibres = () => {
                         <Euro className="h-4 w-4" /> {a.price ?? "?"}
                       </div>
                       <Button size="sm" variant="outline" className="mt-2" onClick={() => navigate("/walkers")}>
-                        Proposer
+                        Voir les profils
                       </Button>
                     </div>
                   </CardContent>

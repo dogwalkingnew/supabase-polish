@@ -12,9 +12,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
-import { User, Shield, Camera, Bell, LogOut } from "lucide-react";
+import { User, Shield, Bell, LogOut } from "lucide-react";
 import { SEOHead } from "@/components/seo/SEOHead";
-import { FloatingContact } from "@/components/ui/floating-contact";
 import { motion } from "framer-motion";
 import heroImage from "@/assets/pages/profile-edit-hero.jpg";
 
@@ -167,16 +166,13 @@ const Profile = () => {
                         {profile.first_name?.[0]}{profile.last_name?.[0]}
                       </AvatarFallback>
                     </Avatar>
-                    <Button size="icon" variant="secondary" className="absolute bottom-0 right-0 rounded-full w-8 h-8">
-                      <Camera className="h-4 w-4" />
-                    </Button>
                   </div>
                   <div className="text-center md:text-left flex-1">
                     <h2 className="text-2xl font-bold">{profile.first_name} {profile.last_name}</h2>
                     <p className="text-muted-foreground">{profile.email}</p>
                     <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-3">
                       <Badge variant={profile.user_type === 'walker' ? 'default' : 'secondary'}>
-                        {profile.user_type === 'walker' ? 'Accompagnateur Certifié' : 'Propriétaire'}
+                        {profile.user_type === 'walker' ? 'Accompagnateur' : 'Propriétaire'}
                       </Badge>
                       {profile.account_verified && (
                         <Badge variant="outline" className="text-primary">
@@ -273,71 +269,15 @@ const Profile = () => {
 
               <TabsContent value="security">
                 <Card className="shadow-card">
-                  <CardHeader>
-                    <CardTitle>Sécurité du compte</CardTitle>
-                    <CardDescription>Gérez la sécurité de votre compte</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <motion.div 
-                      className="flex items-center justify-between p-4 border rounded-lg"
-                      whileHover={{ scale: 1.01 }}
-                    >
-                      <div>
-                        <p className="font-medium">Mot de passe</p>
-                        <p className="text-sm text-muted-foreground">Dernière modification : jamais</p>
-                      </div>
-                      <Button variant="outline">Modifier</Button>
-                    </motion.div>
-                    <motion.div 
-                      className="flex items-center justify-between p-4 border rounded-lg"
-                      whileHover={{ scale: 1.01 }}
-                    >
-                      <div>
-                        <p className="font-medium">Authentification à deux facteurs</p>
-                        <p className="text-sm text-muted-foreground">Non activée</p>
-                      </div>
-                      <Button variant="outline">Activer</Button>
-                    </motion.div>
-                    <motion.div 
-                      className="flex items-center justify-between p-4 border rounded-lg"
-                      whileHover={{ scale: 1.01 }}
-                    >
-                      <div>
-                        <p className="font-medium">Sessions actives</p>
-                        <p className="text-sm text-muted-foreground">1 session active</p>
-                      </div>
-                      <Button variant="outline">Gérer</Button>
-                    </motion.div>
-                  </CardContent>
+                  <CardHeader><CardTitle>Sécurité du compte</CardTitle><CardDescription>Les contrôles avancés sont administrés par le fournisseur d’authentification.</CardDescription></CardHeader>
+                  <CardContent><div className="rounded-lg border bg-muted/30 p-4 text-sm text-muted-foreground">Pour modifier votre mot de passe, utilisez « Mot de passe oublié ? » depuis l’écran de connexion. L’authentification à deux facteurs et la gestion des sessions ne sont pas encore proposées dans DogWalking.</div></CardContent>
                 </Card>
               </TabsContent>
 
               <TabsContent value="notifications">
                 <Card className="shadow-card">
-                  <CardHeader>
-                    <CardTitle>Préférences de notifications</CardTitle>
-                    <CardDescription>Choisissez comment vous souhaitez être notifié</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {[
-                      { label: "Nouvelles réservations", description: "Recevoir une notification pour chaque nouvelle réservation" },
-                      { label: "Messages", description: "Recevoir une notification pour les nouveaux messages" },
-                      { label: "Rappels", description: "Recevoir des rappels avant les réservations" },
-                      { label: "Promotions", description: "Recevoir les offres et promotions DogWalking" },
-                    ].map((item, index) => (
-                      <motion.div 
-                        key={index} 
-                        className="flex items-center justify-between p-4 border rounded-lg"
-                        whileHover={{ scale: 1.01 }}
-                      >
-                        <div>
-                          <p className="font-medium">{item.label}</p>
-                          <p className="text-sm text-muted-foreground">{item.description}</p>
-                        </div>
-                        <input type="checkbox" defaultChecked className="w-5 h-5" />
-                      </motion.div>
-                    ))}
-                  </CardContent>
+                  <CardHeader><CardTitle>Préférences de notifications</CardTitle><CardDescription>Les préférences détaillées ne sont pas encore configurables dans l’application.</CardDescription></CardHeader>
+                  <CardContent><div className="rounded-lg border bg-muted/30 p-4 text-sm text-muted-foreground">Les notifications liées aux actions de mission sont enregistrées lorsque le parcours le prévoit. Aucun paramètre de promotion, de rappel ou d’alerte personnalisée n’est activé ici.</div></CardContent>
                 </Card>
               </TabsContent>
             </Tabs>
@@ -346,7 +286,6 @@ const Profile = () => {
       </main>
       
       <Footer />
-      <FloatingContact />
     </div>
   );
 };

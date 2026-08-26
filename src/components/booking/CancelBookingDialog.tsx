@@ -38,7 +38,7 @@ export const CancelBookingDialog = ({
   const [customReason, setCustomReason] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Check if cancellation is within 3h (interdit) ou 24h (frais possibles)
+  // Annulation en ligne : moins de 3h bloquée ; rappel des modalités convenues à moins de 24h.
   const hoursUntil = scheduledDate
     ? (new Date(scheduledDate).getTime() - Date.now()) / (60 * 60 * 1000)
     : Infinity;
@@ -65,42 +65,12 @@ export const CancelBookingDialog = ({
         ? customReason 
         : CANCEL_REASONS.find(r => r.value === reason)?.label || reason;
 
-      // 1) Récupère booking pour décider du remboursement
-      const { data: bookingRaw, error: fetchErr } = await supabase
-        .from('bookings')
-        .select('*')
-        .eq('id', bookingId)
-        .single();
-      if (fetchErr) throw fetchErr;
-      const booking = bookingRaw as any;
-
-      // 2) Remboursement conditionnel : uniquement si fonds non libérés
-      const fundsReleased = !!booking?.funds_released_at || booking?.payment_status === 'released';
-      let refundResult: 'none' | 'refunded' | 'failed' = 'none';
-
-      if (booking?.stripe_payment_intent_id && !fundsReleased) {
-        const { data: refundData, error: refundErr } = await supabase.functions.invoke('stripe-escrow', {
-          body: {
-            action: 'refund',
-            paymentIntentId: booking.stripe_payment_intent_id,
-            reason: 'requested_by_customer',
-          },
-        });
-        if (refundErr || !refundData?.success) {
-          refundResult = 'failed';
-          console.error('Refund failed:', refundErr || refundData);
-        } else {
-          refundResult = 'refunded';
-        }
-      }
-
-      // 3) Update booking (le webhook fera aussi sa part en arrière-plan)
+      // DogWalking ne traite aucun paiement ni remboursement dans l’application.
       const updatePayload: any = {
         status: 'cancelled',
         cancellation_reason: finalReason,
         cancelled_by: session.user.id,
       };
-      if (refundResult === 'refunded') updatePayload.payment_status = 'refunded';
 
       const { error } = await supabase
         .from('bookings')
@@ -109,17 +79,9 @@ export const CancelBookingDialog = ({
 
       if (error) throw error;
 
-      const desc = fundsReleased
-        ? "La mission est annulée. Les fonds ayant déjà été libérés, aucun remboursement automatique n'a été effectué — contactez le support si besoin."
-        : refundResult === 'refunded'
-        ? "Réservation annulée et remboursement initié sur votre moyen de paiement."
-        : refundResult === 'failed'
-        ? "Réservation annulée, mais le remboursement automatique a échoué. Le support va vous contacter."
-        : "La réservation a été annulée avec succès.";
-
       toast({
         title: "Réservation annulée",
-        description: desc,
+        description: "La réservation a été annulée. Les éventuelles modalités convenues entre participants ne sont pas traitées par DogWalking.",
       });
 
       setReason("");
@@ -163,7 +125,7 @@ export const CancelBookingDialog = ({
               <div className="text-sm">
                 <p className="font-medium text-destructive">Annulation impossible</p>
                 <p className="text-destructive/80 mt-1">
-                  Vous ne pouvez plus annuler une mission à moins de 3h de son début. Contactez le support pour un cas exceptionnel.
+                  Vous ne pouvez plus annuler une mission à moins de 3h de son début depuis l’application.
                 </p>
               </div>
             </div>
@@ -176,7 +138,7 @@ export const CancelBookingDialog = ({
                   Annulation tardive
                 </p>
                 <p className="text-amber-700 dark:text-amber-500 mt-1">
-                  Cette réservation a lieu dans moins de 24h. Des frais d'annulation peuvent s'appliquer.
+                  Cette réservation a lieu dans moins de 24h. Vérifiez les modalités déjà convenues avec l’autre participant.
                 </p>
               </div>
             </div>

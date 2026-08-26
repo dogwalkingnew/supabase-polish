@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AnimatedSection, StaggeredChildren } from "@/components/ui/animated-section";
 import { AvailabilityCalendar } from "@/components/booking/AvailabilityCalendar";
@@ -238,26 +237,23 @@ const WalkerProfilePage = () => {
       <div className="min-h-dvh bg-background">
         <Header />
         <main className="container mx-auto px-4 py-24">
-          <h1 className="text-4xl font-bold mb-8">Accompagnateur Certifié introuvable</h1>
+          <h1 className="text-4xl font-bold mb-8">Accompagnateur introuvable</h1>
         </main>
         <Footer />
       </div>
     );
   }
 
-  const responseRate = 95; 
-  const acceptanceRate = 88;
-
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": `${walker.first_name} - Accompagnateur Certifié`,
-    "description": walker.bio || "Accompagnateur professionnel certifié et vérifié",
+    "name": `${walker.first_name} - Accompagnateur`,
+    "description": walker.bio || "Profil Accompagnateur renseigné sur DogWalking",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": walker.city || "France"
     },
-    "priceRange": `${walker.hourly_rate || 15}€`,
+    "priceRange": walker.hourly_rate ? `${walker.hourly_rate}€` : undefined,
     "aggregateRating": walker.rating ? {
       "@context": "https://schema.org",
       "@type": "AggregateRating",
@@ -269,8 +265,8 @@ const WalkerProfilePage = () => {
   return (
     <div className="min-h-dvh bg-background">
       <Helmet>
-        <title>{walker.first_name} - Accompagnateur Certifié à {walker.city || 'France'} | DogWalking</title>
-        <meta name="description" content={`${walker.first_name}, Accompagnateur Certifié vérifié à ${walker.city || 'France'}. Note: ${walker.rating?.toFixed(1) || '5.0'}/5. Tarif: $à partir de {walker.hourly_rate || 15}€.`} />
+        <title>{walker.first_name} - Accompagnateur à {walker.city || 'France'} | DogWalking</title>
+        <meta name="description" content={`${walker.first_name}, Accompagnateur à ${walker.city || 'France'}. Consultez les informations de profil et les services renseignés.`} />
         <script type="application/ld+json">{JSON.stringify(localBusinessSchema)}</script>
       </Helmet>
       <Header />
@@ -307,7 +303,7 @@ const WalkerProfilePage = () => {
                         {walker.verified && (
                           <Badge className="bg-primary/10 text-primary">
                             <Shield className="h-3 w-3 mr-1" />
-                            Certifié
+                            Profil validé
                           </Badge>
                         )}
                       </h1>
@@ -316,15 +312,8 @@ const WalkerProfilePage = () => {
                           <MapPin className="h-4 w-4" />
                           {walker.city}
                         </div>
-                        <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
-                          <span className="font-bold text-foreground">{walker.rating?.toFixed(1) || '5.0'}</span>
-                          <span>({walker.total_reviews || 0} avis)</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <CheckCircle className="h-4 w-4 text-primary" />
-                          {walker.total_walks || 0} prestations
-                        </div>
+                        {walker.rating !== null && walker.total_reviews !== null && <div className="flex items-center gap-1"><Star className="h-4 w-4 text-amber-500 fill-amber-500" /><span className="font-bold text-foreground">{walker.rating.toFixed(1)}</span><span>({walker.total_reviews} avis)</span></div>}
+                        {walker.total_walks !== null && <div className="flex items-center gap-1"><CheckCircle className="h-4 w-4 text-primary" />{walker.total_walks} prestation{walker.total_walks > 1 ? 's' : ''}</div>}
                       </div>
                     </div>
 
@@ -348,18 +337,15 @@ const WalkerProfilePage = () => {
                       <Clock className="h-3 w-3 mr-1" />
                       {walker.experience_years || 0} ans d'expérience
                     </Badge>
-                    <Badge variant="secondary" className="px-3 py-1">
-                      <Euro className="h-3 w-3 mr-1" />
-                      À partir de {walker.hourly_rate || 15}€
-                    </Badge>
-                    <Badge variant="secondary" className="px-3 py-1">
+                    {walker.hourly_rate !== null && <Badge variant="secondary" className="px-3 py-1"><Euro className="h-3 w-3 mr-1" />Tarif indicatif : {walker.hourly_rate}€</Badge>}
+                    {walker.max_dogs !== null && <Badge variant="secondary" className="px-3 py-1">
                       <Users className="h-3 w-3 mr-1" />
-                      Max {walker.max_dogs || 1} Animaux
-                    </Badge>
-                    <Badge variant="secondary" className="px-3 py-1">
+                      Max {walker.max_dogs} animal{walker.max_dogs > 1 ? 's' : ''}
+                    </Badge>}
+                    {walker.service_radius_km !== null && <Badge variant="secondary" className="px-3 py-1">
                       <MapPin className="h-3 w-3 mr-1" />
-                      Rayon {walker.service_radius_km || 5}km
-                    </Badge>
+                      Rayon renseigné : {walker.service_radius_km} km
+                    </Badge>}
                   </div>
                 </div>
               </div>
@@ -473,7 +459,7 @@ const WalkerProfilePage = () => {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Award className="h-5 w-5 text-amber-600" />
-                      Badges & Certifications
+                      Informations complémentaires
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -493,38 +479,6 @@ const WalkerProfilePage = () => {
                 </Card>
               </AnimatedSection>
             )}
-
-            {/* Response Stats */}
-            <AnimatedSection animation="fade-left" delay={0.2}>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Statistiques</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <div className="flex justify-between text-sm mb-2">
-                      <span className="text-muted-foreground">Taux de réponse</span>
-                      <span className="font-semibold">{responseRate}%</span>
-                    </div>
-                    <Progress value={responseRate} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between text-sm mb-2">
-                      <span className="text-muted-foreground">Taux d'acceptation</span>
-                      <span className="font-semibold">{acceptanceRate}%</span>
-                    </div>
-                    <Progress value={acceptanceRate} className="h-2" />
-                  </div>
-                  <div className="pt-2 border-t">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Clock className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Répond en moyenne en</span>
-                      <span className="font-semibold">1h</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </AnimatedSection>
 
             {/* Availability - Visual Calendar */}
             <AnimatedSection animation="fade-left" delay={0.3}>

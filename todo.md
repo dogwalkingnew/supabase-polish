@@ -34,4 +34,12 @@
 - [x] Vérifier le commit et l’arbre de travail distants après transfert.
 - [x] Inventorier les scénarios Propriétaire et Accompagnateur, leurs règles de transition, validations, refus et notifications.
 - [x] Rédiger la matrice exhaustive des parcours contrôlés et des écarts entre flux actuels et flux pré-publication requis.
-- [ ] Ajouter la matrice finalisée au même dépôt GitHub, pousser puis vérifier le commit distant.
+- [x] Ajouter la matrice finalisée au même dépôt GitHub, pousser puis vérifier le commit distant.
+- [x] Remplacer les libellés et appels à l’action de paiement résiduels du parcours de demande par une confirmation de demande sans paiement intégré.
+- [x] Réécrire la page de candidature Accompagnateur pour ne présenter que la candidature, l’examen administratif et les capacités réellement disponibles.
+- [x] Désactiver explicitement les parcours d’interface non opérationnels qui donnent une impression de disponibilité, de revenus, de finance ou de messagerie active.
+- [x] Retirer les derniers appels de remboursement ou de paiement obsolètes dans l’annulation de réservation.
+- [x] Recontrôler les flux corrigés, le responsive, le build et les prérequis externes avant synchronisation finale GitHub.
+- [ ] Unifier le modèle de candidature Accompagnateur (`walker_profiles` et `walker_applications`) et rendre l’approbation documentaire atomique avant toute validation de production.
+- [ ] Implémenter et tester la réponse Accompagnateur aux demandes directes ainsi que la contre-proposition versionnée avant d’annoncer ce parcours comme actif.
+- [ ] Mettre en œuvre une disponibilité réellement enregistrée et vérifiée lors d’une candidature, au lieu d’un simple affichage de profil.

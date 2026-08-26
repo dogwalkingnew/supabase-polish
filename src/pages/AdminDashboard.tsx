@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   Users, Dog, Calendar, Euro, Shield, Scale, AlertTriangle,
   BarChart3, Activity, CheckCircle, XCircle, Clock, FileCheck, FileX, Eye, Lock, Camera, Search,
-  ShieldCheck, ShieldAlert, Wallet
+  ShieldCheck, ShieldAlert
 } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
@@ -35,9 +35,6 @@ const AdminDashboard = () => {
     completedBookings: 0,
     pendingBookings: 0,
     cancelledBookings: 0,
-    revenue: 0,
-    commission: 0,
-    averageBookingValue: 0
   });
   const [recentBookings, setRecentBookings] = useState<any[]>([]);
   const [recentUsers, setRecentUsers] = useState<any[]>([]);
@@ -86,8 +83,6 @@ const AdminDashboard = () => {
       // Bookings stats
       const { data: bookingsData } = await supabase.from('bookings').select('status, price, created_at');
       const completed = bookingsData?.filter(b => b.status === 'completed') || [];
-      const revenue = completed.reduce((sum, b) => sum + Number(b.price || 0), 0);
-      const commission = revenue * 0.18; // Marge brute Dogfinance v5.0 : 5% client + 13% prestataire
 
       // Recent bookings
       const { data: recentBookingsData } = await supabase
@@ -128,10 +123,7 @@ const AdminDashboard = () => {
         totalBookings: bookingsData?.length || 0,
         completedBookings: completed.length,
         pendingBookings: bookingsData?.filter(b => b.status === 'pending').length || 0,
-        cancelledBookings: bookingsData?.filter(b => b.status === 'cancelled').length || 0,
-        revenue,
-        commission,
-        averageBookingValue: completed.length > 0 ? revenue / completed.length : 0
+        cancelledBookings: bookingsData?.filter(b => b.status === 'cancelled').length || 0
       });
 
       setLoading(false);
@@ -178,12 +170,6 @@ RÉSERVATIONS
   Complétées : ${stats.completedBookings}
   En attente : ${stats.pendingBookings}
   Annulées   : ${stats.cancelledBookings}
-
-FINANCES
-  Volume d'affaires : ${stats.revenue.toFixed(2)} €
-  Commission (18%)  : ${stats.commission.toFixed(2)} €
-  Panier moyen      : ${stats.averageBookingValue.toFixed(2)} €
-
 LITIGES OUVERTS    : ${openDisputes.length}
 DOCUMENTS EN ATTENTE: ${pendingDocuments.length}
 `;
@@ -244,9 +230,8 @@ DOCUMENTS EN ATTENTE: ${pendingDocuments.length}
           <AdminMetrics 
             totalUsers={stats.totalUsers}
             activeWalkers={stats.activeWalkers}
-            platformRevenue={Math.round(stats.commission)}
             openDisputes={openDisputes.length}
-            conversionRate={Math.round((stats.completedBookings / (stats.totalBookings || 1)) * 100)}
+            completionRate={Math.round((stats.completedBookings / (stats.totalBookings || 1)) * 100)}
             verificationRate={Math.round((stats.activeWalkers / (stats.totalWalkers || 1)) * 100)}
           />
 
@@ -270,7 +255,6 @@ DOCUMENTS EN ATTENTE: ${pendingDocuments.length}
                   </span>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="finance" className="rounded-xl font-bold py-2.5">Finance</TabsTrigger>
               <TabsTrigger value="users" className="rounded-xl font-bold py-2.5">Utilisateurs</TabsTrigger>
             </TabsList>
 
@@ -402,36 +386,6 @@ DOCUMENTS EN ATTENTE: ${pendingDocuments.length}
                     createdAt: d.created_at,
                     priority: "medium"
                   }))} />
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="finance">
-              <Card className="border-2 rounded-3xl overflow-hidden">
-                <CardHeader className="bg-slate-900 text-white">
-                  <CardTitle className="flex items-center gap-2">
-                    <Wallet className="h-5 w-5 text-primary" />
-                    Flux Financiers (Commission brute 18%)
-                  </CardTitle>
-                  <CardDescription className="text-slate-400">
-                    Détail des revenus et commissions de la plateforme
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="grid md:grid-cols-3 gap-6">
-                    <div className="p-4 rounded-2xl bg-slate-50 border-2 border-slate-100">
-                      <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Volume d'affaires</p>
-                      <p className="text-3xl font-black text-slate-900">{stats.revenue.toFixed(2)}€</p>
-                    </div>
-                    <div className="p-4 rounded-2xl bg-primary/5 border-2 border-primary/10">
-                      <p className="text-xs font-black text-primary uppercase tracking-widest mb-1">Commission DogWalking</p>
-                      <p className="text-3xl font-black text-primary">{stats.commission.toFixed(2)}€</p>
-                    </div>
-                    <div className="p-4 rounded-2xl bg-green-50 border-2 border-green-100">
-                      <p className="text-xs font-black text-green-600 uppercase tracking-widest mb-1">Panier Moyen</p>
-                      <p className="text-3xl font-black text-green-700">{stats.averageBookingValue.toFixed(2)}€</p>
-                    </div>
-                  </div>
                 </CardContent>
               </Card>
             </TabsContent>

@@ -251,11 +251,11 @@ const Auth = () => {
         { icon: MessageCircle, text: "Informations de mission" },
         { icon: Star, text: "Suivez vos demandes" },
       ],
-      gradient: "from-heart/20 via-heart/10 to-heart/5",
-      border: "border-heart/40 hover:border-heart",
-      iconBg: "bg-heart/20",
-      iconColor: "text-heart",
-      buttonClass: "bg-heart hover:bg-heart/90 text-white",
+      gradient: "from-primary/15 via-primary/10 to-primary/5",
+      border: "border-primary/40 hover:border-primary",
+      iconBg: "bg-primary/10",
+      iconColor: "text-primary",
+      buttonClass: "bg-primary hover:bg-primary/90 text-white",
     },
     {
       type: 'walker' as UserType,
@@ -394,13 +394,13 @@ const Auth = () => {
                 <motion.div key="auth" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: 0.3 }}>
                   {/* Selected role badge */}
                   <div className="flex items-center justify-center gap-2 mb-4">
-                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${selectedUserType === 'owner' ? 'bg-heart/20' : 'bg-stat-green/20'}`}>
-                      {selectedUserType === 'owner' ? <Heart className="h-4 w-4 text-heart" /> : <Dog className="h-4 w-4 text-stat-green" />}
+                    <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-primary/10">
+                      {selectedUserType === 'owner' ? <Heart className="h-4 w-4 text-primary" /> : <Dog className="h-4 w-4 text-primary" />}
                     </div>
                     <span className="text-sm font-semibold">
                       Espace {selectedUserType === 'owner' ? 'Propriétaire' : 'Accompagnateur'}
                     </span>
-                    <CheckCircle className={`h-4 w-4 ${selectedUserType === 'owner' ? 'text-heart' : 'text-stat-green'}`} />
+                    <CheckCircle className="h-4 w-4 text-primary" />
                   </div>
 
                   <Card className="border-0 shadow-xl">
@@ -449,7 +449,7 @@ const Auth = () => {
                             </div>
                             <Button
                               type="submit"
-                              className={`w-full h-11 text-base font-semibold ${selectedUserType === 'owner' ? 'bg-heart hover:bg-heart/90' : 'bg-stat-green hover:bg-stat-green/90'} text-white`}
+                              className="w-full h-11 text-base font-semibold bg-primary hover:bg-primary/90 text-white"
                               disabled={loading}
                             >
                               {loading ? 'Connexion...' : 'Se connecter'}
@@ -483,7 +483,7 @@ const Auth = () => {
                             </div>
                             <Button
                               type="submit"
-                              className={`w-full h-11 text-base font-semibold ${selectedUserType === 'owner' ? 'bg-heart hover:bg-heart/90' : 'bg-stat-green hover:bg-stat-green/90'} text-white`}
+                              className="w-full h-11 text-base font-semibold bg-primary hover:bg-primary/90 text-white"
                               disabled={loading}
                             >
                               {loading ? 'Inscription...' : "Créer mon compte"}

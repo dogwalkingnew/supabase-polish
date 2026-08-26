@@ -9,9 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from "@/components/ui/use-toast";
 import { Briefcase, Euro, Clock, Shield, CheckCircle, Users } from 'lucide-react';
 import { SEOHead } from "@/components/seo/SEOHead";
-import { FloatingContact } from "@/components/ui/floating-contact";
 import { motion } from "framer-motion";
-import heroImage from "@/assets/pages/devenir-promeneur-hero.jpg";
+import heroImage from "@/assets/services/promenade-chien-parc.jpg";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 
@@ -103,7 +102,7 @@ const WalkerRegister = () => {
             admins.map((a: any) => ({
               user_id: a.user_id,
               title: "🆕 Nouvelle candidature Accompagnateur",
-              message: `${firstName} ${lastName} (${city || "ville non renseignée"}) souhaite devenir Accompagnateur Certifié.`,
+              message: `${firstName} ${lastName} (${city || "ville non renseignée"}) souhaite devenir Accompagnateur.`,
               type: "admin",
               link: "/admin",
               metadata: { applicant_id: userId, experience, motivation },
@@ -116,7 +115,7 @@ const WalkerRegister = () => {
 
       toast({
         title: "Candidature envoyée ✓",
-        description: "Notre équipe étudie votre dossier sous 48h ouvrées.",
+        description: "Votre dossier est enregistré et reste en attente d’une décision administrative.",
       });
       sessionStorage.removeItem("pendingWalkerApplication");
       navigate('/');
@@ -134,31 +133,31 @@ const WalkerRegister = () => {
   const advantages = [
     {
       icon: Euro,
-      title: "Revenus attractifs",
-      description: "Fixez vos tarifs librement. Gagnez un complément de revenu significatif en étant votre propre patron."
+      title: "Tarifs renseignés",
+      description: "Indiquez un tarif de référence pour vos demandes ; les modalités restent à confirmer avec chaque Propriétaire."
     },
     {
       icon: Clock,
-      title: "Total flexibilité",
-      description: "Horaires et zones d'intervention libres. Travaillez quand vous voulez, selon vos disponibilités."
+      title: "Profil à compléter",
+      description: "Renseignez votre zone et votre expérience afin de préparer l’examen de votre candidature."
     },
     {
       icon: Shield,
-      title: "Paiement Sécurisé",
-      description: "Vos gains sont garantis et libérés dès que le Propriétaire communique son code unique de fin de mission."
+      title: "Candidature suivie",
+      description: "Votre dossier reste en attente tant qu’une décision administrative n’a pas été enregistrée."
     },
     {
       icon: Users,
-      title: "Clientèle de quartier",
-      description: "Construisez votre réputation locale. Les avis certifiés boostent votre visibilité sur la plateforme."
+      title: "Services proposés",
+      description: "Après validation, votre profil peut être utilisé pour répondre aux demandes compatibles avec vos informations."
     }
   ];
 
   return (
     <div className="min-h-dvh bg-background">
       <SEOHead
-        title="Devenir Accompagnateur Certifié | DogWalking"
-        description="Rejoignez notre réseau d'Accompagnateurs Certifiés. Fixez vos tarifs, gérez vos horaires et gagnez un revenu attractif en prenant soin des animaux."
+        title="Devenir Accompagnateur | DogWalking"
+        description="Déposez votre candidature Accompagnateur. Votre profil sera soumis à un examen administratif avant toute mission."
         canonical="https://dogwalking.fr/walker/register"
       />
       
@@ -171,6 +170,7 @@ const WalkerRegister = () => {
           style={{ backgroundImage: `url(${heroImage})` }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+        <div aria-hidden="true" className="dogwalking-route absolute inset-x-0 bottom-0 h-28 opacity-70" />
         
         <motion.div 
           className="relative z-10 text-center px-4 max-w-4xl mx-auto"
@@ -186,9 +186,9 @@ const WalkerRegister = () => {
           >
             <Briefcase className="h-10 w-10 text-primary" />
           </motion.div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Devenez Accompagnateur Certifié</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Devenez Accompagnateur</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Rejoignez l'élite de l'accompagnement animalier. Seuls 35% des candidats sont retenus pour garantir une sécurité et une confiance totale aux Propriétaires.
+            Déposez votre candidature pour proposer des services auprès des Propriétaires, sous réserve de la validation administrative prévue par DogWalking.
           </p>
         </motion.div>
       </section>
@@ -228,7 +228,7 @@ const WalkerRegister = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <CheckCircle className="h-5 w-5 text-primary" />
-                    Processus de certification strict
+                    Étapes de candidature
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -238,8 +238,8 @@ const WalkerRegister = () => {
                         <CheckCircle className="h-4 w-4 text-primary" />
                       </div>
                       <div>
-                        <p className="font-medium">Identité vérifiée</p>
-                        <p className="text-sm text-muted-foreground">CNI ou passeport en cours de validité</p>
+                        <p className="font-medium">Compte et coordonnées</p>
+                        <p className="text-sm text-muted-foreground">Créez votre compte puis renseignez les coordonnées demandées.</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -247,8 +247,8 @@ const WalkerRegister = () => {
                         <CheckCircle className="h-4 w-4 text-primary" />
                       </div>
                       <div>
-                        <p className="font-medium">Références Vérifiées</p>
-                         <p className="text-sm text-muted-foreground">Références et expériences contrôlées</p>
+                        <p className="font-medium">Expérience décrite</p>
+                         <p className="text-sm text-muted-foreground">Expliquez votre expérience et votre approche de l’accompagnement animalier.</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -256,8 +256,8 @@ const WalkerRegister = () => {
                         <CheckCircle className="h-4 w-4 text-primary" />
                       </div>
                       <div>
-                        <p className="font-medium">Sélection manuelle</p>
-                        <p className="text-sm text-muted-foreground">Taux d'acceptation de 35% maximum</p>
+                        <p className="font-medium">Examen administratif</p>
+                        <p className="text-sm text-muted-foreground">Votre dossier est étudié avant l’autorisation de répondre aux demandes.</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -265,13 +265,13 @@ const WalkerRegister = () => {
                         <CheckCircle className="h-4 w-4 text-primary" />
                       </div>
                       <div>
-                        <p className="font-medium">Protocole DogWalking</p>
-                        <p className="text-sm text-muted-foreground">Engagement sur les preuves visuelles obligatoires</p>
+                        <p className="font-medium">Décision notifiée</p>
+                        <p className="text-sm text-muted-foreground">La décision et son éventuel motif sont communiqués dans votre espace.</p>
                       </div>
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground mt-4 pt-4 border-t">
-                    ⏱️ Étude manuelle de votre dossier sous 48h ouvrées par nos équipes
+                    Le délai d’examen dépend de l’organisation de DogWalking et n’est pas garanti par l’application.
                   </p>
                 </CardContent>
               </Card>
@@ -281,10 +281,9 @@ const WalkerRegister = () => {
             <motion.div variants={itemVariants}>
               <Card className="shadow-card">
                 <CardHeader>
-                  <CardTitle>Candidature Accompagnateur Certifié</CardTitle>
+                  <CardTitle>Candidature Accompagnateur</CardTitle>
                   <CardDescription>
-                    Remplissez ce formulaire pour initier votre processus de certification. 
-                    Nous vous recontacterons sous 48h.
+                    Remplissez ce formulaire pour soumettre votre dossier. Il restera en attente jusqu’à la décision administrative.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -332,7 +331,7 @@ const WalkerRegister = () => {
                       <Textarea
                         id="motivation"
                         name="motivation"
-                        placeholder="Quelles sont vos motivations pour rejoindre un réseau certifié ? Comment garantissez-vous la satisfaction des Propriétaires ?"
+                        placeholder="Pourquoi souhaitez-vous proposer vos services sur DogWalking ?"
                         rows={4}
                         required
                       />
@@ -350,7 +349,6 @@ const WalkerRegister = () => {
       </main>
       
       <Footer />
-      <FloatingContact />
     </div>
   );
 };

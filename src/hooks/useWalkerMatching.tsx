@@ -86,7 +86,7 @@ export const useWalkerMatching = (initialCriteria?: MatchingCriteria) => {
     // 3. Verification bonus (15 points)
     if (walker.verified) {
       score += 15;
-      reasons.push("Accompagnateur Certifié ✓");
+      reasons.push("Profil validé par l’administration");
     }
 
     // 4. Distance score (max 20 points)

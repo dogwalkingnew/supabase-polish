@@ -1,3 +1,7 @@
+/**
+ * Design DogWalking — parcours de demande sobre et contrôlé : vert forêt pour l’action,
+ * texte factuel et aucun paiement, certification ou avis non vérifié dans l’interface.
+ */
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -12,7 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import {
   Calendar, Clock, Dog, MapPin, Shield, Lock, CheckCircle,
-  ArrowLeft, ArrowRight, Sparkles, Star, CreditCard, MessageCircle, Key
+  ArrowLeft, ArrowRight, Sparkles, Star, MessageCircle, Key
 } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
 
@@ -45,14 +49,14 @@ const keyProtocolOptions: { value: KeyHandoverProtocol; label: string; descripti
   { value: 'in_person', label: 'Remise en main propre', description: 'RDV avant la mission pour récupérer les clés', icon: '🤝' },
   { value: 'lockbox', label: 'Boîte à clés sécurisée', description: 'Code à fournir dans les détails', icon: '🔐' },
   { value: 'neighbor', label: 'Voisin / Concierge / Gardien', description: 'Indiquez nom et contact', icon: '👤' },
-  { value: 'already_provided', label: 'Double déjà fourni', description: 'L\'Accompagnateur Certifié a déjà une copie', icon: '🔑' },
+  { value: 'already_provided', label: 'Double déjà fourni', description: 'Un double a déjà été remis dans le cadre convenu', icon: '🔑' },
 ];
 
 const serviceOptions = [
   { 
     id: 'promenade' as ServiceType, 
     label: 'Promenade', 
-    description: 'Balade en extérieur avec photos', 
+    description: 'Balade en extérieur selon les modalités convenues',
     icon: '🚶',
     duration: '30min - 2h'
   },
@@ -66,7 +70,7 @@ const serviceOptions = [
   { 
     id: 'garde' as ServiceType, 
     label: 'Garde', 
-    description: 'Hébergement chez le Accompagnateur Certifié', 
+    description: 'Garde selon les modalités à confirmer avec l’Accompagnateur',
     icon: '🛏️',
     duration: 'Nuit'
   },
@@ -344,7 +348,7 @@ export const BookingSteps = ({
                       <Label className="text-sm font-semibold">Protocole de remise des clés *</Label>
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      Pour les prestations à domicile, indiquez comment l'Accompagnateur Certifié récupèrera vos clés.
+                      Pour les prestations à domicile, indiquez comment l’Accompagnateur récupérera vos clés.
                     </p>
                     <Select
                       value={formData.keyHandoverProtocol}
@@ -504,10 +508,8 @@ export const BookingSteps = ({
                   <div>
                     <p className="font-semibold text-lg">{walker?.first_name}</p>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                      <span>{walker?.rating?.toFixed(1) || '5.0'}</span>
-                      <span>•</span>
-                      <span>{walker?.total_reviews || 0} avis</span>
+                      <Star className="h-4 w-4 text-amber-500" />
+                      <span>Profil renseigné par l’Accompagnateur</span>
                     </div>
                   </div>
                 </div>
@@ -550,11 +552,11 @@ export const BookingSteps = ({
                 {/* Price Summary */}
                 <div className="p-4 rounded-xl bg-primary/5 border border-primary/20">
                   <div className="flex justify-between items-center">
-                    <span className="text-lg font-semibold">Total</span>
+                    <span className="text-lg font-semibold">Montant indicatif</span>
                     <span className="text-2xl font-bold text-primary">{calculatePrice()}€</span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Paiement sécurisé - Fonds bloqués jusqu'à validation
+                    Les modalités et le règlement sont à confirmer directement avec l’Accompagnateur.
                   </p>
                 </div>
 
@@ -562,7 +564,7 @@ export const BookingSteps = ({
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                   <Lock className="h-5 w-5 text-primary" />
                   <p className="text-sm text-muted-foreground">
-                    <strong className="text-foreground">Paiement sécurisé</strong> - Les fonds sont bloqués jusqu'à confirmation du service
+                    <strong className="text-foreground">Demande à confirmer</strong> — DogWalking n’effectue pas de paiement dans l’application.
                   </p>
                 </div>
               </CardContent>
@@ -588,8 +590,8 @@ export const BookingSteps = ({
             "Envoi en cours..."
           ) : step === 4 ? (
             <>
-              <CreditCard className="h-4 w-4" />
-              Confirmer et payer {calculatePrice()}€
+              <CheckCircle className="h-4 w-4" />
+              Envoyer la demande
             </>
           ) : (
             <>

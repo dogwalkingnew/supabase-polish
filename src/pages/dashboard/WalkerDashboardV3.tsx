@@ -1,104 +1,72 @@
-import { useState } from "react";
-import WalkerHome from "@/components/dashboard-v3/WalkerHome";
-import WalkerPlanning from "@/components/dashboard-v3/WalkerPlanning";
-import WalkerRevenus from "@/components/dashboard-v3/WalkerRevenus";
-import WalkerProfile from "@/components/dashboard-v3/WalkerProfile";
-import { Home, CalendarDays, Wallet, User, Settings } from "lucide-react";
+/**
+ * Design DogWalking — tableau Accompagnateur factuel : fond clair, vert forêt pour les états,
+ * aucune donnée de démonstration, aucun revenu, avis, paiement ou disponibilité non calculés.
+ */
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { CalendarDays, CheckCircle2, ClipboardList, Dog, Loader2, MapPin, ShieldAlert, UserRound } from "lucide-react";
+import { Header } from "@/components/ui/header";
+import { Footer } from "@/components/ui/footer";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
-type Tab = "home" | "planning" | "revenus" | "profil" | "params";
+type BookingRow = {
+  id: string;
+  service_type: string | null;
+  scheduled_date: string | null;
+  scheduled_time: string | null;
+  duration_minutes: number | null;
+  address: string | null;
+  status: string | null;
+  dogs?: { name?: string | null } | null;
+};
+
+const statusLabel: Record<string, string> = { pending: "En attente", confirmed: "Confirmée", in_progress: "En cours", completed: "Terminée", cancelled: "Annulée" };
+const serviceLabel: Record<string, string> = { promenade: "Promenade", garde: "Garde", visite: "Visite à domicile", veterinaire: "Accompagnement vétérinaire" };
 
 const WalkerDashboardV3 = () => {
-  const [tab, setTab] = useState<Tab>("home");
-  const [online, setOnline] = useState(true);
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [verified, setVerified] = useState<boolean | null>(null);
+  const [bookings, setBookings] = useState<BookingRow[]>([]);
 
-  const items: { key: Tab; label: string; icon: any }[] = [
-    { key: "home", label: "Accueil", icon: Home },
-    { key: "planning", label: "Planning", icon: CalendarDays },
-    { key: "revenus", label: "Revenus", icon: Wallet },
-    { key: "profil", label: "Profil", icon: User },
-    { key: "params", label: "Paramètres", icon: Settings },
-  ];
+  useEffect(() => {
+    const load = async () => {
+      if (!user) return;
+      setLoading(true);
+      const [{ data: walkerProfile }, { data: bookingRows }] = await Promise.all([
+        (supabase as any).from("walker_profiles").select("verified").eq("user_id", user.id).maybeSingle(),
+        (supabase as any).from("bookings").select("id, service_type, scheduled_date, scheduled_time, duration_minutes, address, status, dogs(name)").eq("walker_id", user.id).order("scheduled_date", { ascending: true }).limit(20),
+      ]);
+      setVerified(Boolean(walkerProfile?.verified));
+      setBookings((bookingRows || []) as BookingRow[]);
+      setLoading(false);
+    };
+    void load();
+  }, [user]);
+
+  const activeBookings = useMemo(() => bookings.filter((booking) => booking.status === "confirmed" || booking.status === "in_progress"), [bookings]);
 
   return (
-    <div className="bg-[#0E1428]">
-      {tab === "home" && (
-        <WalkerHome
-          online={online}
-          onToggleOnline={() => setOnline((v) => !v)}
-          todayEarnings={48}
-          weekEarnings={312}
-          missionsCount={4}
-          nextMission={{ id: "m1", client: "Sarah L.", pet: "Max - Golden Retriever", address: "Rue St-Denis", time: "10:00", durationMin: 60, price: 12 }}
-          reviews={[
-            { id: "r1", from: "Camille D.", rating: 5, comment: "Super attentif avec mon chien, je recommande vivement !", date: "12 mai 2024" },
-            { id: "r2", from: "Thomas L.", rating: 5, comment: "Toujours à l'heure et très professionnel.", date: "10 mai 2024" },
-          ]}
-        />
-      )}
-      {tab === "planning" && (
-        <WalkerPlanning
-          assigned={[
-            { id: "1", client: "Sarah L.", pet: "Max - Golden", address: "Rue St-Denis", time: "10:00", durationMin: 60, price: 12, type: "Promenade", status: "Confirmée" },
-            { id: "2", client: "Lucas M.", pet: "Bella - Beagle", address: "Av. Mont-Royal", time: "14:30", durationMin: 45, price: 10, type: "Visite", status: "Confirmée" },
-          ]}
-          open={[
-            { id: "o1", client: "Anonymisé", pet: "Rocky - Border Collie", address: "Plateau", time: "Demain 09:00", durationMin: 60, price: 14, type: "Promenade" },
-            { id: "o2", client: "Anonymisé", pet: "Luna - Bouledogue", address: "Outremont", time: "Demain 16:00", durationMin: 90, price: 22, type: "Garde" },
-          ]}
-        />
-      )}
-      {tab === "revenus" && (
-        <WalkerRevenus
-          monthEarnings={1248}
-          weekChart={[40, 28, 64, 0, 52, 88, 40]}
-          details={[
-            { id: "d1", date: "13 mai 2024 · 10:00", client: "Sarah L.", type: "Promenade", amount: 12 },
-            { id: "d2", date: "12 mai 2024 · 14:00", client: "Camille D.", type: "Garde", amount: 24 },
-            { id: "d3", date: "11 mai 2024 · 09:30", client: "Thomas L.", type: "Visite", amount: 10 },
-          ]}
-          payouts={[
-            { id: "p1", date: "5 mai 2024", amount: 312.50, status: "Versé" },
-            { id: "p2", date: "Cette semaine", amount: 168.00, status: "En cours" },
-          ]}
-        />
-      )}
-      {tab === "profil" && (
-        <WalkerProfile
-          name="Julie B."
-          bio="Passionnée par les chiens depuis 10 ans, je propose des promenades douces et stimulantes adaptées à chaque animal."
-          rating={4.8} reviews={127}
-          zone="Montréal · 5 km"
-          specialities={["Promenade", "Garde", "Chiens craintifs", "Grands chiens"]}
-          badges={[
-            { label: "Identité vérifiée", verified: true },
-            { label: "Premiers secours", verified: true },
-            { label: "Éducateur certifié" },
-            { label: "100 missions" },
-          ]}
-        />
-      )}
-      {tab === "params" && (
-        <div className="min-h-dvh flex items-center justify-center text-white/60 px-4 text-center">
-          <p>Onglet « Paramètres » — à brancher sur l'existant.</p>
+    <div className="min-h-dvh bg-background text-foreground">
+      <Header />
+      <main className="container max-w-5xl py-24">
+        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div><p className="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-primary">Espace Accompagnateur</p><h1 className="text-3xl font-bold md:text-4xl">Vos missions et informations</h1><p className="mt-2 max-w-2xl text-muted-foreground">Cet espace affiche uniquement les réservations qui vous sont réellement attribuées dans DogWalking.</p></div>
+          <Button asChild variant="outline"><Link to="/messages">Ouvrir la messagerie</Link></Button>
         </div>
-      )}
-
-      {/* BottomNav */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-[#0E1428]/95 backdrop-blur-lg border-t border-white/5 z-50 pb-[env(safe-area-inset-bottom)]">
-        <div className="max-w-lg mx-auto flex items-center justify-around h-16">
-          {items.map((it) => {
-            const Icon = it.icon;
-            const active = tab === it.key;
-            return (
-              <button key={it.key} onClick={() => setTab(it.key)}
-                className={`flex flex-col items-center gap-0.5 px-3 py-2 transition-colors ${active ? "text-[#D4A574]" : "text-white/50"}`}>
-                <Icon className="w-5 h-5" strokeWidth={active ? 2.5 : 2} />
-                <span className="text-[10px] font-bold">{it.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </nav>
+        {loading ? <div className="flex min-h-48 items-center justify-center rounded-2xl border bg-card"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div> : (
+          <div className="space-y-6">
+            <Card className={verified ? "border-primary/30 bg-primary/5" : "border-amber-400/40 bg-amber-50"}><CardContent className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between"><div className="flex items-start gap-3">{verified ? <CheckCircle2 className="mt-0.5 h-5 w-5 text-primary" /> : <ShieldAlert className="mt-0.5 h-5 w-5 text-amber-700" />}<div><p className="font-semibold">{verified ? "Profil opérationnel" : "Profil en attente de validation"}</p><p className="text-sm text-muted-foreground">{verified ? "Vous pouvez consulter vos missions qui vous sont attribuées." : "Vous ne pouvez pas répondre à une demande ouverte tant qu’une validation administrative n’est pas enregistrée."}</p></div></div><Button asChild size="sm" variant="outline"><Link to="/walker/register">Compléter mon dossier</Link></Button></CardContent></Card>
+            <div className="grid gap-4 md:grid-cols-2"><Card><CardHeader className="pb-3"><CardDescription className="flex items-center gap-2"><ClipboardList className="h-4 w-4" /> Missions actives</CardDescription><CardTitle>{activeBookings.length}</CardTitle></CardHeader><CardContent className="text-sm text-muted-foreground">Confirmées ou en cours, sans calcul de revenu ni paiement intégré.</CardContent></Card><Card><CardHeader className="pb-3"><CardDescription className="flex items-center gap-2"><UserRound className="h-4 w-4" /> Disponibilités</CardDescription><CardTitle>À renseigner</CardTitle></CardHeader><CardContent className="text-sm text-muted-foreground">La gestion de disponibilités n’est pas encore active ; n’acceptez que les missions dont vous pouvez confirmer le créneau.</CardContent></Card></div>
+            <Card><CardHeader><CardTitle className="flex items-center gap-2"><CalendarDays className="h-5 w-5 text-primary" /> Réservations attribuées</CardTitle><CardDescription>Les coordonnées détaillées restent limitées aux participants de la mission.</CardDescription></CardHeader><CardContent>{bookings.length === 0 ? <div className="rounded-xl border border-dashed p-8 text-center text-muted-foreground"><Dog className="mx-auto mb-3 h-8 w-8 text-primary/60" />Aucune réservation ne vous est attribuée actuellement.</div> : <div className="space-y-3">{bookings.map((booking) => <div key={booking.id} className="flex flex-col gap-3 rounded-xl border p-4 sm:flex-row sm:items-center sm:justify-between"><div><div className="mb-1 flex flex-wrap items-center gap-2"><span className="font-semibold">{serviceLabel[booking.service_type || ""] || "Prestation"}</span><Badge variant="secondary">{statusLabel[booking.status || ""] || booking.status || "—"}</Badge></div><p className="text-sm text-muted-foreground">{booking.dogs?.name ? `Animal : ${booking.dogs.name} · ` : ""}{booking.scheduled_date ? new Date(booking.scheduled_date).toLocaleDateString("fr-FR") : "Date à confirmer"}{booking.scheduled_time ? ` à ${booking.scheduled_time.slice(0, 5)}` : ""}{booking.duration_minutes ? ` · ${booking.duration_minutes} min` : ""}</p>{booking.address && <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground"><MapPin className="h-3.5 w-3.5" /> Zone renseignée pour la mission</p>}</div><Button asChild size="sm" variant="outline"><Link to={`/booking/${booking.id}`}>Voir la mission</Link></Button></div>)}</div>}</CardContent></Card>
+          </div>
+        )}
+      </main>
+      <Footer />
     </div>
   );
 };

@@ -81,11 +81,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "DogWalking — Promenade & garde de chiens vérifiées" },
+      { title: "DogWalking — Demandes de promenade et garde" },
       {
         name: "description",
         content:
-          "Plateforme française de mise en relation entre propriétaires de chiens et promeneurs certifiés.",
+          "Plateforme de mise en relation entre propriétaires et accompagnateurs pour organiser des demandes liées aux animaux.",
       },
       { name: "author", content: "DogWalking" },
       { property: "og:type", content: "website" },
