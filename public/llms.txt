@@ -1,0 +1,28 @@
+# Dogfinance
+
+> Plateforme française de mise en relation entre Propriétaires de chiens et Accompagnateurs certifiés. Dogfinance sécurise chaque promenade et garde grâce à des profils vérifiés, un paiement en attente (escrow), un code unique de validation et des preuves visuelles obligatoires. Disponible partout en France.
+
+## Pages
+
+- [/](/): Accueil — Découvrir Dogfinance et réserver un Accompagnateur Certifié
+- [/qui-sommes-nous](/qui-sommes-nous): Qui sommes-nous — Notre mission et notre équipe
+- [/tarifs](/tarifs): Tarifs — Prix des promenades et gardes de chiens
+- [/trouver-promeneur](/trouver-promeneur): Trouver un promeneur — Rechercher un Accompagnateur Certifié près de chez vous
+- [/blog](/blog): Blog — Conseils, actualités et ressources pour les propriétaires et accompagnateurs
+- [/support](/support): Support — Centre d'aide et contact
+- [/nous-sommes-presentes](/nous-sommes-presentes): Villes couvertes — Liste des villes et zones desservies en France
+- [/auth](/auth): Connexion / Inscription — Espace membre Propriétaire ou Accompagnateur
+
+## Services
+
+- [/service/promenade](/service/promenade): Promenade de chien — Balades individuelles ou collectives
+- [/service/garde](/service/garde): Garde de chien à domicile — Surveillance et soins
+- [/service/visite](/service/visite): Visite à domicile — Check-in quotidien pour votre chien
+- [/service/pet-sitting](/service/pet-sitting): Pet sitting — Hébergement chez l'Accompagnateur
+- [/service/marche-reguliere](/service/marche-reguliere): Marche régulière — Abonnement de promenades récurrentes
+- [/service/dog-sitting](/service/dog-sitting): Dog sitting complet — Service de garde étendu
+
+## Dashboards (espace membre)
+
+- [/dashboard/proprietaire](/dashboard/proprietaire): Dashboard Propriétaire — Gérer ses chiens, réservations et messages
+- [/dashboard/accompagnateur](/dashboard/accompagnateur): Dashboard Accompagnateur — Planifier missions, revenus et disponibilités

@@ -1,0 +1,206 @@
+import { useState } from "react";
+import { Home, PawPrint, Briefcase, Receipt, User } from "lucide-react";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import OwnerHomeImproved from "@/components/dashboard-v3/OwnerHomeImproved";
+import OwnerPets from "@/components/dashboard-v3/OwnerPets";
+import OwnerMissions from "@/components/dashboard-v3/OwnerMissions";
+import OwnerBilling from "@/components/dashboard-v3/OwnerBilling";
+import OwnerProfileComplete from "@/components/dashboard-v3/OwnerProfileComplete";
+import MissionLiveTracking from "@/components/dashboard-v3/MissionLiveTracking";
+import OwnerAlertsAndRecommendations from "@/components/dashboard-v3/OwnerAlertsAndRecommendations";
+import { useAuth } from "@/contexts/AuthContext";
+import { useOwnerDashboard } from "@/hooks/useOwnerDashboard";
+import { supabase } from "@/integrations/supabase/client";
+
+type Tab = "home" | "pets" | "missions" | "billing" | "profil";
+
+const OwnerDashboardV3 = () => {
+  const [tab, setTab] = useState<Tab>("home");
+  const [showLiveTracking, setShowLiveTracking] = useState(false);
+  const { user, profile, signOut, refreshProfile } = useAuth();
+  const { data, isLoading } = useOwnerDashboard();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const items: { key: Tab; label: string; icon: any }[] = [
+    { key: "home", label: "Accueil", icon: Home },
+    { key: "pets", label: "Animaux", icon: PawPrint },
+    { key: "missions", label: "Missions", icon: Briefcase },
+    { key: "billing", label: "Facturation", icon: Receipt },
+    { key: "profil", label: "Profil", icon: User },
+  ];
+
+  const handleReserve = () => setTab("missions");
+  const handleTracking = () => {
+    if (data?.activeMission) setShowLiveTracking(true);
+    else toast.info("Aucune mission en cours à suivre pour le moment.");
+  };
+  const handleEmergency = () => window.open("tel:3115");
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/auth");
+  };
+
+  const handleUpdateProfile = async (updated: Record<string, any>) => {
+    if (!user) return;
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        first_name: updated.firstName,
+        last_name: updated.lastName,
+        phone: updated.phone,
+        address: updated.address,
+        city: updated.city,
+        postal_code: updated.postalCode,
+        bio: updated.bio,
+        ...(updated.preferences ? { notification_preferences: updated.preferences } : {}),
+      })
+      .eq("id", user.id);
+    if (error) toast.error("Impossible d'enregistrer le profil.");
+    else {
+      toast.success("Profil mis à jour.");
+      refreshProfile();
+    }
+  };
+
+  if (isLoading || !data || !profile) {
+    return (
+      <div className="min-h-dvh flex items-center justify-center bg-[#F9F7F4]">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#1DB584]" />
+      </div>
+    );
+  }
+
+  const ownerProfile = {
+    id: user?.id ?? "",
+    firstName: profile.first_name ?? "",
+    lastName: profile.last_name ?? "",
+    email: profile.email ?? user?.email ?? "",
+    phone: profile.phone ?? "",
+    address: profile.address ?? "",
+    city: profile.city ?? "",
+    postalCode: profile.postal_code ?? "",
+    bio: profile.bio ?? "",
+    avatar: profile.avatar_url ?? undefined,
+    verificationStatus: "verified" as const,
+    createdAt: profile.created_at ?? "",
+    preferences: { notifications: true, emailUpdates: true, smsAlerts: false, newsletter: false },
+    documents: [],
+  };
+
+  return (
+    <div className="bg-[#F9F7F4] min-h-screen">
+      {data.activeMission && (
+        <MissionLiveTracking
+          missionId={data.activeMission.id}
+          walkerName={data.activeMission.walkerName}
+          walkerPhone={data.activeMission.walkerPhone ?? ""}
+          walkerPhoto={data.activeMission.walkerPhoto ?? "/placeholder.svg"}
+          petName={data.activeMission.petName}
+          estimatedEndTime=""
+          isActive={showLiveTracking}
+          onClose={() => setShowLiveTracking(false)}
+        />
+      )}
+
+      <motion.div key={tab} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+        {tab === "home" && (
+          <div className="space-y-6 pb-32">
+            <OwnerHomeImproved
+              pets={data.pets}
+              nextMission={data.nextMission}
+              onReserve={handleReserve}
+              onStartTracking={handleTracking}
+              onEmergency={handleEmergency}
+              onViewAllPets={() => setTab("pets")}
+              onViewAllMissions={() => setTab("missions")}
+              onViewMissionDetails={() => data.nextMission && navigate(`/bookings/${data.nextMission.id}`)}
+            />
+
+            {data.unreadNotifications > 0 && (
+              <div className="px-4 max-w-lg mx-auto">
+                <OwnerAlertsAndRecommendations
+                  alerts={[
+                    {
+                      id: "notif-unread",
+                      type: "warning" as const,
+                      title: `${data.unreadNotifications} notification(s) non lue(s)`,
+                      description: "Consultez vos notifications pour ne rien manquer de vos missions.",
+                      action: "Voir",
+                      timestamp: "Maintenant",
+                    },
+                  ]}
+                  recommendations={[]}
+                />
+              </div>
+            )}
+          </div>
+        )}
+
+        {tab === "pets" && (
+          <div className="pb-32">
+            <OwnerPets pets={data.pets} />
+          </div>
+        )}
+
+        {tab === "missions" && (
+          <div className="pb-32">
+            <OwnerMissions
+              favorites={data.walkers.filter((w) => w.favorite)}
+              available={data.walkers}
+              history={data.history}
+            />
+          </div>
+        )}
+
+        {tab === "billing" && (
+          <div className="pb-32">
+            <OwnerBilling
+              pets={data.pets.map((p) => ({ id: p.id, name: p.name, photo: p.photo, promenade: 0, garde: 0, visite: 0 }))}
+              invoices={data.invoices}
+              walletBalance={data.walletBalance}
+            />
+          </div>
+        )}
+
+        {tab === "profil" && (
+          <div className="pb-32">
+            <OwnerProfileComplete
+              profile={ownerProfile}
+              onUpdate={(p) => handleUpdateProfile(p)}
+              onLogout={handleLogout}
+            />
+          </div>
+        )}
+      </motion.div>
+
+      <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-[#EFEAE0] z-50 pb-[env(safe-area-inset-bottom)]">
+        <div className="max-w-lg mx-auto flex items-center justify-around h-16">
+          {items.map((it) => {
+            const Icon = it.icon;
+            const active = tab === it.key;
+            return (
+              <motion.button
+                key={it.key}
+                onClick={() => setTab(it.key)}
+                whileTap={{ scale: 0.95 }}
+                className={`flex flex-col items-center justify-center gap-1 w-16 py-1 rounded-lg transition-colors ${
+                  active ? "text-[#1DB584]" : "text-[#8A8A99]"
+                }`}
+              >
+                <Icon size={20} strokeWidth={active ? 2.5 : 2} />
+                <span className="text-[10px] font-bold">{it.label}</span>
+              </motion.button>
+            );
+          })}
+        </div>
+      </nav>
+    </div>
+  );
+};
+
+export default OwnerDashboardV3;
