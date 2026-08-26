@@ -29,3 +29,6 @@
 - [x] Purger les promesses résiduelles des pages publiques de zones, d’aperçu de tableaux de bord, de messagerie, d’exports et de métadonnées de réservation.
 - [x] Revoir les libellés utilisateurs d’Accompagnateur « certifié » dans les parcours contrôlés, sans masquer les états de vérification réellement administrés.
 - [x] Archiver et préparer la livraison des accès QA, sources et rapports de cette vague.
+- [ ] Vérifier la branche locale, la cible GitHub et les fichiers qui seraient transférés.
+- [ ] Créer le commit de synchronisation puis effectuer le push forcé autorisé vers le dépôt GitHub sélectionné.
+- [ ] Vérifier le commit et l’arbre de travail distants après transfert.
