@@ -34,13 +34,15 @@ Une recette transactionnelle annulée a validé l’upload et la lecture Accompa
 
 Les écrans historiques inaccessibles contenant des portefeuilles, gains, factures et paiements ont été retirés, ainsi que le service de génération de facture qui n’était plus importé par un parcours actif. Les routes principales utilisaient déjà les tableaux factuels de la vague 009.
 
-La CI GitHub a échoué lors de sa première exécution parce que `actions/setup-node` cherchait le cache pnpm avant que pnpm ne soit installé. L’ordre des deux étapes a été corrigé : pnpm est préparé avant Node et sa mise en cache. Le prochain push déclenchera donc le contrôle réel `installation verrouillée → typecheck → lint → build → audit`.
+La CI GitHub a échoué lors de sa première exécution parce que `actions/setup-node` cherchait le cache pnpm avant que pnpm ne soit installé. L’ordre des deux étapes a été corrigé : pnpm est préparé avant Node et sa mise en cache. La CI suivante a réussi intégralement sur le checkpoint `98062750` : `installation verrouillée → typecheck → lint → build → audit`.
+
+La branche `main` est désormais protégée. Elle exige ce statut CI à jour, une approbation de revue, un historique linéaire et la résolution des conversations ; les suppressions et push forcés sont interdits. L’administrateur du dépôt conserve un contournement d’urgence explicite (`enforce_admins: false`) afin de ne pas bloquer la récupération du projet en cas d’incident critique.
 
 ## Restes à valider
 
 | Sujet | Action nécessaire |
 |---|---|
-| Protection GitHub | Attendre la CI corrigée et réussie, puis imposer son statut sur `main`, les revues et l’interdiction des push forcés. |
+| Protection GitHub | Configurée : CI à jour obligatoire, une revue, historique linéaire, conversations résolues, suppression et push forcé interdits. Vérifier périodiquement les accès administrateur. |
 | Photos publiques | Décider et documenter si avatars et photos d’animaux peuvent être accessibles par URL publique ; sinon planifier une migration vers URL signées et mises à jour UI. |
 | Auth Supabase | Confirmer le domaine final, les URL de redirection et activer la protection contre les mots de passe compromis si le plan le permet. |
 | Outils | Programmer une mise à jour compatible de `react-helmet-async` et des dépendances Nitro signalées par le contrôle de pairs. |
