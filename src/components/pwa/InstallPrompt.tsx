@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { X, Download, Smartphone, Bell, Wifi, WifiOff } from "lucide-react";
+import { X, Download, Smartphone, Wifi, WifiOff } from "lucide-react";
 import { usePWA } from "@/hooks/usePWA";
 import { getSafeLocalStorage } from "@/lib/safeStorage";
 
@@ -56,10 +56,7 @@ export const InstallPrompt: React.FC = () => {
   const handleInstall = async () => {
     try {
       const success = await installApp();
-      if (success) {
-        // Ask for notification permission after install
-        await requestPushPermission();
-      }
+      if (success) return;
     } catch {
       // Swallow any unexpected browser permission errors in sandboxed contexts.
     }
@@ -118,7 +115,7 @@ export const InstallPrompt: React.FC = () => {
                 Installer DogWalking
               </h3>
               <p className="text-xs text-muted-foreground mb-3">
-                Accès rapide, notifications et fonctionnement hors ligne.
+                  Accès rapide et fonctionnement hors ligne.
               </p>
 
               <div className="flex flex-wrap gap-2">
@@ -143,10 +140,6 @@ export const InstallPrompt: React.FC = () => {
 
           {/* Features */}
           <div className="flex items-center gap-4 mt-4 pt-3 border-t text-xs text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <Bell className="h-3.5 w-3.5" />
-              <span>Notifications</span>
-            </div>
             <div className="flex items-center gap-1">
               <Wifi className="h-3.5 w-3.5" />
               <span>Mode hors ligne</span>

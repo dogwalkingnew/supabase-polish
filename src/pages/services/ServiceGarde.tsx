@@ -1,415 +1,59 @@
+/**
+ * DogWalking — page Garde factuelle : informer et préparer la demande sans avis,
+ * disponibilité, garantie, paiement, statistique ou prestation non confirmés.
+ */
 import { Header } from "@/components/ui/header";
-import { TrustBadges } from "@/components/ui/trust-badges";
 import { Footer } from "@/components/ui/footer";
 import { SEOHead } from "@/components/ui/seo-head";
 import { SEOFAQ } from "@/components/ui/seo-faq";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ClientReviews } from "@/components/ui/client-reviews";
-import { CaseStudies } from "@/components/ui/case-studies";
-import { getReviewsByService, getCaseStudiesByService } from "@/data/clientReviewsData";
 import { ServiceHero } from "@/components/ui/service-hero";
-import { 
-  Home, Clock, Shield, Camera, Moon, Sun, Heart, Star, 
-  CheckCircle, ArrowRight, Users, Calendar, Award, Bed
-} from "lucide-react";
+import { ArrowRight, CalendarDays, Home, MapPin, MessageCircle, PawPrint, Search, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import serviceGardeImg from "@/assets/service-garde.jpg";
 
-// Données pour reviews et case studies
-const reviews = getReviewsByService("garde");
-const caseStudies = getCaseStudiesByService("garde");
-
 const gardeFAQs = [
-  {
-    question: "Quelle est la différence entre garde à domicile et hébergement ?",
-    answer: "La garde à domicile signifie que le Accompagnateur vient chez vous et dort dans votre maison avec votre chien. L'hébergement implique que votre chien séjourne chez le Accompagnateur, dans son environnement familial. Les deux options incluent les mêmes garanties de sécurité et preuves photo."
-  },
-  {
-    question: "Comment se passe la première rencontre avec le Accompagnateur ?",
-    answer: "Nous recommandons fortement une rencontre préalable gratuite entre le Accompagnateur, vous et votre chien. Cela permet de vérifier la compatibilité, de partager les habitudes de votre animal et de visiter le lieu d'hébergement si applicable. Cette rencontre peut être organisée via la messagerie de la plateforme."
-  },
-  {
-    question: "Mon chien peut-il être gardé avec d'autres animaux ?",
-    answer: "Chaque Accompagnateur indique sur son profil s'il accueille d'autres animaux simultanément. Si votre chien n'est pas sociable avec ses congénères, privilégiez les gardiens qui proposent des séjours exclusifs. Vous pouvez filtrer les profils selon ce critère."
-  },
-  {
-    question: "Que se passe-t-il en cas d'urgence médicale pendant la garde ?",
-    answer: "Chaque Accompagnateur dispose de vos coordonnées et celles de votre vétérinaire. En cas d'urgence, il contacte immédiatement les services vétérinaires et vous prévient. Les frais d'urgence sont à votre charge, mais notre équipe intervient immédiatement pour vous accompagner."
-  },
-  {
-    question: "Puis-je avoir des nouvelles de mon chien pendant la garde ?",
-    answer: "Absolument ! Les Accompagnateurs envoient obligatoirement des photos et vidéos quotidiennes via notre plateforme. Vous pouvez également échanger avec eux via la messagerie sécurisée pour prendre des nouvelles ou donner des instructions."
-  },
-  {
-    question: "Quels objets dois-je fournir pour la garde ?",
-    answer: "Nous recommandons d'apporter : la nourriture habituelle de votre chien, ses médicaments si nécessaire, son panier ou couverture préférée, un jouet familier, et le carnet de santé à jour. Ces éléments rassurent votre compagnon et facilitent son adaptation."
-  }
+  { question: "Comment préparer une demande de garde ?", answer: "Indiquez les dates souhaitées, les besoins de l’animal et votre ville ou zone. Consultez ensuite les profils qui renseignent ce type de service et échangez avant de confirmer." },
+  { question: "La garde se déroule-t-elle au domicile ou chez l’Accompagnateur ?", answer: "Le lieu dépend du service renseigné par l’Accompagnateur et de ce que vous convenez ensemble. Vérifiez le lieu, les conditions d’accueil et les accès avant toute mission." },
+  { question: "Les prix et le règlement sont-ils intégrés à DogWalking ?", answer: "Le paiement en ligne n’est pas disponible. Le prix et le moyen de règlement doivent être convenus directement entre les personnes concernées avant la mission." },
+  { question: "Quelles informations faut-il confirmer avant la garde ?", answer: "Confirmez notamment les dates, les horaires, le lieu, les habitudes de l’animal, les consignes utiles et les coordonnées nécessaires." },
 ];
+
+const serviceJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Demande de garde d’animal",
+  description: "Mise en relation pour organiser une demande de garde avec des Accompagnateurs dont les informations de service sont renseignées dans DogWalking.",
+  provider: { "@type": "Organization", name: "DogWalking" },
+};
 
 const ServiceGarde = () => {
   const navigate = useNavigate();
-
-  const serviceJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    "name": "Garde de Chien à Domicile et Hébergement",
-    "description": "Service de garde de chien par des Accompagnateurs professionnels vérifiés. Garde à domicile, hébergement de jour et de nuit. Preuves photo quotidiennes et protection incluse.",
-    "provider": {
-      "@type": "Organization",
-      "name": "DogWalking",
-      "url": "https://dogwalking.fr"
-    },
-    "areaServed": {
-      "@type": "Country",
-      "name": "France"
-    },
-    
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": "Options de garde",
-      "itemListElement": [
-        { "@type": "Offer", "name": "Garde de chien", "priceCurrency": "EUR" }
-      ]
-    }
-  };
-
   return (
     <div className="min-h-dvh bg-background">
-      <SEOHead
-        title="Garde de Chien à domicile ou chez gardien"
-        description="Garde de chien par des Accompagnateurs vérifiés. À domicile ou en hébergement. Preuves photo et protection incluses."
-        keywords="garde chien, garde multi-animaux, hébergement chien, pension chien, garde à domicile, gardien chien, pension canine france"
-        canonicalUrl="https://dogwalking.fr/services/garde"
-        structuredData={serviceJsonLd}
-        ogImage={serviceGardeImg}
-      />
+      <SEOHead title="Garde d’animal | DogWalking" description="Préparez une demande de garde et consultez les profils qui renseignent leurs services dans votre zone." keywords="garde animal, garde chien, demande de garde, accompagnateur" canonicalUrl="https://dogwalking.fr/services/garde" structuredData={serviceJsonLd} ogImage={serviceGardeImg} />
       <Header />
-      
       <main>
-        <ServiceHero
-          backgroundImage={serviceGardeImg}
-          badgeIcon={Home}
-          badgeText="Alternative aux pensions classiques"
-          title={<>Garde de Chien par des <span className="text-gradient">Accompagnateurs Vérifiés</span></>}
-          description="Confiez votre compagnon à des gardiens passionnés et certifiés. Garde à domicile ou hébergement en environnement familial, avec suivi quotidien et protection complète."
-          ctaText="Trouver une garde pour mes dates"
-          ctaLink="/walkers?service=garde"
-          imageAlt="Accompagnateur Certifié prenant soin d'un chien heureux dans un salon confortable"
-          trustIndicators={[
-            { icon: Shield, text: "Gardiens vérifiés" },
-            { icon: Camera, text: "Photos quotidiennes" },
-            { icon: Heart, text: "Env. familial" },
-          ]}
-          statBadge={{ icon: Bed, value: "50 000+", label: "Nuits de garde" }}
-        />
+        <ServiceHero backgroundImage={serviceGardeImg} badgeIcon={Home} badgeText="Organiser une garde" title={<>Garde d’animal, <span className="text-gradient">à organiser ensemble</span></>} description="Décrivez les besoins de votre animal, consultez les profils et convenez des modalités avec l’Accompagnateur avant la mission." ctaText="Consulter les profils" ctaLink="/walkers?service=garde" secondaryCtaText="Déposer une annonce de garde" secondaryCtaLink="/annonces-libres" imageAlt="Personne avec un chien dans un intérieur" trustIndicators={[{ icon: Search, text: "Profils à consulter" }, { icon: CalendarDays, text: "Dates à confirmer" }, { icon: MessageCircle, text: "Modalités à convenir" }]} />
 
-        {/* Types de garde */}
-        <section className="py-16 bg-muted/30">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Les Formules de Garde Adaptées à Votre Situation
-              </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Choisissez la formule qui correspond le mieux aux besoins de votre compagnon.
-              </p>
-            </div>
+        <section className="py-16 md:py-20 bg-muted/30"><div className="container mx-auto px-4"><div className="max-w-2xl mx-auto text-center mb-12"><Badge className="mb-4 bg-primary/10 text-primary border-primary/20">Préparer une demande</Badge><h2 className="text-3xl md:text-4xl font-bold mb-4">Les informations à préciser pour une garde</h2><p className="text-base md:text-lg text-muted-foreground">Les conditions dépendent du profil choisi et de l’accord entre les participants.</p></div><div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto"><InfoCard icon={CalendarDays} title="Dates et horaires" text="Précisez la période souhaitée ainsi que les horaires à discuter." /><InfoCard icon={PawPrint} title="Besoins de l’animal" text="Partagez les habitudes, consignes et contraintes utiles." /><InfoCard icon={MapPin} title="Lieu et accès" text="Déterminez le lieu de garde et les informations pratiques nécessaires." /></div></div></section>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              <Card className="border-2 hover:border-primary/50 transition-all hover:shadow-lg">
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Sun className="h-8 w-8 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">Garderie de Jour</h3>
-                  <p className="text-sm text-muted-foreground mb-4">Journée complète</p>
-                  <ul className="text-sm text-left space-y-2 mb-6">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      Journée complète chez le gardien
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      Activités et promenades incluses
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      Socialisation avec autres chiens
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      Photos tout au long de la journée
-                    </li>
-                  </ul>
-                  <Button className="w-full" onClick={() => navigate("/walkers?service=hebergement_jour")}>
-                    Réserver
-                  </Button>
-                </CardContent>
-              </Card>
+        <section className="relative overflow-hidden py-16"><div aria-hidden="true" className="dogwalking-route absolute -right-10 top-3 rotate-[-7deg]" /><div className="container mx-auto px-4"><div className="text-center mb-12"><h2 className="text-3xl md:text-4xl font-bold mb-4">Organiser une garde en trois étapes</h2><p className="text-lg text-muted-foreground max-w-2xl mx-auto">Un parcours de mise en relation, sans disponibilité ni paiement garantis par la plateforme.</p></div><div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto"><Step number="1" title="Consultez" text="Recherchez les profils et informations de service disponibles." /><Step number="2" title="Décrivez" text="Présentez votre besoin, vos dates et les consignes de l’animal." /><Step number="3" title="Confirmez" text="Convenez du lieu, du prix, du règlement et des conditions avant la mission." /></div><div className="text-center mt-12"><Button size="lg" onClick={() => navigate("/walkers?service=garde")}>Voir les Accompagnateurs <ArrowRight className="ml-2 h-5 w-5" /></Button></div></div></section>
 
-              <Card className="border-2 border-primary hover:shadow-xl transition-all relative">
-                <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">Populaire</Badge>
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Moon className="h-8 w-8 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">Hébergement Nuit</h3>
-                  <p className="text-sm text-muted-foreground mb-4">Nuit complète</p>
-                  <ul className="text-sm text-left space-y-2 mb-6">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      Nuit chez le gardien
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      Environnement familial sécurisé
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      Promenades et jeux inclus
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      Attention personnalisée 24h
-                    </li>
-                  </ul>
-                  <Button className="w-full" onClick={() => navigate("/walkers?service=hebergement_nuit")}>
-                    Réserver
-                  </Button>
-                </CardContent>
-              </Card>
+        <section className="py-16 bg-muted/30"><div className="container mx-auto px-4"><div className="grid lg:grid-cols-2 gap-10 items-center max-w-5xl mx-auto"><div><h2 className="text-3xl md:text-4xl font-bold mb-6">Avant de confirmer la mission</h2><p className="text-lg text-muted-foreground mb-7">Prenez le temps d’échanger avec l’Accompagnateur choisi. La plateforme ne garantit ni l’acceptation, ni la disponibilité, ni les conditions particulières d’une garde.</p></div><Card className="border"><CardContent className="p-7"><h3 className="text-2xl font-bold mb-4">Points à convenir</h3><ul className="space-y-3 text-muted-foreground"><ListItem text="Période, horaires et lieu de garde" /><ListItem text="Besoins, habitudes et consignes de l’animal" /><ListItem text="Prix et moyen de règlement hors plateforme" /><ListItem text="Coordonnées et modalités pratiques" /></ul></CardContent></Card></div></div></section>
 
-              <Card className="border-2 hover:border-primary/50 transition-all hover:shadow-lg">
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Home className="h-8 w-8 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">Garde à Domicile</h3>
-                  <p className="text-sm text-muted-foreground mb-4">Garde à votre domicile</p>
-                  <ul className="text-sm text-left space-y-2 mb-6">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      Le gardien dort chez vous
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      Votre chien reste dans son environnement
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      Routine habituelle préservée
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      Surveillance maison incluse
-                    </li>
-                  </ul>
-                  <Button className="w-full" onClick={() => navigate("/walkers?service=garde_domicile")}>
-                    Réserver
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-        {/* Pourquoi choisir DogWalking */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Pourquoi Choisir DogWalking Plutôt qu'une Pension Traditionnelle ?
-              </h2>
-              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-                Les pensions classiques peuvent être stressantes pour votre chien : environnement impersonnel, 
-                nombreux animaux, box individuel. Nos Accompagnateurs offrent une alternative humaine et chaleureuse.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-              <div className="bg-red-50 dark:bg-red-950/20 p-6 rounded-2xl border border-red-200 dark:border-red-900">
-                <h3 className="text-xl font-bold mb-4 text-red-700 dark:text-red-400">❌ Pension Traditionnelle</h3>
-                <ul className="space-y-3 text-sm">
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Environnement de box, souvent bruyant et stressant</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Nombreux chiens, risque sanitaire accru</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Personnel partagé entre de nombreux animaux</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Horaires fixes, peu de flexibilité</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Peu de nouvelles pendant le séjour</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="bg-green-50 dark:bg-green-950/20 p-6 rounded-2xl border border-green-200 dark:border-green-900">
-                <h3 className="text-xl font-bold mb-4 text-green-700 dark:text-green-400">✓ DogWalking</h3>
-                <ul className="space-y-3 text-sm">
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
-                    <span>Environnement familial, chaleureux et rassurant</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
-                    <span>Peu d'animaux, attention personnalisée</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
-                    <span>Un gardien dédié qui connaît votre chien</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
-                    <span>Flexibilité totale sur les horaires</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
-                    <span>Photos et vidéos quotidiennes obligatoires</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Bloc garanties retiré : redondant avec le protocole 5 points de la home */}
-
-        {/* Témoignages */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Ils Nous Font Confiance pour la Garde de Leur Chien
-              </h2>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-1 mb-4">
-                    {[1,2,3,4,5].map(i => <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />)}
-                  </div>
-                  <p className="italic mb-4">
-                    "Nous avons fait garder Luna pendant 2 semaines. Elle a été chouchoutée comme une reine ! 
-                    Les photos quotidiennes nous ont vraiment rassurés."
-                  </p>
-                  <p className="text-sm text-muted-foreground">— Sophie M., Marseille</p>
-                </CardContent>
-              </Card>
-
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-1 mb-4">
-                    {[1,2,3,4,5].map(i => <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />)}
-                  </div>
-                  <p className="italic mb-4">
-                    "Notre boxer anxieux a parfaitement été pris en charge. Le gardien a su le rassurer 
-                    et respecter ses habitudes. Merci infiniment !"
-                  </p>
-                  <p className="text-sm text-muted-foreground">— Pierre L., Toulouse</p>
-                </CardContent>
-              </Card>
-
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-1 mb-4">
-                    {[1,2,3,4,5].map(i => <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />)}
-                  </div>
-                  <p className="italic mb-4">
-                    "La garde à domicile était parfaite. Notre chien est resté dans ses repères 
-                    et la gardienne a même arrosé nos plantes !"
-                  </p>
-                  <p className="text-sm text-muted-foreground">— Marie & Jean D., Nantes</p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-
-        {/* Section Preuves de Confiance (E-E-A-T) */}
-        <section className="py-16 md:py-20 bg-muted/30">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                La Sécurité au Cœur de Chaque Garde
-              </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Des mesures de protection concrètes pour la garde de votre animal.
-              </p>
-            </div>
-            <TrustBadges />
-          </div>
-        </section>
-
-        {/* FAQ */}
-        <SEOFAQ 
-          title="Questions Fréquentes sur la Garde de Chien"
-          subtitle="Tout savoir avant de confier votre compagnon"
-          faqs={gardeFAQs}
-          className="bg-muted/30"
-        />
-
-        {/* CTA Final */}
-        <section className="py-16 bg-primary text-primary-foreground">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Partez l'Esprit Tranquille avec DogWalking
-            </h2>
-            <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-              Vacances, déplacements professionnels, imprévus... Trouvez le gardien idéal pour votre compagnon.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button 
-                size="lg" 
-                variant="secondary"
-                onClick={() => navigate("/walkers?service=garde")}
-              >
-                Trouver un gardien
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-                onClick={() => navigate("/walker/register")}
-              >
-                Devenir Accompagnateur
-              </Button>
-            </div>
-          </div>
-        </section>
+        <SEOFAQ title="Questions fréquentes sur la garde" subtitle="Les éléments à vérifier avant de déposer une demande." faqs={gardeFAQs} className="bg-background" />
+        <section className="py-16 bg-primary text-primary-foreground"><div className="container mx-auto px-4 text-center"><h2 className="text-3xl md:text-4xl font-bold mb-4">Préparer une demande de garde</h2><p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">Consultez les profils et échangez sur les conditions adaptées à votre situation.</p><div className="flex flex-wrap justify-center gap-4"><Button size="lg" variant="secondary" onClick={() => navigate("/walkers?service=garde")}>Trouver un Accompagnateur <ArrowRight className="ml-2 h-5 w-5" /></Button><Button size="lg" variant="outline" className="border-primary-foreground bg-primary-foreground text-primary hover:bg-primary-foreground/90 hover:text-primary" onClick={() => navigate("/walker/register")}>Proposer mes services</Button></div></div></section>
       </main>
-        {/* Client Reviews Section */}
-        <section className="py-12 bg-muted/30">
-          <div className="container mx-auto px-4">
-            <ClientReviews reviews={reviews} />
-          </div>
-        </section>
-
-        {/* Case Studies Section */}
-        <section className="py-12">
-          <div className="container mx-auto px-4">
-            <CaseStudies studies={caseStudies} />
-          </div>
-        </section>
-
-
       <Footer />
     </div>
   );
 };
+
+const InfoCard = ({ icon: Icon, title, text }: { icon: typeof Home; title: string; text: string }) => <Card className="border-2 hover:border-primary/50 transition-colors text-center"><CardContent className="p-6"><span className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 mx-auto"><Icon className="h-6 w-6 text-primary" /></span><h3 className="text-xl font-bold mb-2">{title}</h3><p className="text-muted-foreground text-sm">{text}</p></CardContent></Card>;
+const Step = ({ number, title, text }: { number: string; title: string; text: string }) => <div className="text-center"><span className="w-16 h-16 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4">{number}</span><h3 className="text-xl font-bold mb-2">{title}</h3><p className="text-muted-foreground">{text}</p></div>;
+const ListItem = ({ text }: { text: string }) => <li className="flex gap-2"><ShieldCheck className="h-5 w-5 text-primary shrink-0" />{text}</li>;
 
 export default ServiceGarde;

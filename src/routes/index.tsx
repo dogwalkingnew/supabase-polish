@@ -4,13 +4,13 @@ import { LegacyApp } from "@/legacy-app";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "DogWalking — Promenade & garde de chiens vérifiées en France" },
+      { title: "DogWalking — Demandes de promenade et garde" },
       {
         name: "description",
         content:
           "Trouvez un promeneur ou pet-sitter près de chez vous. Organisez votre demande et suivez les informations partagées pendant la mission.",
       },
-      { property: "og:title", content: "DogWalking — Promenade & garde de chiens vérifiées" },
+      { property: "og:title", content: "DogWalking — Demandes de promenade et garde" },
       {
         property: "og:description",
         content:

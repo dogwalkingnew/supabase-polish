@@ -39,3 +39,5 @@ Avant toute modification d’interface, vérifier : **« Cette correction renfor
 - Le vert forêt DogWalking est l’unique couleur d’action et de sélection ; le menthe soutient les états doux, le sable et le blanc chaud portent les surfaces, et le bleu reste réservé aux informations réellement sémantiques.
 - Les pages publiques alternent photographie de promenade, panneaux éditoriaux sable et cartes utiles aérées ; elles évitent l’accumulation de blocs SaaS centrés et répétitifs.
 - Une ligne de parcours organique, inspirée d’un itinéraire de promenade, sert de motif de marque discret dans les sections éditoriales et opérationnelles ; elle ne doit pas devenir un décor dominant.
+- Chaque page de service associe son héros à un panneau pratique propre au besoin présenté ; elle ne se limite pas à une succession générique de cartes, d’étapes, de FAQ et de bandeau d’action.
+- Tout CTA nomme le prochain geste dans DogWalking, par exemple « Consulter les profils », « Trouver un Accompagnateur » ou « Déposer une annonce » ; une action secondaire vague ou illisible est interdite.

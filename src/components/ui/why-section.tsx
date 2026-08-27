@@ -68,7 +68,7 @@ export const WhySection = () => {
   ];
 
   return (
-    <section id="pourquoi" className="py-16 md:py-24 px-4 bg-gradient-to-b from-muted/50 via-background to-background relative overflow-hidden">
+    <section id="pourquoi" className="py-12 md:py-16 px-4 bg-gradient-to-b from-muted/50 via-background to-background relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute top-20 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl" />
@@ -80,7 +80,7 @@ export const WhySection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12 md:mb-16"
+          className="text-center mb-10 md:mb-12"
         >
           <motion.span 
             initial={{ opacity: 0, scale: 0.9 }}
@@ -105,7 +105,7 @@ export const WhySection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="grid grid-cols-3 gap-3 md:gap-6 mb-12 md:mb-16 max-w-4xl mx-auto"
+          className="grid grid-cols-3 gap-3 md:gap-6 mb-10 md:mb-12 max-w-4xl mx-auto"
         >
           {[servicePromenade, serviceGarde, serviceVisite].map((img, idx) => (
             <motion.div

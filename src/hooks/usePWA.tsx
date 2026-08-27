@@ -9,7 +9,7 @@ interface BeforeInstallPromptEvent extends Event {
 export const usePWA = () => {
   const [isInstallable, setIsInstallable] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isOnline, setIsOnline] = useState(() => typeof navigator === "undefined" || navigator.onLine);
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [pushSubscription, setPushSubscription] = useState<PushSubscription | null>(null);
 
@@ -121,8 +121,12 @@ export const usePWA = () => {
       return null;
     }
 
-    const shouldDisableInEditorPreview =
-      !import.meta.env.PROD || window.location.hostname.endsWith("lovableproject.com");
+    const hostname = window.location.hostname.toLowerCase();
+    const isLovableDeployment =
+      hostname === "lovable.app" ||
+      hostname.endsWith(".lovable.app") ||
+      hostname.endsWith("lovableproject.com");
+    const shouldDisableInEditorPreview = !import.meta.env.PROD || isLovableDeployment;
 
     if (shouldDisableInEditorPreview) {
       try {

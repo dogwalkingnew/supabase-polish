@@ -1,3 +1,4 @@
+/** DogWalking — héros de service : image chaleureuse, contraste fort, actions concrètes et motif de parcours discret. */
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
@@ -39,8 +40,8 @@ export const ServiceHero = ({
   description,
   ctaText,
   ctaLink,
-  secondaryCtaText = "Voir les tarifs",
-  secondaryCtaLink = "/tarifs",
+  secondaryCtaText = "Déposer une annonce",
+  secondaryCtaLink = "/annonces-libres",
   trustIndicators,
   statBadge,
   imageAlt,
@@ -61,7 +62,7 @@ export const ServiceHero = ({
   };
 
   return (
-    <section className="relative min-h-[70vh] md:min-h-[80vh] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[68vh] md:min-h-[74vh] flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -70,6 +71,10 @@ export const ServiceHero = ({
         aria-label={imageAlt}
       >
         <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/55 to-black/35" />
+      </div>
+
+      <div aria-hidden="true" className="absolute bottom-6 left-1/2 z-[1] w-[min(82vw,680px)] -translate-x-1/2 opacity-60">
+        <svg viewBox="0 0 680 52" fill="none" className="h-auto w-full"><path d="M4 35C110 5 142 54 246 29C350 4 400 46 504 22C572 7 616 19 676 8" stroke="rgba(255,255,255,.72)" strokeWidth="1.5" strokeDasharray="4 9" strokeLinecap="round" /><circle cx="4" cy="35" r="3" fill="rgba(255,255,255,.85)" /><circle cx="676" cy="8" r="3" fill="rgba(255,255,255,.85)" /></svg>
       </div>
 
       {/* Content */}

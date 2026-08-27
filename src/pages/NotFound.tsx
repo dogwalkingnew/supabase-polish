@@ -1,5 +1,4 @@
 import { useLocation, Link } from "react-router-dom";
-import { useEffect } from "react";
 import { Header } from "@/components/ui/header";
 import { Footer } from "@/components/ui/footer";
 import { Button } from "@/components/ui/button";
@@ -7,11 +6,7 @@ import { Home, Search, ArrowLeft, Dog } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 
 const NotFound = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
-  }, [location.pathname]);
+  useLocation();
 
   return (
     <div className="min-h-dvh bg-background flex flex-col">

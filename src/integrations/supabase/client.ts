@@ -29,23 +29,22 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
 
 
 function createSupabaseClient() {
-  // Les valeurs de prévisualisation ne sont admises qu'en développement. Toute construction
-  // de production doit déclarer ses variables, sans URL ni clé intégrée au bundle.
-  const previewDefaults = import.meta.env.DEV
-    ? {
-        url: "https://aqitjhaotpautjywoeys.supabase.co",
-        publishableKey: "sb_publishable_6IBm8ZjwBOIlPq2GmDTBbw_PaywttiK",
-      }
-    : { url: undefined, publishableKey: undefined };
+  // Une URL de projet et une clé `sb_publishable_*` sont prévues pour les navigateurs.
+  // Ce repli documenté garantit le fonctionnement des hébergeurs qui n’injectent pas
+  // VITE_* (notamment Lovable) ; il ne contient ni clé `sb_secret_*` ni service_role.
+  const publicProjectDefaults = {
+    url: "https://aqitjhaotpautjywoeys.supabase.co",
+    publishableKey: "sb_publishable_6IBm8ZjwBOIlPq2GmDTBbw_PaywttiK",
+  };
 
   const SUPABASE_URL =
     import.meta.env['VITE_SUPABASE_URL'] ||
     process.env['SUPABASE_URL'] ||
-    previewDefaults.url;
+    publicProjectDefaults.url;
   const SUPABASE_PUBLISHABLE_KEY =
     import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY'] ||
     process.env['SUPABASE_PUBLISHABLE_KEY'] ||
-    previewDefaults.publishableKey;
+    publicProjectDefaults.publishableKey;
 
   if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
     const missing = [

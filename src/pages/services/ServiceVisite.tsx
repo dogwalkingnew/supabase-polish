@@ -1,500 +1,53 @@
+/**
+ * DogWalking — page Visite factuelle : les actions présentées sont à définir entre
+ * les participants ; aucun soin, suivi ou résultat n’est garanti par la plateforme.
+ */
 import { Header } from "@/components/ui/header";
-import { TrustBadges } from "@/components/ui/trust-badges";
 import { Footer } from "@/components/ui/footer";
 import { SEOHead } from "@/components/ui/seo-head";
 import { SEOFAQ } from "@/components/ui/seo-faq";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ClientReviews } from "@/components/ui/client-reviews";
-import { CaseStudies } from "@/components/ui/case-studies";
-import { getReviewsByService, getCaseStudiesByService } from "@/data/clientReviewsData";
 import { ServiceHero } from "@/components/ui/service-hero";
-import { 
-  Home, Clock, Shield, Camera, Heart, Star, 
-  CheckCircle, ArrowRight, Droplet, UtensilsCrossed, Stethoscope, Award
-} from "lucide-react";
+import { ArrowRight, CalendarDays, ClipboardList, Home, MapPin, MessageCircle, Search, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import serviceVisiteImg from "@/assets/service-visite.jpg";
 
-// Données pour reviews et case studies
-const reviews = getReviewsByService("visite");
-const caseStudies = getCaseStudiesByService("visite");
-
 const visiteFAQs = [
-  {
-    question: "Que comprend une visite à domicile pour mon chien ?",
-    answer: "Une visite standard de 30 minutes comprend : le nourrissage avec la nourriture que vous fournissez, le renouvellement de l'eau fraîche, une sortie hygiénique dans le jardin ou à proximité, des câlins et du temps de jeu, et l'envoi de photos/vidéos comme preuve. Vous pouvez personnaliser le contenu selon vos besoins."
-  },
-  {
-    question: "Le Accompagnateur peut-il administrer des médicaments à mon chien ?",
-    answer: "Oui, la plupart de nos Accompagnateurs peuvent administrer des médicaments simples (comprimés, gouttes) selon vos instructions. Précisez les besoins médicaux lors de la réservation et discutez-en avec l'Accompagnateur avant la première visite. Pour les traitements complexes, choisissez un visiteur avec expérience médicale."
-  },
-  {
-    question: "Combien de fois par jour puis-je faire venir le Accompagnateur ?",
-    answer: "Vous pouvez réserver autant de visites que nécessaire : 1, 2, 3 visites par jour ou plus. L'idéal pour un chien adulte est 2 à 3 visites espacées dans la journée. Pour un chiot, prévoyez des visites plus rapprochées toutes les 3-4 heures."
-  },
-  {
-    question: "Le Accompagnateur peut-il s'occuper aussi de mes chats ou autres animaux ?",
-    answer: "Absolument ! De nombreux visiteurs s'occupent également des chats, oiseaux, poissons, rongeurs et reptiles. Indiquez tous vos animaux lors de la réservation. Le tarif peut être légèrement ajusté si plusieurs animaux nécessitent des soins spécifiques."
-  },
-  {
-    question: "Comment le Accompagnateur entre-t-il chez moi ?",
-    answer: "Plusieurs options : vous pouvez laisser un double de clés à l'Accompagnateur, utiliser un boîtier à code à l'extérieur de chez vous, ou donner un code de digicode/serrure connectée. La remise des clés se fait généralement lors d'une rencontre préalable."
-  },
-  {
-    question: "Que se passe-t-il si le Accompagnateur constate un problème chez moi ?",
-    answer: "L'Accompagnateur vous contacte immédiatement en cas de problème : fuite d'eau, porte mal fermée, animal qui semble malade. C'est un service de surveillance bonus de votre domicile. Nos visiteurs sont formés pour être vigilants et réactifs."
-  }
+  { question: "Comment demander une visite à domicile ?", answer: "Décrivez le besoin, la ville ou zone, le créneau souhaité et les consignes pertinentes. Consultez les profils puis convenez des modalités avec l’Accompagnateur choisi." },
+  { question: "Quelles actions peuvent être prévues pendant une visite ?", answer: "Les actions dépendent du profil, de l’animal et de l’accord entre les participants. Elles doivent être décrites et confirmées avant la mission." },
+  { question: "Puis-je demander une aide médicale ?", answer: "DogWalking ne fournit pas de soin vétérinaire. Pour toute situation de santé, demandez conseil à un professionnel compétent et ne confirmez une mission que si les compétences et conditions sont clairement établies." },
+  { question: "Comment sont définis le prix et le règlement ?", answer: "Le paiement en ligne n’est pas disponible. Le prix et le moyen de règlement sont à convenir directement entre les personnes concernées avant la mission." },
 ];
+
+const serviceJsonLd = { "@context": "https://schema.org", "@type": "Service", name: "Demande de visite à domicile", description: "Mise en relation pour organiser une demande de visite avec des Accompagnateurs dont les informations de service sont renseignées dans DogWalking.", provider: { "@type": "Organization", name: "DogWalking" } };
 
 const ServiceVisite = () => {
   const navigate = useNavigate();
-
-  const serviceJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    "name": "Visite à Domicile pour Chien et Animaux",
-    "description": "Service de visite à domicile par des Accompagnateurs professionnels vérifiés. Nourriture, eau, câlins et sortie hygiénique pour votre chien pendant votre absence.",
-    "provider": {
-      "@type": "Organization",
-      "name": "DogWalking",
-      "url": "https://dogwalking.fr"
-    },
-    "areaServed": {
-      "@type": "Country",
-      "name": "France"
-    },
-    
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": "Options de visite",
-      "itemListElement": [
-        { "@type": "Offer", "name": "Visite à domicile", "priceCurrency": "EUR" }
-      ]
-    }
-  };
-
   return (
     <div className="min-h-dvh bg-background">
-      <SEOHead
-        title="Visite à Domicile pour votre Chien"
-        description="Nourriture, câlins et sortie pour votre chien à domicile par un Accompagnateur vérifié. Preuves photo incluses."
-        keywords="visite domicile chien, garde multi-animaux maison, nourriture chien, soins animal domicile, garde chat domicile, visite chat, garde animaux maison"
-        canonicalUrl="https://dogwalking.fr/services/visite"
-        structuredData={serviceJsonLd}
-        ogImage={serviceVisiteImg}
-      />
+      <SEOHead title="Visite à domicile | DogWalking" description="Préparez une demande de visite et consultez les profils qui renseignent leurs services dans votre zone." keywords="visite domicile animal, visite chien, demande de visite, accompagnateur" canonicalUrl="https://dogwalking.fr/services/visite" structuredData={serviceJsonLd} ogImage={serviceVisiteImg} />
       <Header />
-      
       <main>
-        <ServiceHero
-          backgroundImage={serviceVisiteImg}
-          badgeIcon={Home}
-          badgeText="Votre animal reste chez lui"
-          title={<>Visite à Domicile pour <span className="text-gradient">Votre Chien</span></>}
-          description="Votre compagnon reste dans son environnement familier pendant que nos Accompagnateurs vérifiés assurent nourriture, eau fraîche, câlins et sortie hygiénique. La solution idéale pour les journées chargées."
-          ctaText="Réserver une visite à domicile"
-          ctaLink="/walkers?service=visite"
-          imageAlt="Accompagnateur Certifié nourrissant un chien heureux à domicile dans un appartement parisien"
-          trustIndicators={[
-            { icon: Clock, text: "30 min de visite" },
-            { icon: Camera, text: "Preuves photo" },
-            { icon: Heart, text: "Câlins inclus" },
-          ]}
-          statBadge={{ icon: UtensilsCrossed, value: "15 000+", label: "Visites par mois" }}
-        />
+        <ServiceHero backgroundImage={serviceVisiteImg} badgeIcon={Home} badgeText="Organiser une visite" title={<>Visite à domicile, <span className="text-gradient">à définir avec l’Accompagnateur</span></>} description="Présentez votre besoin, consultez les profils et échangez sur le contenu et les conditions de la visite avant toute mission." ctaText="Consulter les profils" ctaLink="/walkers?service=visite" secondaryCtaText="Déposer une annonce de visite" secondaryCtaLink="/annonces-libres" imageAlt="Personne avec un chien à domicile" trustIndicators={[{ icon: Search, text: "Profils à consulter" }, { icon: CalendarDays, text: "Créneau à confirmer" }, { icon: MessageCircle, text: "Actions à convenir" }]} />
 
-        {/* Ce qui est inclus */}
-        <section className="py-16 bg-muted/30">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Ce Qui Est Inclus dans Chaque Visite
-              </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Une visite complète pour assurer le bien-être de votre compagnon pendant votre absence.
-              </p>
-            </div>
+        <section className="py-16 md:py-20 bg-muted/30"><div className="container mx-auto px-4"><div className="max-w-2xl mx-auto text-center mb-12"><Badge className="mb-4 bg-primary/10 text-primary border-primary/20">Préparer une visite</Badge><h2 className="text-3xl md:text-4xl font-bold mb-4">Ce qu’il est utile de préciser</h2><p className="text-base md:text-lg text-muted-foreground">Une demande détaillée aide les participants à échanger sur une visite adaptée.</p></div><div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto"><InfoCard icon={ClipboardList} title="Consignes" text="Indiquez les informations utiles pour votre animal et votre domicile." /><InfoCard icon={CalendarDays} title="Créneau" text="Proposez une date, une heure et une durée à confirmer." /><InfoCard icon={MapPin} title="Accès" text="Échangez les modalités pratiques uniquement avec le profil choisi." /></div></div></section>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-              <Card className="border-2 hover:border-primary/50 transition-colors">
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
-                    <UtensilsCrossed className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">Nourriture</h3>
-                  <p className="text-muted-foreground">
-                    Distribution de la nourriture selon vos instructions : quantité, horaires, type d'alimentation. 
-                    Nous respectons le régime alimentaire de votre chien à la lettre.
-                  </p>
-                </CardContent>
-              </Card>
+        <section className="relative overflow-hidden py-16"><div aria-hidden="true" className="dogwalking-route absolute -left-12 top-7 rotate-[8deg]" /><div className="container mx-auto px-4"><div className="text-center mb-12"><h2 className="text-3xl md:text-4xl font-bold mb-4">Un parcours simple en trois étapes</h2><p className="text-lg text-muted-foreground max-w-2xl mx-auto">DogWalking met en relation ; les détails de la mission sont à convenir entre les participants.</p></div><div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto"><Step number="1" title="Recherchez" text="Consultez les profils et services renseignés dans votre zone." /><Step number="2" title="Décrivez" text="Ajoutez votre besoin, vos consignes et votre préférence de créneau." /><Step number="3" title="Confirmez" text="Convenez du contenu, du prix, du règlement et des conditions avant la visite." /></div><div className="text-center mt-12"><Button size="lg" onClick={() => navigate("/walkers?service=visite")}>Voir les Accompagnateurs <ArrowRight className="ml-2 h-5 w-5" /></Button></div></div></section>
 
-              <Card className="border-2 hover:border-primary/50 transition-colors">
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
-                    <Droplet className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">Eau Fraîche</h3>
-                  <p className="text-muted-foreground">
-                    Renouvellement systématique de l'eau de la gamelle. Votre chien a toujours accès 
-                    à une eau propre et fraîche pour rester hydraté.
-                  </p>
-                </CardContent>
-              </Card>
+        <section className="py-16 bg-muted/30"><div className="container mx-auto px-4"><div className="grid lg:grid-cols-2 gap-10 items-center max-w-5xl mx-auto"><div><h2 className="text-3xl md:text-4xl font-bold mb-6">Des modalités claires avant la visite</h2><p className="text-lg text-muted-foreground mb-7">Vérifiez que le profil choisi accepte la demande et qu’il dispose des informations nécessaires. DogWalking ne valide pas la faisabilité ni les compétences particulières d’une personne.</p></div><Card className="border"><CardContent className="p-7"><h3 className="text-2xl font-bold mb-4">Points à confirmer</h3><ul className="space-y-3 text-muted-foreground"><ListItem text="Contenu de la visite et consignes" /><ListItem text="Créneau, durée et conditions d’accès" /><ListItem text="Prix et règlement hors plateforme" /><ListItem text="Contact à joindre en cas de question" /></ul></CardContent></Card></div></div></section>
 
-              <Card className="border-2 hover:border-primary/50 transition-colors">
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
-                    <Heart className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">Câlins & Jeux</h3>
-                  <p className="text-muted-foreground">
-                    Moment de tendresse et de jeu avec votre animal. Nos visiteurs adorent passer du temps 
-                    de qualité avec vos compagnons à quatre pattes.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-2 hover:border-primary/50 transition-colors">
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
-                    <Home className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">Sortie Hygiénique</h3>
-                  <p className="text-muted-foreground">
-                    Petite sortie dans le jardin ou à proximité immédiate pour les besoins. 
-                    Parfait pour les chiens qui ne peuvent pas attendre longtemps.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-2 hover:border-primary/50 transition-colors">
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
-                    <Camera className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">Preuves Photo</h3>
-                  <p className="text-muted-foreground">
-                    Photos et vidéos envoyées après chaque visite pour vous rassurer. 
-                    Vous voyez que tout s'est bien passé et que votre animal va bien.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-2 hover:border-primary/50 transition-colors">
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
-                    <Stethoscope className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">Administration Médicaments</h3>
-                  <p className="text-muted-foreground">
-                    Sur demande, l'Accompagnateur peut administrer les médicaments prescrits 
-                    selon vos instructions précises et le protocole établi.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-        {/* Options de visite */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Deux Niveaux de Service pour Votre Animal
-              </h2>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              <Card className="border-2 hover:border-primary/50 transition-all hover:shadow-lg">
-                <CardContent className="p-8">
-                  <h3 className="text-2xl font-bold mb-2">Visite Standard</h3>
-                  <p className="text-muted-foreground mb-6">30 minutes de présence</p>
-                  <ul className="space-y-3 mb-6">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-primary" />
-                      Nourriture et eau fraîche
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-primary" />
-                      Câlins et temps de jeu
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-primary" />
-                      Sortie hygiénique courte
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-primary" />
-                      Photos/vidéos envoyées
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-primary" />
-                      Chiens ET chats acceptés
-                    </li>
-                  </ul>
-                  <Button className="w-full" size="lg" onClick={() => navigate("/walkers?service=visite_domicile")}>
-                    Réserver une visite
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="border-2 border-primary hover:shadow-xl transition-all relative">
-                <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">Complet</Badge>
-                <CardContent className="p-8">
-                  <h3 className="text-2xl font-bold mb-2">Visite Sanitaire</h3>
-                  <p className="text-muted-foreground mb-6">45 minutes de soins complets</p>
-                  <ul className="space-y-3 mb-6">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-primary" />
-                      Tout le contenu visite standard
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-primary" />
-                      Brossage et soins du pelage
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-primary" />
-                      Nettoyage des yeux/oreilles
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-primary" />
-                      Administration médicaments
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-primary" />
-                      Compte-rendu détaillé
-                    </li>
-                  </ul>
-                  <Button className="w-full" size="lg" onClick={() => navigate("/walkers?service=visite_sanitaire")}>
-                    Réserver cette formule
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-        {/* Idéal pour */}
-        <section className="py-16 bg-muted/30">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                La Visite à Domicile est Idéale Pour...
-              </h2>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-              <Card className="text-center hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="text-4xl mb-4">🏢</div>
-                  <h3 className="font-bold mb-2">Journées de Travail</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Vous travaillez toute la journée ? Une visite à midi permet à votre chien 
-                    de se dégourdir et manger.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="text-center hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="text-4xl mb-4">🐱</div>
-                  <h3 className="font-bold mb-2">Chats & Petits Animaux</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Les chats préfèrent rester chez eux. Une visite quotidienne est parfaite 
-                    pour leur bien-être.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="text-center hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="text-4xl mb-4">🐕‍🦺</div>
-                  <h3 className="font-bold mb-2">Chiens Seniors ou Malades</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Besoin de médicaments réguliers ou de surveillance ? Nos visiteurs 
-                    s'adaptent aux besoins spéciaux.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="text-center hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="text-4xl mb-4">✈️</div>
-                  <h3 className="font-bold mb-2">Courts Déplacements</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Absent 1-2 jours ? Préférez les visites à la garde pour minimiser 
-                    le stress de votre animal.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-        {/* Témoignages */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                  Pourquoi Nos Clients Adorent les Visites à votre Domicile
-                </h2>
-                <div className="space-y-6">
-                  <div className="bg-card p-6 rounded-xl border">
-                    <div className="flex items-center gap-1 mb-2">
-                      {[1,2,3,4,5].map(i => <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />)}
-                    </div>
-                    <p className="italic mb-2">
-                      "Notre chat déteste les voyages. Les visites quotidiennes pendant nos vacances 
-                      sont la solution parfaite. Marion est devenue sa meilleure amie !"
-                    </p>
-                    <p className="text-sm text-muted-foreground">— Claire T., Paris 11e</p>
-                  </div>
-
-                  <div className="bg-card p-6 rounded-xl border">
-                    <div className="flex items-center gap-1 mb-2">
-                      {[1,2,3,4,5].map(i => <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />)}
-                    </div>
-                    <p className="italic mb-2">
-                      "Je travaille souvent 12h par jour. Savoir que quelqu'un passe voir mon chien 
-                      à midi me soulage énormément. Les photos sont toujours adorables."
-                    </p>
-                    <p className="text-sm text-muted-foreground">— Julien M., Lyon 3e</p>
-                  </div>
-
-                  <div className="bg-card p-6 rounded-xl border">
-                    <div className="flex items-center gap-1 mb-2">
-                      {[1,2,3,4,5].map(i => <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />)}
-                    </div>
-                    <p className="italic mb-2">
-                      "Mon vieux labrador a besoin de ses médicaments 2 fois par jour. 
-                      La visiteuse est ponctuelle et très douce avec lui. Service impeccable."
-                    </p>
-                    <p className="text-sm text-muted-foreground">— André D., Bordeaux</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-primary/5 p-8 rounded-2xl border border-primary/20">
-                <h3 className="text-2xl font-bold mb-6">Avantages de la Visite à Domicile</h3>
-                <ul className="space-y-4">
-                  <li className="flex items-start gap-3">
-                    <CheckCircle className="h-6 w-6 text-primary shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-semibold">Pas de stress du transport</p>
-                      <p className="text-sm text-muted-foreground">Votre animal reste dans son environnement familier</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle className="h-6 w-6 text-primary shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-semibold">Routine préservée</p>
-                      <p className="text-sm text-muted-foreground">Mêmes repères, mêmes odeurs, même confort</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle className="h-6 w-6 text-primary shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-semibold">Surveillance de votre domicile</p>
-                      <p className="text-sm text-muted-foreground">L'Accompagnateur vérifie que tout va bien chez vous</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle className="h-6 w-6 text-primary shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-semibold">Économique</p>
-                      <p className="text-sm text-muted-foreground">Moins cher qu'une garde complète pour des absences courtes</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle className="h-6 w-6 text-primary shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-semibold">Flexible</p>
-                      <p className="text-sm text-muted-foreground">1, 2 ou 3 visites par jour selon vos besoins</p>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-
-        {/* Section Preuves de Confiance (E-E-A-T) */}
-        <section className="py-16 md:py-20 bg-muted/30">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Fiabilité et Confiance pour Chaque Visite
-              </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Un cadre sécurisé pour les visites à votre domicile.
-              </p>
-            </div>
-            <TrustBadges />
-          </div>
-        </section>
-
-        {/* FAQ */}
-        <SEOFAQ 
-          title="Questions Fréquentes sur les Visites à votre Domicile"
-          subtitle="Tout ce que vous devez savoir avant de réserver"
-          faqs={visiteFAQs}
-          className="bg-muted/30"
-        />
-
-        {/* CTA Final */}
-        <section className="py-16 bg-primary text-primary-foreground">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Votre Animal Mérite une Attention Quotidienne
-            </h2>
-            <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-              Réservez une visite à domicile et partez l'esprit tranquille. 
-              Nos Accompagnateurs vérifiés prendront soin de votre compagnon.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button 
-                size="lg" 
-                variant="secondary"
-                onClick={() => navigate("/walkers?service=visite")}
-              >
-                Trouver un visiteur
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-                onClick={() => navigate("/walker/register")}
-              >
-                Devenir Accompagnateur
-              </Button>
-            </div>
-          </div>
-        </section>
+        <SEOFAQ title="Questions fréquentes sur les visites" subtitle="Les informations utiles avant de déposer une demande." faqs={visiteFAQs} className="bg-background" />
+        <section className="py-16 bg-primary text-primary-foreground"><div className="container mx-auto px-4 text-center"><h2 className="text-3xl md:text-4xl font-bold mb-4">Préparer une visite pour votre animal</h2><p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">Consultez les profils et échangez sur les conditions adaptées à votre situation.</p><div className="flex flex-wrap justify-center gap-4"><Button size="lg" variant="secondary" onClick={() => navigate("/walkers?service=visite")}>Trouver un Accompagnateur <ArrowRight className="ml-2 h-5 w-5" /></Button><Button size="lg" variant="outline" className="border-primary-foreground bg-primary-foreground text-primary hover:bg-primary-foreground/90 hover:text-primary" onClick={() => navigate("/walker/register")}>Proposer mes services</Button></div></div></section>
       </main>
-        {/* Client Reviews Section */}
-        <section className="py-12 bg-muted/30">
-          <div className="container mx-auto px-4">
-            <ClientReviews reviews={reviews} />
-          </div>
-        </section>
-
-        {/* Case Studies Section */}
-        <section className="py-12">
-          <div className="container mx-auto px-4">
-            <CaseStudies studies={caseStudies} />
-          </div>
-        </section>
-
-
       <Footer />
     </div>
   );
 };
+
+const InfoCard = ({ icon: Icon, title, text }: { icon: typeof Home; title: string; text: string }) => <Card className="border-2 hover:border-primary/50 transition-colors text-center"><CardContent className="p-6"><span className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 mx-auto"><Icon className="h-6 w-6 text-primary" /></span><h3 className="text-xl font-bold mb-2">{title}</h3><p className="text-muted-foreground text-sm">{text}</p></CardContent></Card>;
+const Step = ({ number, title, text }: { number: string; title: string; text: string }) => <div className="text-center"><span className="w-16 h-16 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4">{number}</span><h3 className="text-xl font-bold mb-2">{title}</h3><p className="text-muted-foreground">{text}</p></div>;
+const ListItem = ({ text }: { text: string }) => <li className="flex gap-2"><ShieldCheck className="h-5 w-5 text-primary shrink-0" />{text}</li>;
 
 export default ServiceVisite;

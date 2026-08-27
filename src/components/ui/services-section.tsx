@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
  * avec des prix indicatifs et des informations de mission sans promesse financière implicite.
  */
 import { Badge } from "@/components/ui/badge";
-import { Camera, ArrowRight, Dog, Home, Moon, Sun, Heart, Stethoscope, Car, PawPrint, Shield, Check } from 'lucide-react';
+import { ArrowRight, Dog, Home, Moon, Sun, Heart, PawPrint, Shield, Check } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 
 // Import des images locales
@@ -13,8 +13,6 @@ import visiteRepas from '@/assets/services/visite-chien-repas.jpg';
 import hebergementNuit from '@/assets/services/pet-sitting-serenite.jpg';
 import garderieJour from '@/assets/services/pet-sitting-organisation.jpg';
 import gardeDomicile from '@/assets/services/pet-sitting-multi-animaux.jpg';
-import visiteSoins from '@/assets/services/visite-chien-soins.jpg';
-import vetAccompagnement from '@/assets/services/veterinaire-accompagnement.jpg';
 
 export const ServicesSection = () => {
   const navigate = useNavigate();
@@ -26,19 +24,19 @@ export const ServicesSection = () => {
       title: "Promenade",
       description: "Demande de promenade à organiser selon les besoins renseignés pour votre animal.",
       image: promenadeParc,
-      tags: ["Exercice adapté", "Suivi de mission"],
+      tags: ["Besoin à détailler", "Conditions à confirmer"],
       icon: Dog,
-      benefits: ["Socialisation", "Dépense d'énergie"]
+      benefits: ["Profil à consulter", "Créneau à convenir"]
     },
     {
       id: "visite_domicile",
       slug: "visite",
       title: "Visite à domicile",
-      description: "Demande de visite à domicile dont la durée, les consignes et les soins sont à confirmer.",
+      description: "Demande de visite à domicile dont la durée, les consignes et les actions sont à confirmer.",
       image: visiteRepas,
-      tags: ["Animaux choyés", "Soins quotidiens"],
+      tags: ["Consignes à préciser", "Créneau à confirmer"],
       icon: Home,
-      benefits: ["Routine préservée", "Moins de stress"]
+      benefits: ["Profil à consulter", "Modalités à convenir"]
     },
     {
       id: "hebergement_nuit",
@@ -46,49 +44,29 @@ export const ServicesSection = () => {
       title: "Hébergement",
       description: "Demande d’hébergement à préciser avec l’Accompagnateur, selon ses informations et le besoin de votre animal.",
       image: hebergementNuit,
-      tags: ["Env. familial", "Suivi régulier"],
+      tags: ["Lieu à confirmer", "Conditions à convenir"],
       icon: Moon,
-      benefits: ["Accueil prévu", "Compagnie"],
+      benefits: ["Profil à consulter", "Dates à discuter"],
     },
     {
       id: "garderie",
-      slug: "garde-domicile",
+      slug: "garde",
       title: "Garderie de Jour/Nuit",
       description: "Demande de garde de jour à organiser avec l’Accompagnateur et les consignes adaptées à votre animal.",
       image: garderieJour,
-      tags: ["Socialisation", "Activités variées"],
+      tags: ["Demande à préciser", "Conditions à confirmer"],
       icon: Sun,
-      benefits: ["Jeux", "Stimulation"]
+      benefits: ["Profil à consulter", "Créneau à convenir"]
     },
     {
       id: "garde_domicile",
-      slug: "garde-multi-animaux",
+      slug: "garde-domicile",
       title: "Garde à domicile",
       description: "Demande de garde au domicile du Propriétaire, dont les conditions sont à convenir avant la mission.",
       image: gardeDomicile,
-      tags: ["Chez vous", "Routine préservée"],
+      tags: ["Lieu à préciser", "Modalités à confirmer"],
       icon: Heart,
-      benefits: ["Confort maison", "Sécurité"]
-    },
-    {
-      id: "visite_sanitaire",
-      slug: "marche-reguliere",
-      title: "Visite Sanitaire",
-      description: "Demande de visite incluant des consignes d’entretien ou d’hygiène à détailler avec l’Accompagnateur.",
-      image: visiteSoins,
-      tags: ["Soins hygiène", "Brossage"],
-      icon: Stethoscope,
-      benefits: ["Bien-être", "Propreté"]
-    },
-    {
-      id: "accompagnement_veterinaire",
-      slug: "visite",
-      title: "Accomp. Vétérinaire",
-      description: "Demande d’accompagnement à un rendez-vous vétérinaire, sous réserve des modalités convenues avec l’Accompagnateur.",
-      image: vetAccompagnement,
-      tags: ["Transport inclus", "Compte-rendu"],
-      icon: Car,
-      benefits: ["Tranquillité", "Suivi santé"]
+      benefits: ["Profil à consulter", "Dates à discuter"]
     }
   ];
 
@@ -156,7 +134,6 @@ export const ServicesSection = () => {
                 <div className="flex flex-wrap gap-2 mb-4">
                   {service.tags.map((tag, index) => (
                     <Badge key={index} variant="outline" className="text-xs font-normal py-0.5 px-2">
-                      {index === 1 && <Camera className="h-3 w-3 mr-1" />}
                       {tag}
                     </Badge>
                   ))}
@@ -168,7 +145,7 @@ export const ServicesSection = () => {
                   className="p-0 h-auto font-semibold text-primary hover:text-primary/80 group/btn"
                   onClick={() => navigate(`/services/${service.slug}`)}
                 >
-                  En savoir plus
+                  Consulter le service
                   <ArrowRight className="ml-1 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                 </Button>
               </div>
@@ -185,7 +162,7 @@ export const ServicesSection = () => {
           </div>
           <div>
             <Button size="lg" className="rounded-full px-8" onClick={() => navigate('/walkers')}>
-              Voir tous les Accompagnateurs
+              Consulter les Accompagnateurs
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>

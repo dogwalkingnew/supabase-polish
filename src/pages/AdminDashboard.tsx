@@ -35,6 +35,7 @@ const AdminDashboard = () => {
     totalBookings: 0,
     completedBookings: 0,
     pendingBookings: 0,
+    activeBookings: 0,
     cancelledBookings: 0,
   });
   const [recentBookings, setRecentBookings] = useState<any[]>([]);
@@ -86,6 +87,7 @@ const AdminDashboard = () => {
       // Bookings stats
       const { data: bookingsData, error: bookingsError } = await supabase.from('bookings').select('status, price, created_at');
       const completed = bookingsData?.filter(b => b.status === 'completed') || [];
+      const active = bookingsData?.filter(b => b.status === 'confirmed' || b.status === 'in_progress') || [];
 
       // Recent bookings
       const { data: recentBookingsData, error: recentBookingsError } = await supabase
@@ -137,6 +139,7 @@ const AdminDashboard = () => {
         totalBookings: bookingsData?.length || 0,
         completedBookings: completed.length,
         pendingBookings: bookingsData?.filter(b => b.status === 'pending').length || 0,
+        activeBookings: active.length,
         cancelledBookings: bookingsData?.filter(b => b.status === 'cancelled').length || 0
       });
 
@@ -197,13 +200,6 @@ DOCUMENTS EN ATTENTE: ${pendingDocuments.length}
     URL.revokeObjectURL(url);
     toast.success("Rapport généré");
   };
-
-  const mockStages = [
-    { label: "Demandes", count: stats.totalUsers, percentage: 100, icon: Users, color: "text-primary", bg: "bg-primary/10" },
-    { label: "Vérifiées", count: stats.activeWalkers + stats.pendingWalkers, percentage: 75, icon: ShieldCheck, color: "text-blue-600", bg: "bg-blue-50" },
-    { label: "Confirmées", count: stats.completedBookings, percentage: 45, icon: Clock, color: "text-amber-600", bg: "bg-amber-50" },
-    { label: "Finalisées (35%)", count: Math.round(stats.totalUsers * 0.35), percentage: 35, icon: CheckCircle, color: "text-green-600", bg: "bg-green-50" },
-  ];
 
   if (loading) {
     return (
@@ -296,7 +292,13 @@ DOCUMENTS EN ATTENTE: ${pendingDocuments.length}
             <TabsContent value="overview" className="space-y-6">
               <div className="grid lg:grid-cols-12 gap-6">
                 <div className="lg:col-span-8">
-                  <SelectionFlowChart totalRequests={stats.totalUsers} stages={mockStages} />
+                  <SelectionFlowChart
+                    totalBookings={stats.totalBookings}
+                    pendingBookings={stats.pendingBookings}
+                    activeBookings={stats.activeBookings}
+                    completedBookings={stats.completedBookings}
+                    cancelledBookings={stats.cancelledBookings}
+                  />
                 </div>
                 <div className="lg:col-span-4">
                   <DisputeTracker disputes={openDisputes.map(d => ({

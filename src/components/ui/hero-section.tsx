@@ -7,8 +7,10 @@ import heroImage from "@/assets/hero-dog-walking.jpg";
 import { Shield, Clock, Camera } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const HeroSection = () => {
+  const navigate = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -56,7 +58,7 @@ export const HeroSection = () => {
   return (
     <section 
       ref={ref}
-      className="relative min-h-[85vh] md:min-h-dvh flex items-center justify-center overflow-hidden"
+      className="relative min-h-[76vh] md:min-h-[88vh] flex items-center justify-center overflow-hidden"
     >
       {/* Parallax Background Image */}
       <motion.div
@@ -125,7 +127,7 @@ export const HeroSection = () => {
               <Button 
                 size="lg" 
                 className="text-base md:text-lg px-6 md:px-8 py-3 md:py-4 h-auto w-full sm:w-auto shadow-button" 
-                onClick={() => window.location.href = '/walkers'}
+                onClick={() => navigate('/walkers')}
               >
                 Voir les profils Accompagnateur
               </Button>
@@ -138,7 +140,7 @@ export const HeroSection = () => {
                 variant="outline" 
                 size="lg" 
                 className="text-base md:text-lg px-6 md:px-8 py-3 md:py-4 h-auto bg-white/10 border-white/30 text-white hover:bg-white/20 w-full sm:w-auto backdrop-blur-sm" 
-                onClick={() => window.location.href = '/walker/register'}
+                onClick={() => navigate('/walker/register')}
               >
                 Devenir Accompagnateur
               </Button>

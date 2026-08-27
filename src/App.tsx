@@ -22,7 +22,6 @@ import NotFound from "./pages/NotFound";
 // Lazy-loaded pages
 const OwnerDashboardV3 = lazy(() => import("./pages/dashboard/OwnerDashboardV3"));
 const WalkerDashboardV3 = lazy(() => import("./pages/dashboard/WalkerDashboardV3"));
-const ServicePage = lazy(() => import("./pages/ServicePage"));
 const BookingDetails = lazy(() => import("./pages/BookingDetails"));
 const BookWalk = lazy(() => import("./pages/BookWalk"));
 const WalkerRegister = lazy(() => import("./pages/WalkerRegister"));
@@ -90,7 +89,7 @@ const App = () => (
               <Route path="/services/dog-walking" element={<Navigate to="/services/promenade" replace />} />
               <Route path="/services/home-visit" element={<Navigate to="/services/visite" replace />} />
               <Route path="/services/boarding" element={<Navigate to="/services/hebergement" replace />} />
-              <Route path="/services/:slug" element={<ServicePage />} />
+              <Route path="/services/:slug" element={<NotFound />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
               {/* Owner Dashboard */}

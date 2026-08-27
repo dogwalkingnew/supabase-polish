@@ -2,7 +2,7 @@
  * DogWalking — Confiance canine de proximité : montage client sobre et fiable
  * pour que chaque route se charge après une mise à jour, y compris sur mobile.
  */
-import { createElement, lazy, Suspense, useEffect } from "react";
+import { createElement, lazy, Suspense, useEffect, useState } from "react";
 import { ClientOnly } from "@tanstack/react-router";
 import { retireLegacyServiceWorker } from "./lib/retire-legacy-service-worker";
 
@@ -19,9 +19,16 @@ function Splash() {
 }
 
 export function LegacyApp() {
+  const [isClientReady, setIsClientReady] = useState(false);
+
   useEffect(() => {
     retireLegacyServiceWorker();
+    // BrowserRouter initialise son historique en remplaçant l’état courant. Attendre le
+    // premier commit évite de notifier TanStack pendant que son shell est encore rendu.
+    setIsClientReady(true);
   }, []);
+
+  if (!isClientReady) return createElement(Splash);
 
   return createElement(
     ClientOnly,
