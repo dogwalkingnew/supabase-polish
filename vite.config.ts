@@ -14,9 +14,10 @@ export default defineConfig({
       allowedHosts: [".manus.computer"],
     },
   },
+  // Les écrans DogWalking sont rendus côté client. Le mode SPA génère un
+  // shell stable et configure les réécritures nécessaires aux liens directs
+  // vers les routes React, y compris après un rechargement mobile.
   tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
-    server: { entry: "server" },
+    spa: { enabled: true },
   },
 });
