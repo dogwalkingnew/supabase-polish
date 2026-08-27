@@ -35,28 +35,18 @@ export interface OwnerDashboardData {
     walkerPhoto?: string;
     walkerRole: string;
     status: "Confirmée" | "En attente";
-    gpsTracking: boolean;
     estimatedDuration?: number;
-    estimatedPrice?: number;
+    indicativePrice?: number;
     validationCode?: string | null;
-  } | null;
-  activeMission: {
-    id: string;
-    walkerName: string;
-    walkerPhone?: string;
-    walkerPhoto?: string;
-    petName: string;
-    estimatedEndTime?: string;
   } | null;
   walkers: {
     id: string;
     name: string;
-    photo: string;
+    photo?: string;
     rating: number;
     reviews: number;
     services: string[];
-    distanceKm: number;
-    pricePerHour: number;
+    pricePerHour?: number;
     favorite?: boolean;
   }[];
   history: {
@@ -64,18 +54,9 @@ export interface OwnerDashboardData {
     title: string;
     walkerName: string;
     date: string;
-    price: number;
+    price?: number;
     status: "Terminée" | "Annulée";
   }[];
-  invoices: {
-    id: string;
-    ref: string;
-    date: string;
-    total: number;
-    status: "Utilisé" | "En attente";
-  }[];
-  walletBalance: number;
-  walletCurrency: string;
   unreadNotifications: number;
 }
 
@@ -142,8 +123,6 @@ export const useOwnerDashboard = () => {
         .filter((b) => (b.status === "confirmed" || b.status === "pending") && b.scheduled_date >= today)
         .sort((a, b) => (a.scheduled_date + (a.scheduled_time ?? "")).localeCompare(b.scheduled_date + (b.scheduled_time ?? "")))[0];
 
-      const inProgress = bookings.find((b) => b.status === "in_progress");
-
       const upcomingWalker = upcoming?.walker_id ? walkerById.get(upcoming.walker_id) : undefined;
       const nextMission = upcoming
         ? {
@@ -156,21 +135,9 @@ export const useOwnerDashboard = () => {
             walkerPhoto: upcomingWalker?.avatar_url ?? undefined,
             walkerRole: "Accompagnateur",
             status: upcoming.status === "confirmed" ? ("Confirmée" as const) : ("En attente" as const),
-            gpsTracking: true,
             estimatedDuration: upcoming.duration_minutes ?? undefined,
-            estimatedPrice: upcoming.price ?? undefined,
+            indicativePrice: upcoming.price ?? undefined,
             validationCode: upcoming.validation_code,
-          }
-        : null;
-
-      const inProgressWalker = inProgress?.walker_id ? walkerById.get(inProgress.walker_id) : undefined;
-      const activeMission = inProgress
-        ? {
-            id: inProgress.id,
-            walkerName: formatWalkerName(inProgress.walker_id, "Accompagnateur"),
-            walkerPhone: inProgressWalker?.phone ?? undefined,
-            walkerPhoto: inProgressWalker?.avatar_url ?? undefined,
-            petName: inProgress.dogs?.name ?? "Votre chien",
           }
         : null;
 
@@ -179,12 +146,11 @@ export const useOwnerDashboard = () => {
         return {
         id: w.user_id,
         name: formatWalkerName(w.user_id, "Accompagnateur"),
-        photo: walker?.avatar_url ?? PLACEHOLDER_AVATAR,
+        photo: walker?.avatar_url ?? undefined,
         rating: w.rating ?? 0,
         reviews: w.total_reviews ?? 0,
         services: (w.services ?? []).map((s) => SERVICE_LABELS[s] ?? s),
-        distanceKm: w.service_radius_km ?? 0,
-        pricePerHour: w.hourly_rate ?? 0,
+        pricePerHour: w.hourly_rate ?? undefined,
         favorite: favIds.has(w.user_id),
       };
       });
@@ -195,29 +161,15 @@ export const useOwnerDashboard = () => {
         title: SERVICE_LABELS[b.service_type] ?? b.service_type,
         walkerName: formatWalkerName(b.walker_id, "—"),
         date: `${new Date(b.scheduled_date).toLocaleDateString("fr-FR")} à ${(b.scheduled_time ?? "").slice(0, 5)}`,
-        price: b.price ?? 0,
+        price: b.price ?? undefined,
         status: b.status === "completed" ? ("Terminée" as const) : ("Annulée" as const),
       }));
-
-      const invoices = bookings
-        .filter((b) => b.price != null && b.payment_status)
-        .map((b) => ({
-          id: b.id,
-          ref: `DOG-${b.scheduled_date.replaceAll("-", "")}-${b.id.slice(0, 4).toUpperCase()}`,
-          date: new Date(b.scheduled_date).toLocaleDateString("fr-FR"),
-          total: Number(b.price ?? 0) * 1.05,
-          status: b.payment_status === "released" || b.payment_status === "held" ? ("Utilisé" as const) : ("En attente" as const),
-        }));
 
       return {
         pets,
         nextMission,
-        activeMission,
         walkers,
         history,
-        invoices,
-        walletBalance: profile?.wallet_balance ?? 0,
-        walletCurrency: profile?.wallet_currency ?? "EUR",
         unreadNotifications: notifRes.count ?? 0,
       };
     },

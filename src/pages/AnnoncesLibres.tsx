@@ -16,7 +16,7 @@ import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 /**
  * DogWalking — Confiance canine de proximité : annonces libres rattachées à des données réelles,
- * avec prix indicatif et absence explicite de traitement de paiement dans l’application.
+ * avec prix indicatif, candidature atomique réservée aux profils validés et absence de paiement intégré.
  */
 import { MapPin, Calendar, Euro, FileText, ShieldCheck, Plus, Lock } from "lucide-react";
 
@@ -46,17 +46,40 @@ const AnnoncesLibres = () => {
   const [annonces, setAnnonces] = useState<Annonce[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [applyingId, setApplyingId] = useState<string | null>(null);
+  const [isVerifiedWalker, setIsVerifiedWalker] = useState(false);
   const [form, setForm] = useState({
     service_type: "promenade",
     city: "",
     description: "",
     scheduled_date: "",
-    price: 8,
+    scheduled_time: "",
+    duration_minutes: "",
+    price: "",
   });
 
   useEffect(() => {
     void load();
   }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    if (!user) {
+      setIsVerifiedWalker(false);
+      return () => { mounted = false; };
+    }
+
+    void (async () => {
+      const { data } = await (supabase as any)
+        .from("walker_profiles")
+        .select("verified")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (mounted) setIsVerifiedWalker(data?.verified === true);
+    })();
+
+    return () => { mounted = false; };
+  }, [user?.id]);
 
   const load = async () => {
     setLoading(true);
@@ -93,10 +116,10 @@ const AnnoncesLibres = () => {
       navigate("/auth?redirect=/annonces-libres");
       return;
     }
-    if (Number(form.price) < 0) {
+    if (Number(form.price) < 0 || Number(form.duration_minutes) < 15) {
       toast({
-        title: "Prix invalide",
-        description: "Le prix proposé ne peut pas être négatif.",
+        title: "Informations de mission invalides",
+        description: "Indiquez un prix indicatif nul ou positif et une durée d’au moins 15 minutes.",
         variant: "destructive",
       });
       return;
@@ -125,8 +148,8 @@ const AnnoncesLibres = () => {
       address: form.city,
       notes: form.description,
       scheduled_date: form.scheduled_date,
-      scheduled_time: "10:00",
-      duration_minutes: 60,
+      scheduled_time: form.scheduled_time,
+      duration_minutes: Number(form.duration_minutes),
       price: Number(form.price),
       status: "pending",
     });
@@ -140,15 +163,41 @@ const AnnoncesLibres = () => {
       description: "Les Accompagnateurs autorisés peuvent maintenant la consulter.",
     });
     setShowForm(false);
-    setForm({ service_type: "promenade", city: "", description: "", scheduled_date: "", price: 8 });
+    setForm({ service_type: "promenade", city: "", description: "", scheduled_date: "", scheduled_time: "", duration_minutes: "", price: "" });
     await load();
+  };
+
+  const handleApply = async (announcement: Annonce) => {
+    if (!user) {
+      toast({ title: "Connexion requise", description: "Connectez-vous avec un profil Accompagnateur validé pour candidater." });
+      navigate("/auth?role=walker&mode=login&redirect=/annonces-libres");
+      return;
+    }
+    if (!isVerifiedWalker) return;
+
+    setApplyingId(announcement.id);
+    try {
+      const { error } = await (supabase as any).rpc("apply_to_open_booking", {
+        _booking_id: announcement.id,
+        _message: "Candidature envoyée via DogWalking.",
+      });
+      if (error) throw error;
+      toast({
+        title: "Candidature enregistrée",
+        description: "Votre candidature est en attente de décision. Le Propriétaire a été notifié si elle vient d’être créée.",
+      });
+    } catch (error: any) {
+      toast({ title: "Candidature non envoyée", description: error?.message || "La demande n’a pas pu être enregistrée.", variant: "destructive" });
+    } finally {
+      setApplyingId(null);
+    }
   };
 
   return (
     <div className="min-h-dvh bg-background">
       <SEOHead
         title="Annonces Libres & Besoins | DogWalking"
-        description="Déposez un besoin spécifique ou consultez les demandes en cours. Indiquez vos informations de mission et un prix proposé."
+        description="Déposez un besoin spécifique ou consultez les demandes ouvertes. Indiquez les informations de mission et un prix à titre indicatif."
         canonical="https://dogwalking.fr/annonces-libres"
       />
       <Header />
@@ -158,7 +207,7 @@ const AnnoncesLibres = () => {
             <div>
               <h1 className="text-3xl md:text-4xl font-bold mb-2">Annonce libre</h1>
               <p className="text-muted-foreground">
-                Déposez un besoin spécifique ou consultez les demandes en cours pour proposer vos services.
+                Déposez un besoin spécifique ou, avec un profil Accompagnateur validé, candidatez aux demandes ouvertes.
               </p>
             </div>
             <Button size="lg" onClick={() => setShowForm((v) => !v)} className="gap-2">
@@ -183,7 +232,7 @@ const AnnoncesLibres = () => {
             <Card className="mb-8 border-2 shadow-lg">
               <CardHeader>
                 <CardTitle>Nouvelle annonce</CardTitle>
-                <CardDescription>Tous les champs sont libres : durée, fréquence, modalités.</CardDescription>
+                <CardDescription>Indiquez les éléments utiles à la mission. Les modalités restent à confirmer avec l’Accompagnateur.</CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -213,9 +262,20 @@ const AnnoncesLibres = () => {
                     </div>
                   </div>
 
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="time">Heure souhaitée</Label>
+                      <Input id="time" type="time" required value={form.scheduled_time} onChange={(e) => setForm({ ...form, scheduled_time: e.target.value })} />
+                    </div>
+                    <div>
+                      <Label htmlFor="duration">Durée estimée (minutes)</Label>
+                      <Input id="duration" type="number" min={15} step={15} required value={form.duration_minutes} onChange={(e) => setForm({ ...form, duration_minutes: e.target.value })} placeholder="Ex : 60" />
+                    </div>
+                  </div>
+
                   <div>
-                    <Label htmlFor="price">Prix proposé (€)</Label>
-                    <Input id="price" type="number" min={0} required value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} />
+                    <Label htmlFor="price">Prix indicatif (€)</Label>
+                    <Input id="price" type="number" min={0} required value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />
                   </div>
 
                   <div>
@@ -235,7 +295,7 @@ const AnnoncesLibres = () => {
             </Card>
           )}
 
-          <h2 className="text-xl font-bold mb-4">Annonces actives</h2>
+          <h2 className="text-xl font-bold mb-4">Annonces ouvertes</h2>
           {loading ? (
             <div className="grid gap-3">
               {[1, 2, 3].map((i) => <div key={i} className="h-24 rounded-xl bg-muted animate-pulse" />)}
@@ -269,12 +329,23 @@ const AnnoncesLibres = () => {
                       {a.description && <p className="text-sm text-muted-foreground line-clamp-2">{a.description}</p>}
                     </div>
                     <div className="text-right shrink-0">
-                      <div className="text-xl font-bold text-primary inline-flex items-center gap-1">
+                      <div className="text-xl font-bold text-primary inline-flex items-center gap-1" aria-label="Prix indicatif">
                         <Euro className="h-4 w-4" /> {a.price ?? "?"}
                       </div>
+                      <p className="text-[11px] text-muted-foreground">Indicatif</p>
                       <Button size="sm" variant="outline" className="mt-2" onClick={() => navigate("/walkers")}>
                         Voir les profils
                       </Button>
+                      {!user && (
+                        <Button size="sm" className="mt-2 w-full" onClick={() => handleApply(a)}>
+                          Connexion pour candidater
+                        </Button>
+                      )}
+                      {user && isVerifiedWalker && user.id !== a.owner_id && (
+                        <Button size="sm" className="mt-2 w-full" disabled={applyingId !== null} onClick={() => handleApply(a)}>
+                          {applyingId === a.id ? "Envoi…" : "Candidater"}
+                        </Button>
+                      )}
                     </div>
                   </CardContent>
                 </Card>

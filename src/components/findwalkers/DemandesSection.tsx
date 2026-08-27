@@ -69,12 +69,12 @@ export const DevenirAccompagnateurCTA = () => {
               <PlusCircle className="h-7 w-7 text-primary-foreground" />
             </div>
             <div>
-              <h3 className="text-xl md:text-2xl font-extrabold mb-2">Proposez vos services à votre rythme</h3>
+              <h3 className="text-xl md:text-2xl font-extrabold mb-2">Déposez votre dossier Accompagnateur</h3>
               <p className="text-primary-foreground/80 text-sm font-medium mb-3">
-                Créez votre profil, renseignez vos disponibilités et suivez les demandes reçues dans votre espace.
+                Renseignez votre expérience et votre zone ; après validation administrative, vous pouvez répondre aux demandes qui vous sont attribuées.
               </p>
               <div className="flex flex-wrap gap-x-4 gap-y-1.5">
-                {["Créer son profil", "Gérer ses disponibilités", "Renseigner ses tarifs", "Suivre ses demandes"].map((item) => (
+                {["Déposer son dossier", "Décrire son expérience", "Suivre la décision", "Répondre aux demandes attribuées"].map((item) => (
                   <div key={item} className="flex items-center gap-1.5 text-xs font-semibold text-primary-foreground/90">
                     <CheckCircle className="h-3.5 w-3.5 text-primary-foreground shrink-0" /> {item}
                   </div>

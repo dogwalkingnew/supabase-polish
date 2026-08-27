@@ -60,3 +60,10 @@
 - [x] Remplacer les valeurs Supabase codées en dur par une configuration d’environnement obligatoire hors prévisualisation.
 - [x] Auditer et durcir les politiques Storage des preuves de mission privées ; l’exposition publique des photos de chien reste une décision RGPD à prendre.
 - [x] Corriger les avertissements RLS de performance à faible risque et conserver les index historiques non utilisés jusqu’à une période d’observation mesurée.
+- [ ] **Vague 009 — Cohérence métier :** auditer les routes, données et composants de flux ouverts ; finaliser par RPC atomique ou masquer durablement tout parcours non achevé, dont la sélection d’une candidature à une annonce libre.
+- [ ] **Vague 009 — Cohérence métier :** spécifier puis implémenter, ou rendre explicitement indisponibles, les contre-propositions, conflits de créneaux et disponibilités persistées.
+- [ ] **Vague 010 — Durcissement production :** effectuer la migration testée de React Router vers une version corrigée, contrôler les routes SSR et fermer les écarts Storage/RLS restant mesurables.
+- [ ] **Vague 010 — Durcissement production :** configurer les protections GitHub de `main` et valider les réglages Supabase Auth, les redirections de domaine et les politiques de photos de chien avec l’éditeur.
+- [ ] **Vague 011 — Recette et exploitation :** exécuter une recette de bout en bout documentée avec comptes QA, analyser les erreurs applicatives et préparer le plan de lancement et de retour arrière final.
+- [ ] **Vague 011 — Livraison :** produire les archives, rapports, checkpoint et synchronisation GitHub vérifiée après chaque vague, sans secrets ni données QA non autorisées.
+- [ ] Exécuter les vagues 009, 010 et 011 à la suite lorsque les contrôles restent non destructifs et sans attendre une confirmation intermédiaire, puis signaler sans masquer les prérequis externes non levés.

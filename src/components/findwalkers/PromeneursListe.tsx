@@ -73,7 +73,7 @@ const AccompagnateurCertifiesListe = () => {
         <div className="relative overflow-hidden text-center py-12 px-6 bg-warm/60 rounded-[1.25rem] border border-primary/15 shadow-soft">
           <div aria-hidden="true" className="dogwalking-route absolute inset-x-0 bottom-0 h-20 opacity-60" />
           <div className="relative">
-            <p className="text-lg font-bold text-foreground mb-2">Aucun accompagnateur disponible dans cette sélection</p>
+            <p className="text-lg font-bold text-foreground mb-2">Aucun profil ne correspond à cette sélection</p>
             <p className="mx-auto max-w-lg text-sm text-foreground/60">Aucun profil renseigné ne correspond encore aux critères affichés. Vous pouvez préciser votre besoin dans une annonce ou revenir consulter les profils ultérieurement.</p>
             <div className="mt-5 flex flex-col justify-center gap-3 sm:flex-row">
               <button onClick={() => navigate("/annonces-libres")} className="bg-primary text-primary-foreground text-sm font-bold px-4 py-2.5 rounded-lg hover:bg-primary/90 transition-all active:scale-95">Déposer une annonce</button>

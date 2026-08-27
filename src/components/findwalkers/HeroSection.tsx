@@ -25,10 +25,10 @@ const FindWalkersHero = () => {
           className="relative z-10 text-center px-4 -mt-8"
         >
           <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-2 md:mb-3 leading-tight drop-shadow-lg">
-            Trouvez un Accompagnateur<br className="hidden sm:block" /> près de chez vous 🐶
+            Consultez les profils<br className="hidden sm:block" /> Accompagnateur
           </h1>
           <p className="text-white/85 text-sm md:text-lg mb-4 md:mb-5 max-w-xl mx-auto drop-shadow-sm">
-            Consultez les profils, services et disponibilités renseignés autour de vous.
+            Consultez les profils et services renseignés, puis confirmez directement le créneau qui vous convient.
           </p>
 
           <motion.div
@@ -43,7 +43,7 @@ const FindWalkersHero = () => {
             </div>
             <div className="flex items-center gap-1.5 text-white/90 text-xs md:text-sm bg-white/10 backdrop-blur-sm rounded-full px-3 py-1.5">
               <Users className="h-4 w-4 text-primary" />
-              <span className="font-semibold">Services et disponibilités</span>
+              <span className="font-semibold">Services renseignés</span>
             </div>
             <div className="hidden sm:flex items-center gap-1.5 text-white/90 text-xs md:text-sm bg-white/10 backdrop-blur-sm rounded-full px-3 py-1.5">
               <Clock className="h-4 w-4 text-[hsl(var(--star))]" />

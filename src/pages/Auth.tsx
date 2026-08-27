@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
-import { ArrowLeft, Shield, Dog, CheckCircle, Star, Heart, Users, Calendar, MessageCircle, Wallet, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Shield, Dog, CheckCircle, Star, Heart, Users, Calendar, MessageCircle, ArrowRight } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
@@ -286,12 +286,12 @@ const Auth = () => {
       icon: Dog,
       title: "Accompagnateur",
       subtitle: "Je promène des chiens",
-      description: "Proposez vos services et organisez vos disponibilités",
+      description: "Déposez votre dossier et répondez aux demandes ouvertes après validation",
       features: [
-        { icon: Wallet, text: "Renseignez vos tarifs indicatifs" },
-        { icon: Calendar, text: "Consultez vos demandes" },
-        { icon: Shield, text: "Suivez vos demandes" },
-        { icon: Star, text: "Complétez votre profil" },
+        { icon: Shield, text: "Déposez votre dossier" },
+        { icon: Calendar, text: "Suivez la décision" },
+        { icon: MessageCircle, text: "Consultez les annonces" },
+        { icon: Star, text: "Répondez aux demandes" },
       ],
       gradient: "from-stat-green/20 via-stat-green/10 to-stat-green/5",
       border: "border-stat-green/40 hover:border-stat-green",
@@ -408,7 +408,7 @@ const Auth = () => {
                   </div>
 
                   <p className="text-xs text-center text-muted-foreground mt-6">
-                    Vous pourrez changer de profil à tout moment depuis votre tableau de bord
+                    Le choix du rôle vous oriente vers le parcours adapté à votre utilisation de DogWalking.
                   </p>
                 </motion.div>
               )}
@@ -506,7 +506,7 @@ const Auth = () => {
                             </div>
                             <div>
                               <Label htmlFor="register-password" className="text-sm">Mot de passe</Label>
-                              <Input id="register-password" name="password" type="password" placeholder="6 caractères minimum" required className="mt-1 h-10" />
+                              <Input id="register-password" name="password" type="password" placeholder="8 caractères minimum, lettre et chiffre" required className="mt-1 h-10" />
                             </div>
                             <Button
                               type="submit"

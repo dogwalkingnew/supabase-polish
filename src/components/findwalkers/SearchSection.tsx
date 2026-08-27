@@ -24,13 +24,13 @@ const SearchSection = () => {
           className="mb-8 text-center"
         >
           <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-3 py-1.5 rounded-full mb-3">
-            Profils disponibles
+            Profils renseignés
           </div>
           <h2 className="text-2xl md:text-3xl font-extrabold text-foreground mb-2">
             Les Accompagnateurs
           </h2>
           <p className="text-sm text-foreground/60 max-w-2xl mx-auto font-medium leading-relaxed">
-            Consultez les profils, services et disponibilités renseignés près de chez vous.
+            Consultez les profils et services renseignés, puis échangez pour confirmer le créneau et les modalités.
           </p>
         </motion.div>
 

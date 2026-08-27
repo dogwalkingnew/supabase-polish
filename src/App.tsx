@@ -21,10 +21,8 @@ import AuthCallback from "./pages/AuthCallback";
 import NotFound from "./pages/NotFound";
 
 // Lazy-loaded pages
-const OwnerDashboard = lazy(() => import("./pages/dashboard/OwnerDashboard"));
 const OwnerDashboardV3 = lazy(() => import("./pages/dashboard/OwnerDashboardV3"));
 const WalkerDashboardV3 = lazy(() => import("./pages/dashboard/WalkerDashboardV3"));
-const WalkerDashboardPage = lazy(() => import("./pages/dashboard/WalkerDashboard"));
 const ServicePage = lazy(() => import("./pages/ServicePage"));
 const BookingDetails = lazy(() => import("./pages/BookingDetails"));
 const BookWalk = lazy(() => import("./pages/BookWalk"));
@@ -39,7 +37,6 @@ const WalkerProfile = lazy(() => import("./pages/WalkerProfile"));
 const Support = lazy(() => import("./pages/Support"));
 const FindWalkers = lazy(() => import("./pages/FindWalkers"));
 const NousSommesPresents = lazy(() => import("./pages/NousSommesPresents"));
-const DashboardPreview = lazy(() => import("./pages/DashboardPreview"));
 const AnnoncesLibres = lazy(() => import("./pages/AnnoncesLibres"));
 const ServicePromenade = lazy(() => import("./pages/services/ServicePromenade"));
 const ServiceGarde = lazy(() => import("./pages/services/ServiceGarde"));
@@ -80,9 +77,9 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/index" element={<Navigate to="/" replace />} />
-              <Route path="/dashboard-preview" element={<DashboardPreview />} />
-              <Route path="/dashboard-v3" element={<OwnerDashboardV3 />} />
-              <Route path="/walker-dashboard-v3" element={<WalkerDashboardV3 />} />
+              <Route path="/dashboard-preview" element={<Navigate to="/auth" replace />} />
+              <Route path="/dashboard-v3" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/walker-dashboard-v3" element={<Navigate to="/walker/dashboard" replace />} />
               <Route path="/services/promenade" element={<ServicePromenade />} />
               <Route path="/services/garde" element={<ServiceGarde />} />
               <Route path="/services/visite" element={<ServiceVisite />} />
@@ -102,17 +99,17 @@ const App = () => (
               <Route path="/dashboard" element={<ProtectedRoute requiredRole="owner"><OwnerDashboardV3 /></ProtectedRoute>} />
               <Route path="/dashboard-proprietaire" element={<ProtectedRoute requiredRole="owner"><OwnerDashboardV3 /></ProtectedRoute>} />
               <Route path="/mon-espace" element={<ProtectedRoute requiredRole="owner"><OwnerDashboardV3 /></ProtectedRoute>} />
-              <Route path="/dashboard-legacy" element={<ProtectedRoute requiredRole="owner"><OwnerDashboard /></ProtectedRoute>} />
+              <Route path="/dashboard-legacy" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dogs/add" element={<Navigate to="/dashboard?tab=chiens" replace />} />
               <Route path="/bookings" element={<Navigate to="/dashboard?tab=reservations" replace />} />
-              <Route path="/referral" element={<Navigate to="/dashboard?tab=parrainage" replace />} />
+              <Route path="/referral" element={<Navigate to="/dashboard" replace />} />
               <Route path="/profile" element={<Navigate to="/dashboard?tab=profil" replace />} />
               {/* Walker Dashboard */}
               <Route path="/walker/dashboard" element={<ProtectedRoute requiredRole="walker"><WalkerDashboardV3 /></ProtectedRoute>} />
               <Route path="/dashboard-promeneur" element={<ProtectedRoute requiredRole="walker"><WalkerDashboardV3 /></ProtectedRoute>} />
               <Route path="/espace-promeneur" element={<ProtectedRoute requiredRole="walker"><WalkerDashboardV3 /></ProtectedRoute>} />
-              <Route path="/walker-dashboard-legacy" element={<ProtectedRoute requiredRole="walker"><WalkerDashboardPage /></ProtectedRoute>} />
-              <Route path="/walker/earnings" element={<Navigate to="/walker/dashboard?tab=gains" replace />} />
+              <Route path="/walker-dashboard-legacy" element={<Navigate to="/walker/dashboard" replace />} />
+              <Route path="/walker/earnings" element={<Navigate to="/walker/dashboard" replace />} />
               {/* Standalone pages */}
               <Route path="/walkers" element={<FindWalkers />} />
               <Route path="/find-walkers" element={<FindWalkers />} />

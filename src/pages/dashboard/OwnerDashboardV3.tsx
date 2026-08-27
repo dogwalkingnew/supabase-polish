@@ -1,25 +1,21 @@
 import { useState } from "react";
-import { Home, PawPrint, Briefcase, Receipt, User } from "lucide-react";
+import { Home, PawPrint, Briefcase, User } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import OwnerHomeImproved from "@/components/dashboard-v3/OwnerHomeImproved";
-import OwnerPets from "@/components/dashboard-v3/OwnerPets";
+import DogsTab from "@/components/dashboard/owner/DogsTab";
 import OwnerMissions from "@/components/dashboard-v3/OwnerMissions";
-import OwnerBilling from "@/components/dashboard-v3/OwnerBilling";
 import OwnerProfileComplete from "@/components/dashboard-v3/OwnerProfileComplete";
-import MissionLiveTracking from "@/components/dashboard-v3/MissionLiveTracking";
-import OwnerAlertsAndRecommendations from "@/components/dashboard-v3/OwnerAlertsAndRecommendations";
 import { useAuth } from "@/contexts/AuthContext";
 import { useOwnerDashboard } from "@/hooks/useOwnerDashboard";
 import { supabase } from "@/integrations/supabase/client";
 
-type Tab = "home" | "pets" | "missions" | "billing" | "profil";
+type Tab = "home" | "pets" | "missions" | "profil";
 
 const OwnerDashboardV3 = () => {
   const [tab, setTab] = useState<Tab>("home");
-  const [showLiveTracking, setShowLiveTracking] = useState(false);
   const { user, profile, signOut, refreshProfile } = useAuth();
   const { data, isLoading } = useOwnerDashboard();
   const queryClient = useQueryClient();
@@ -29,16 +25,10 @@ const OwnerDashboardV3 = () => {
     { key: "home", label: "Accueil", icon: Home },
     { key: "pets", label: "Animaux", icon: PawPrint },
     { key: "missions", label: "Missions", icon: Briefcase },
-    { key: "billing", label: "Facturation", icon: Receipt },
     { key: "profil", label: "Profil", icon: User },
   ];
 
-  const handleReserve = () => setTab("missions");
-  const handleTracking = () => {
-    if (data?.activeMission) setShowLiveTracking(true);
-    else toast.info("Aucune mission en cours à suivre pour le moment.");
-  };
-  const handleEmergency = () => window.open("tel:3115");
+  const handleReserve = () => navigate("/walkers");
 
   const handleLogout = async () => {
     await signOut();
@@ -86,27 +76,11 @@ const OwnerDashboardV3 = () => {
     postalCode: profile.postal_code ?? "",
     bio: profile.bio ?? "",
     avatar: profile.avatar_url ?? undefined,
-    verificationStatus: "verified" as const,
     createdAt: profile.created_at ?? "",
-    preferences: { notifications: true, emailUpdates: true, smsAlerts: false, newsletter: false },
-    documents: [],
   };
 
   return (
     <div className="bg-[#F9F7F4] min-h-screen">
-      {data.activeMission && (
-        <MissionLiveTracking
-          missionId={data.activeMission.id}
-          walkerName={data.activeMission.walkerName}
-          walkerPhone={data.activeMission.walkerPhone ?? ""}
-          walkerPhoto={data.activeMission.walkerPhoto ?? "/placeholder.svg"}
-          petName={data.activeMission.petName}
-          estimatedEndTime=""
-          isActive={showLiveTracking}
-          onClose={() => setShowLiveTracking(false)}
-        />
-      )}
-
       <motion.div key={tab} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
         {tab === "home" && (
           <div className="space-y-6 pb-32">
@@ -114,55 +88,25 @@ const OwnerDashboardV3 = () => {
               pets={data.pets}
               nextMission={data.nextMission}
               onReserve={handleReserve}
-              onStartTracking={handleTracking}
-              onEmergency={handleEmergency}
               onViewAllPets={() => setTab("pets")}
               onViewAllMissions={() => setTab("missions")}
               onViewMissionDetails={() => data.nextMission && navigate(`/bookings/${data.nextMission.id}`)}
             />
 
-            {data.unreadNotifications > 0 && (
-              <div className="px-4 max-w-lg mx-auto">
-                <OwnerAlertsAndRecommendations
-                  alerts={[
-                    {
-                      id: "notif-unread",
-                      type: "warning" as const,
-                      title: `${data.unreadNotifications} notification(s) non lue(s)`,
-                      description: "Consultez vos notifications pour ne rien manquer de vos missions.",
-                      action: "Voir",
-                      timestamp: "Maintenant",
-                    },
-                  ]}
-                  recommendations={[]}
-                />
-              </div>
-            )}
           </div>
         )}
 
         {tab === "pets" && (
           <div className="pb-32">
-            <OwnerPets pets={data.pets} />
+            <DogsTab />
           </div>
         )}
 
         {tab === "missions" && (
           <div className="pb-32">
             <OwnerMissions
-              favorites={data.walkers.filter((w) => w.favorite)}
-              available={data.walkers}
+              profiles={data.walkers}
               history={data.history}
-            />
-          </div>
-        )}
-
-        {tab === "billing" && (
-          <div className="pb-32">
-            <OwnerBilling
-              pets={data.pets.map((p) => ({ id: p.id, name: p.name, photo: p.photo, promenade: 0, garde: 0, visite: 0 }))}
-              invoices={data.invoices}
-              walletBalance={data.walletBalance}
             />
           </div>
         )}

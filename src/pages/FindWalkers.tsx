@@ -1,7 +1,7 @@
 import { Header } from "@/components/ui/header";
 /**
  * DogWalking — Confiance canine de proximité : page de recherche factuelle,
- * orientée vers les profils, services et disponibilités réellement renseignés.
+ * orientée vers les profils et services renseignés, avec confirmation directe des créneaux.
  */
 import { Footer } from "@/components/ui/footer";
 import { SEOHead } from "@/components/seo/SEOHead";
@@ -13,8 +13,8 @@ const FindWalkers = () => {
   return (
     <div className="min-h-dvh bg-background">
       <SEOHead
-        title="Trouver un Accompagnateur de Confiance"
-        description="Trouvez un Accompagnateur près de chez vous. Consultez les profils, services et disponibilités renseignés pour organiser votre demande."
+        title="Consulter les profils Accompagnateur"
+        description="Consultez les profils et services renseignés, puis confirmez le créneau et les modalités directement avec l’Accompagnateur."
       />
       <Header />
       <FindWalkersHero />
