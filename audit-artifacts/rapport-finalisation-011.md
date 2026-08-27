@@ -33,7 +33,8 @@ Les contrôles de compilation ont été rejoués après les dernières modificat
 | `pnpm audit --prod --audit-level=high` | `No known vulnerabilities found`. | Aucune vulnérabilité connue dans le périmètre audité. |
 | Lint ciblé des fichiers 011 | Réussi sans sortie. | Le correctif d’authentification n’a pas introduit de nouvelle erreur ou avertissement local. |
 | Lint global | Non finalisé localement après deux fenêtres d’attente ; le journal a commencé à remonter les avertissements historiques connus. | **Non bloquant pour ce patch**, mais dette à traiter séparément ; ne pas le présenter comme propre. |
-| CI GitHub du dernier commit 010 | Terminée avec succès le 27 août 2026 : [run 33032005052][4]. | Contrôle de référence réussi avant le patch 011. |
+| CI GitHub du dernier commit 010 | Terminée avec succès le 27 août 2026 : [run 33032005052][4]. | Contrôle de référence historique réussi avant le patch 011. |
+| CI GitHub de la vague 011 | Terminée avec succès le 27 août 2026 : [run 33032632150][5]. | Contrôle obligatoire vert pour le SHA `043be83ba25d202627d0a7d02a9358d72b21ca2b`. |
 
 Le dépôt conserve des avertissements ESLint historiques, notamment des `any` explicites et des dépendances de hooks incomplètes dans des composants anciens ou non routés. Ils ne sont ni effacés ni maquillés par ce rapport. Leur correction doit être effectuée par lots fonctionnels, avec recette de chaque écran concerné, et non par désactivation des règles.
 
@@ -71,7 +72,7 @@ Le travail technique ne substitue pas les décisions de l’éditeur. Avant de c
 
 ## 5. Procédure de release et retour arrière
 
-La branche `main` est protégée : la CI est exigée, une revue est requise, l’historique linéaire et la résolution des conversations sont imposés ; la suppression et le push forcé sont interdits. Pour toute évolution suivante, la procédure normale est **branche courte → pull request → CI verte → revue → fusion linéaire**. Le bypass administrateur doit rester une exception consignée en cas de récupération urgente.
+La branche `main` est protégée : la CI est exigée, une revue est requise, l’historique linéaire et la résolution des conversations sont imposés ; la suppression et le push forcé sont interdits. La livraison 011 est disponible sur la branche `release/finalisation-011` au SHA `043be83ba25d202627d0a7d02a9358d72b21ca2b`, dans la [pull request n°10][6]. Sa CI est verte, mais GitHub signale correctement que la fusion demeure **bloquée par la revue obligatoire**. Pour toute évolution suivante, la procédure normale est **branche courte → pull request → CI verte → revue → fusion linéaire**. Le bypass administrateur doit rester une exception consignée en cas de récupération urgente.
 
 Avant activation publique, l’exploitant doit créer un checkpoint et conserver l’archive de sources de la vague. En cas d’incident applicatif, le premier retour arrière est le checkpoint précédent validé, puis la vérification CI et la recette minimale des écrans publics, Auth et barrières de tableau de bord. Les changements de schéma et de données doivent être restaurés selon une procédure spécifique : un retour arrière de code ne restaure pas automatiquement les données de base.
 
@@ -79,7 +80,7 @@ Avant activation publique, l’exploitant doit créer un checkpoint et conserver
 
 | Statut | Décision |
 |---|---|
-| Code et build | Livrables à checkpoint et synchroniser après contrôle GitHub du commit 011. |
+| Code et build | Checkpoint `043be83b`, branche GitHub et CI de la pull request n°10 vérifiés. |
 | Environnement contrôlé | Les parcours publics, les protections de navigation et l’écran de récupération peuvent être démontrés. |
 | Ouverture publique | **Bloquée** jusqu’à la levée documentée des prérequis critiques de la section 4. |
 | Paiement et garanties | Non intégrés et non présentés comme actifs. |
@@ -91,3 +92,5 @@ Avant activation publique, l’exploitant doit créer un checkpoint et conserver
 [2] [Supabase — Database Linter : index non utilisés](https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index)  
 [3] [Supabase — Database Linter : politiques RLS permissives multiples](https://supabase.com/docs/guides/database/database-linter?lint=0006_multiple_permissive_policies)  
 [4] [GitHub Actions — CI DogWalking, run 33032005052](https://github.com/dogwalkingnew/supabase-polish/actions/runs/33032005052)
+[5] [GitHub Actions — CI DogWalking, run 33032632150](https://github.com/dogwalkingnew/supabase-polish/actions/runs/33032632150)
+[6] [GitHub — Pull request n°10 : Finalisation 011](https://github.com/dogwalkingnew/supabase-polish/pull/10)
