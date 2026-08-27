@@ -11,7 +11,6 @@ import { HelmetProvider } from "react-helmet-async";
 import { useEffect, lazy, Suspense } from "react";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
-import { PushNotificationPrompt } from "@/components/notifications/PushNotificationPrompt";
 import { AuthProvider } from "@/contexts/AuthContext";
 
 // Critical pages loaded eagerly
@@ -72,7 +71,6 @@ const App = () => (
         <BrowserRouter>
           <ScrollToTop />
           <InstallPrompt />
-          <PushNotificationPrompt />
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Index />} />

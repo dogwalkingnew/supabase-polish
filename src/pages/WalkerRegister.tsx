@@ -152,7 +152,7 @@ const WalkerRegister = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[340px] min-h-[340px] sm:h-[50vh] sm:min-h-[400px] flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${heroImage})` }}
@@ -170,12 +170,12 @@ const WalkerRegister = () => {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/20 mb-6"
+            className="inline-flex items-center justify-center w-14 h-14 md:w-20 md:h-20 rounded-full bg-primary/20 mb-4 md:mb-6"
           >
-            <Briefcase className="h-10 w-10 text-primary" />
+            <Briefcase className="h-7 w-7 md:h-10 md:w-10 text-primary" />
           </motion.div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Devenez Accompagnateur</h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <h1 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4">Devenez Accompagnateur</h1>
+          <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto">
             Déposez votre candidature pour proposer des services auprès des Propriétaires, sous réserve de la validation administrative prévue par DogWalking.
           </p>
         </motion.div>

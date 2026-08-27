@@ -415,6 +415,44 @@
 .dogwalking-route::before { transform: translate(-1px, -5px); }
 .dogwalking-route::after { margin-left: auto; transform: translate(1px, -13px); }
 
+/* Signature de marque : marque vectorielle réutilisable dans les zones publiques. */
+.dogwalking-brand-mark {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid hsl(var(--primary) / 0.14);
+  border-radius: 9999px;
+  color: hsl(var(--primary));
+  background:
+    radial-gradient(circle at 30% 25%, hsl(var(--warm-beige)) 0%, transparent 42%),
+    hsl(var(--sage-green-light));
+  box-shadow: 0 5px 15px -8px hsl(var(--primary) / 0.55);
+}
+
+.dogwalking-brand-mark--footer {
+  border-color: hsl(0 0% 100% / 0.18);
+  color: hsl(0 0% 100%);
+  background: hsl(0 0% 100% / 0.09);
+  box-shadow: none;
+}
+
+.dogwalking-wordmark {
+  color: hsl(var(--primary));
+  font-family: var(--font-heading);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+}
+
+.dogwalking-wordmark span {
+  color: hsl(var(--foreground));
+}
+
+.dogwalking-wordmark--footer,
+.dogwalking-wordmark--footer span {
+  color: hsl(0 0% 100%);
+}
+
 @utility shadow-card { box-shadow: var(--shadow-card-v); }
 @utility shadow-card-hover { box-shadow: var(--shadow-card-hover); }
 @utility shadow-elevated { box-shadow: var(--shadow-elevated); }

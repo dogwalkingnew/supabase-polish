@@ -79,10 +79,12 @@ export const useRealtimeNotifications = () => {
 
             // Play notification sound
             try {
-              const audio = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbsGczHj6NyN/Qu2k8JT2Hw9bQv3xMM0OFwtHOw4FVOUmKxNHMwIBWPEmKxM/JvX1VPEuMyM3FuXlUP1CQy8zDtXVTQFOUzsvBsHJSQViX0svBr3FPQlqa08zBrm5MQWCi18/ArWxKQWWt5NHArGlGP2iy59PBqWRDP3C46tfGplxAPnO87d3Mol5CP3fB8+LMn11BQHrF+OfQnFpAQH7K/ezUmldAQYDP//DYmFY/QYLR//PbllQ+QYTT//XdlFI9QIbV//fflVA8P4XX//nhl009PoXZ//rjlks8PoXZ//vjl0o7PYTa//zkmEk7PYPa//3lmUg6PILb//7nmkc5O4Hb///om0Y5O4Dc///pnEU4OoHc///qnUQ4On/d///snkM3OX7d///tn0I2OX3e///uoEE2OHze///voUA1OH3e///woT81N37e///xoj80N37e///yoz40Nn/e///0pD0zNn/e///1pTwyNoHe///2pjsxNYHe///4pzovNILe///5qDkuNILe///6qTgtM4Pe///7qjcsM4Pf///8qzYrMoPf///+rDUqMYTf///");
+              const audio = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbsGczHj6NyN/Qu2k8JT2Hw9bQv3xMM0OFwtHOw4FVOUmKxNHMwIBWPEmKxM/JvX1VPEuMyM3FuXlUP1CQy8zDtXVTQFOUzsvBsHJSQViX0svBr3FPQlqa08zBrm5MQWCi18/ArWxKQWWt5NHArGlGP2iy59PBqWRDP3C46tfGplxAPnO87d3Mol5CP3fB8+LMn11BQHrF+OfQnFpAQH7K/ezUmldAQYDP//DYmFY/QYLR//PbllQ+QYTT//XdlFI9QIbV//fflVA8P4XX//nhl009PoXZ//rjlks8PoXZ//vjl0o7PYTa//zkmEk7PYPa//3lmUg6PILb//7nmkc5O4Hb///om0Y5O4Dc///pnEU4OoHc///qnUQ4On/d///snkM3OX7d///tn0I2OX3e///uoEE2OHze///voUA1OH3e///woT81N37e///xoj80N37e///yoz40Nn/e///0pD0zNn/e///1pTwyNoHe///2pjsxNYHe///4pzovNILe///5qDkuNILe///6qTgtM4Pe///7qjcsM4Pf///8qzYrMoPf///+rDUqMYTf///+rDUqMYTf///");
               audio.volume = 0.3;
-              audio.play().catch(() => {});
-            } catch {}
+              void audio.play().catch(() => undefined);
+            } catch (error) {
+              console.warn("Lecture du son de notification impossible", error);
+            }
           }
         )
         .subscribe();

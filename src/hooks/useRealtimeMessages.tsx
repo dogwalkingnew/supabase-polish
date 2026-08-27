@@ -301,7 +301,11 @@ export const useRealtimeMessages = (selectedPartnerId?: string | null) => {
         if (receiverId === currentUserId) {
           setTypingUsers(prev => {
             const newMap = new Map(prev);
-            isTyping ? newMap.set(userId, { id: userId, name: '', isTyping: true }) : newMap.delete(userId);
+            if (isTyping) {
+              newMap.set(userId, { id: userId, name: '', isTyping: true });
+            } else {
+              newMap.delete(userId);
+            }
             return newMap;
           });
         }

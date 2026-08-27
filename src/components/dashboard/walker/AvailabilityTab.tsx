@@ -49,7 +49,9 @@ function buildScheduleFromProfile(walkerProfile: any): WeekSchedule {
         : walkerProfile.schedule_details;
       // Validate structure
       if (parsed && typeof parsed === 'object' && parsed.Monday) return parsed;
-    } catch {}
+    } catch (error) {
+      console.warn("Format de disponibilités invalide ; les horaires généraux sont utilisés.", error);
+    }
   }
   
   // Fallback: build from available_days + global hours

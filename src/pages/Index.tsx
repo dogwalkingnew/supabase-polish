@@ -26,7 +26,23 @@ const Index = () => {
       <main className="relative overflow-hidden">
         {/* 1. Hero + recherche */}
         <HeroSection />
-        <section className="py-8 md:py-12 px-4 -mt-16 md:-mt-24 relative z-10">
+        <section className="relative overflow-hidden bg-warm/80 px-4 py-10 md:py-14">
+          <div aria-hidden="true" className="dogwalking-route absolute -left-10 top-5 -rotate-6" />
+          <div className="container mx-auto max-w-6xl">
+            <div className="grid items-center gap-8 md:grid-cols-[1.25fr_0.75fr]">
+              <div className="max-w-2xl">
+                <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.18em] text-primary">Une mission commence par une demande claire</p>
+                <h2 className="text-3xl font-black tracking-tight text-foreground md:text-4xl">Votre quotidien change. Les besoins de votre animal aussi.</h2>
+                <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">Indiquez le service, le lieu et le créneau souhaité. Les informations affichées vous aident à engager l’échange ; les conditions se confirment ensuite entre les personnes concernées.</p>
+              </div>
+              <div className="rounded-2xl border border-primary/15 bg-background/80 p-5 shadow-soft backdrop-blur-sm">
+                <p className="text-sm font-bold text-foreground">Le repère DogWalking</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Disponibilités renseignées, candidature accompagnée, et suivi de demande depuis un même espace — sans promesse automatique.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section className="relative z-10 bg-background px-4 py-10 md:py-14">
           <div className="container mx-auto">
             <SearchForm />
           </div>
@@ -51,7 +67,7 @@ const Index = () => {
         <HomeFAQSection />
 
         {/* 8. Positionnement éditorial factuel */}
-        <section className="relative py-14 md:py-18 bg-warm/45 overflow-hidden">
+        <section className="relative py-14 md:py-18 bg-warm/65 overflow-hidden">
           <div aria-hidden="true" className="dogwalking-route absolute -right-12 top-8 rotate-[-8deg]" />
           <div className="container mx-auto px-4 max-w-3xl">
             <div className="text-left md:pl-8 mb-8 md:mb-10 max-w-2xl">

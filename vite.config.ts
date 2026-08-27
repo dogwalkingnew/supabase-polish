@@ -9,7 +9,9 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 export default defineConfig({
   vite: {
     server: {
-      allowedHosts: ["8080-i45ttw5zikrthpw96npap-e0f9d0d5.us2.manus.computer"],
+      // Les hôtes de prévisualisation Manus sont éphémères. Restreindre la règle à
+      // l’ancien hôte empêchait tout rendu dans la prévisualisation courante.
+      allowedHosts: [".manus.computer"],
     },
   },
   tanstackStart: {

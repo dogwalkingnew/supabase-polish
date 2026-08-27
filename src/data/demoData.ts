@@ -3,10 +3,10 @@ import dogGolden from "@/assets/dog-golden.jpg";
 import avatarWalker from "@/assets/avatar-walker.jpg";
 
 // Try to import optional demo images, fallback to defaults
-let demoDogMax = dogGolden;
-let demoDogBella = dogGolden;
-let demoWalkerLucas = avatarWalker;
-let demoWalkerSophie = avatarWalker;
+const demoDogMax = dogGolden;
+const demoDogBella = dogGolden;
+const demoWalkerLucas = avatarWalker;
+const demoWalkerSophie = avatarWalker;
 
 // Demo images removed - using fallback defaults from above
 

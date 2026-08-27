@@ -1,4 +1,4 @@
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
+import { Dog, Mail } from "lucide-react";
 /**
  * DogWalking — Confiance canine de proximité : footer sobre et opérationnel,
  * centré sur des liens internes et des informations de contact vérifiables.
@@ -13,8 +13,10 @@ export const Footer = () => {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="text-2xl">🐕</div>
-              <span className="text-xl font-bold">DogWalking</span>
+              <div className="dogwalking-brand-mark dogwalking-brand-mark--footer h-9 w-9" aria-hidden="true">
+                <Dog className="h-4 w-4" strokeWidth={2.4} />
+              </div>
+              <span className="dogwalking-wordmark dogwalking-wordmark--footer text-xl">Dog<span>Walking</span></span>
             </Link>
             <p className="text-white/70 text-sm mb-4">
               Une plateforme de mise en relation pour organiser les demandes de promenade, garde et visite d’animaux.
@@ -63,7 +65,7 @@ export const Footer = () => {
             <ul className="space-y-2 text-sm text-white/70">
               <li className="flex items-start gap-2">
                 <Mail className="mt-0.5 h-4 w-4 shrink-0" />
-                <span>Coordonnées de publication à confirmer</span>
+                <span>Coordonnées de publication à renseigner avant ouverture</span>
               </li>
             </ul>
           </div>

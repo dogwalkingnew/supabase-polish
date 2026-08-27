@@ -42,13 +42,17 @@ const useTrainingProgress = () => {
             setLoadingProgress(false);
             return;
           }
-        } catch {}
+        } catch (error) {
+          console.warn("Chargement distant de la formation impossible ; la sauvegarde locale est utilisée.", error);
+        }
       }
       // Fallback: localStorage
       try {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) setCompletedModules(JSON.parse(stored));
-      } catch {}
+      } catch (error) {
+        console.warn("Lecture locale de la progression de formation impossible.", error);
+      }
       setLoadingProgress(false);
     };
     load();
@@ -63,14 +67,17 @@ const useTrainingProgress = () => {
 
     if (user) {
       try {
-        await (supabase as any).from("walker_training_progress").upsert({
+        const { error } = await (supabase as any).from("walker_training_progress").upsert({
           user_id: user.id,
           module_id: moduleId,
           completed: true,
           score,
           completed_at: new Date().toISOString(),
         }, { onConflict: "user_id,module_id" });
-      } catch {}
+        if (error) throw error;
+      } catch (error) {
+        console.error("Enregistrement distant de la progression impossible.", error);
+      }
     }
   };
 
