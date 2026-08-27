@@ -11,7 +11,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useEffect, type ReactNode } from "react";
+import { createElement, useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -114,26 +114,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
-  return (
-    <html lang="fr">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
+  return createElement(
+    "html",
+    { lang: "fr" },
+    createElement("head", null, createElement(HeadContent)),
+    createElement("body", null, children, createElement(Scripts)),
   );
 }
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
-    </QueryClientProvider>
+  // Les routes enfants restent montées ici. La forme createElement évite que le
+  // pré-rendu SPA de Vite charge jsxDEV dans son runtime React de production.
+  return createElement(
+    QueryClientProvider,
+    { client: queryClient },
+    createElement(Outlet),
   );
 }
