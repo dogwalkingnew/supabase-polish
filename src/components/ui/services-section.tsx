@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
  * avec des prix indicatifs et des informations de mission sans promesse financière implicite.
  */
 import { Badge } from "@/components/ui/badge";
-import { Clock, Camera, ArrowRight, Dog, Home, Moon, Sun, Heart, Stethoscope, Car, PawPrint, Shield, Check } from 'lucide-react';
+import { Camera, ArrowRight, Dog, Home, Moon, Sun, Heart, Stethoscope, Car, PawPrint, Shield, Check } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 
 // Import des images locales
@@ -24,9 +24,7 @@ export const ServicesSection = () => {
       id: "promenade",
       slug: "promenade",
       title: "Promenade",
-      description: "Promenade en extérieur adaptée aux besoins renseignés pour votre animal.",
-      minPrice: 8,
-      duration: "Durée libre",
+      description: "Demande de promenade à organiser selon les besoins renseignés pour votre animal.",
       image: promenadeParc,
       tags: ["Exercice adapté", "Suivi de mission"],
       icon: Dog,
@@ -36,9 +34,7 @@ export const ServicesSection = () => {
       id: "visite_domicile",
       slug: "visite",
       title: "Visite à domicile",
-      description: "Nourriture, eau fraîche et câlins pour vos animaux dans le confort de leur maison.",
-      minPrice: 8,
-      duration: "30 min",
+      description: "Demande de visite à domicile dont la durée, les consignes et les soins sont à confirmer.",
       image: visiteRepas,
       tags: ["Animaux choyés", "Soins quotidiens"],
       icon: Home,
@@ -48,9 +44,7 @@ export const ServicesSection = () => {
       id: "hebergement_nuit",
       slug: "garde",
       title: "Hébergement",
-      description: "Votre animal séjourne chez l'Accompagnateur Certifié dans un environnement sécurisé et familial.",
-      minPrice: 10,
-      duration: "Par nuit",
+      description: "Demande d’hébergement à préciser avec l’Accompagnateur, selon ses informations et le besoin de votre animal.",
       image: hebergementNuit,
       tags: ["Env. familial", "Suivi régulier"],
       icon: Moon,
@@ -60,9 +54,7 @@ export const ServicesSection = () => {
       id: "garderie",
       slug: "garde-domicile",
       title: "Garderie de Jour/Nuit",
-      description: "Garderie de jour chez l'Accompagnateur Certifié, idéal pour la socialisation et l'exercice en journée.",
-      minPrice: 10,
-      duration: "Journée",
+      description: "Demande de garde de jour à organiser avec l’Accompagnateur et les consignes adaptées à votre animal.",
       image: garderieJour,
       tags: ["Socialisation", "Activités variées"],
       icon: Sun,
@@ -72,9 +64,7 @@ export const ServicesSection = () => {
       id: "garde_domicile",
       slug: "garde-multi-animaux",
       title: "Garde à domicile",
-      description: "L'Accompagnateur Certifié reste chez vous pour garder vos animaux dans leur environnement.",
-      minPrice: 12,
-      duration: "Par nuit",
+      description: "Demande de garde au domicile du Propriétaire, dont les conditions sont à convenir avant la mission.",
       image: gardeDomicile,
       tags: ["Chez vous", "Routine préservée"],
       icon: Heart,
@@ -84,9 +74,7 @@ export const ServicesSection = () => {
       id: "visite_sanitaire",
       slug: "marche-reguliere",
       title: "Visite Sanitaire",
-      description: "Entretien et soins assurés à l’aide des produits fournis par le Propriétaire (brossage, hygiène, soins).",
-      minPrice: 16,
-      duration: "45 min",
+      description: "Demande de visite incluant des consignes d’entretien ou d’hygiène à détailler avec l’Accompagnateur.",
       image: visiteSoins,
       tags: ["Soins hygiène", "Brossage"],
       icon: Stethoscope,
@@ -96,9 +84,7 @@ export const ServicesSection = () => {
       id: "accompagnement_veterinaire",
       slug: "visite",
       title: "Accomp. Vétérinaire",
-      description: "Transport et accompagnement de votre animal chez le vétérinaire pour ses rendez-vous santé.",
-      minPrice: 13,
-      duration: "Variable",
+      description: "Demande d’accompagnement à un rendez-vous vétérinaire, sous réserve des modalités convenues avec l’Accompagnateur.",
       image: vetAccompagnement,
       tags: ["Transport inclus", "Compte-rendu"],
       icon: Car,
@@ -112,11 +98,11 @@ export const ServicesSection = () => {
         <div className="text-center mb-12 md:mb-16">
           <span className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-medium mb-4">
             <PawPrint className="h-4 w-4" />
-            7 services disponibles
+            Services à organiser
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Nos Services d'Accompagnement pour vos animaux</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Promenade, garde, hébergement et accompagnement vétérinaire : choisissez le service adapté et confirmez les modalités avec l’Accompagnateur.
+            Promenade, garde, hébergement et accompagnement vétérinaire : choisissez une catégorie de besoin et confirmez les modalités avec l’Accompagnateur.
           </p>
         </div>
 
@@ -134,15 +120,9 @@ export const ServicesSection = () => {
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                <div className="absolute top-3 right-3">
-                  <Badge className="bg-white/95 text-foreground font-bold text-sm shadow-md px-3 py-1">
-                    À partir de {service.minPrice}€
-                  </Badge>
-                </div>
                 <div className="absolute bottom-3 left-3">
                   <Badge variant="secondary" className="bg-black/70 text-white text-xs backdrop-blur-sm">
-                    <Clock className="h-3 w-3 mr-1" />
-                    {service.duration}
+                    Modalités à confirmer
                   </Badge>
                 </div>
               </div>

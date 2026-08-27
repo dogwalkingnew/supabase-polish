@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "@/components/ui/use-toast";
 
 type BookingRow = {
   id: string;
@@ -24,29 +25,70 @@ type BookingRow = {
   dogs?: { name?: string | null } | null;
 };
 
-const statusLabel: Record<string, string> = { pending: "En attente", confirmed: "Confirmée", in_progress: "En cours", completed: "Terminée", cancelled: "Annulée" };
+const statusLabel: Record<string, string> = { pending: "Réponse attendue", confirmed: "Confirmée", in_progress: "En cours", completed: "Terminée", cancelled: "Non disponible" };
 const serviceLabel: Record<string, string> = { promenade: "Promenade", garde: "Garde", visite: "Visite à domicile", veterinaire: "Accompagnement vétérinaire" };
 
 const WalkerDashboardV3 = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [respondingId, setRespondingId] = useState<string | null>(null);
   const [verified, setVerified] = useState<boolean | null>(null);
   const [bookings, setBookings] = useState<BookingRow[]>([]);
 
-  useEffect(() => {
-    const load = async () => {
-      if (!user) return;
-      setLoading(true);
-      const [{ data: walkerProfile }, { data: bookingRows }] = await Promise.all([
-        (supabase as any).from("walker_profiles").select("verified").eq("user_id", user.id).maybeSingle(),
-        (supabase as any).from("bookings").select("id, service_type, scheduled_date, scheduled_time, duration_minutes, address, status, dogs(name)").eq("walker_id", user.id).order("scheduled_date", { ascending: true }).limit(20),
-      ]);
-      setVerified(Boolean(walkerProfile?.verified));
-      setBookings((bookingRows || []) as BookingRow[]);
+  const loadDashboard = async () => {
+    if (!user) {
       setLoading(false);
-    };
-    void load();
-  }, [user]);
+      return;
+    }
+
+    setLoading(true);
+    const [{ data: walkerProfile }, { data: bookingRows, error: bookingsError }] = await Promise.all([
+      (supabase as any).from("walker_profiles").select("verified").eq("user_id", user.id).maybeSingle(),
+      (supabase as any).from("bookings").select("id, service_type, scheduled_date, scheduled_time, duration_minutes, address, status, dogs(name)").eq("walker_id", user.id).order("scheduled_date", { ascending: true }).limit(20),
+    ]);
+
+    if (bookingsError) {
+      toast({ title: "Erreur", description: "Impossible de charger les réservations attribuées.", variant: "destructive" });
+    }
+    setVerified(Boolean(walkerProfile?.verified));
+    setBookings((bookingRows || []) as BookingRow[]);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    void loadDashboard();
+  }, [user?.id]);
+
+  const respondToBooking = async (bookingId: string, decision: "accept" | "decline") => {
+    if (!verified) return;
+    if (decision === "decline" && !window.confirm("Confirmer le refus de cette demande ? Le Propriétaire sera informé.")) return;
+    if (decision === "accept" && !window.confirm("Confirmer ce créneau ? Vérifiez auparavant que vous pouvez assurer cette mission.")) return;
+
+    setRespondingId(bookingId);
+    try {
+      const { error } = await (supabase as any).rpc("respond_to_direct_booking", {
+        p_booking_id: bookingId,
+        p_decision: decision,
+      });
+      if (error) throw error;
+
+      toast({
+        title: decision === "accept" ? "Demande confirmée" : "Demande refusée",
+        description: decision === "accept" ? "Le Propriétaire a été notifié. Les modalités restent à confirmer entre vous." : "Le Propriétaire a été notifié de l’indisponibilité.",
+      });
+      await loadDashboard();
+    } catch (error: any) {
+      const message = String(error?.message || "");
+      const description = message.includes("Verified walker profile required")
+        ? "Votre profil doit d’abord être validé par l’administration."
+        : message.includes("Booking has already been decided")
+          ? "Cette demande a déjà reçu une réponse. Actualisez la page."
+          : message || "Impossible d’enregistrer votre réponse.";
+      toast({ title: "Réponse non enregistrée", description, variant: "destructive" });
+    } finally {
+      setRespondingId(null);
+    }
+  };
 
   const activeBookings = useMemo(() => bookings.filter((booking) => booking.status === "confirmed" || booking.status === "in_progress"), [bookings]);
 
@@ -60,9 +102,9 @@ const WalkerDashboardV3 = () => {
         </div>
         {loading ? <div className="flex min-h-48 items-center justify-center rounded-2xl border bg-card"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div> : (
           <div className="space-y-6">
-            <Card className={verified ? "border-primary/30 bg-primary/5" : "border-amber-400/40 bg-amber-50"}><CardContent className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between"><div className="flex items-start gap-3">{verified ? <CheckCircle2 className="mt-0.5 h-5 w-5 text-primary" /> : <ShieldAlert className="mt-0.5 h-5 w-5 text-amber-700" />}<div><p className="font-semibold">{verified ? "Profil opérationnel" : "Profil en attente de validation"}</p><p className="text-sm text-muted-foreground">{verified ? "Vous pouvez consulter vos missions qui vous sont attribuées." : "Vous ne pouvez pas répondre à une demande ouverte tant qu’une validation administrative n’est pas enregistrée."}</p></div></div><Button asChild size="sm" variant="outline"><Link to="/walker/register">Compléter mon dossier</Link></Button></CardContent></Card>
-            <div className="grid gap-4 md:grid-cols-2"><Card><CardHeader className="pb-3"><CardDescription className="flex items-center gap-2"><ClipboardList className="h-4 w-4" /> Missions actives</CardDescription><CardTitle>{activeBookings.length}</CardTitle></CardHeader><CardContent className="text-sm text-muted-foreground">Confirmées ou en cours, sans calcul de revenu ni paiement intégré.</CardContent></Card><Card><CardHeader className="pb-3"><CardDescription className="flex items-center gap-2"><UserRound className="h-4 w-4" /> Disponibilités</CardDescription><CardTitle>À renseigner</CardTitle></CardHeader><CardContent className="text-sm text-muted-foreground">La gestion de disponibilités n’est pas encore active ; n’acceptez que les missions dont vous pouvez confirmer le créneau.</CardContent></Card></div>
-            <Card><CardHeader><CardTitle className="flex items-center gap-2"><CalendarDays className="h-5 w-5 text-primary" /> Réservations attribuées</CardTitle><CardDescription>Les coordonnées détaillées restent limitées aux participants de la mission.</CardDescription></CardHeader><CardContent>{bookings.length === 0 ? <div className="rounded-xl border border-dashed p-8 text-center text-muted-foreground"><Dog className="mx-auto mb-3 h-8 w-8 text-primary/60" />Aucune réservation ne vous est attribuée actuellement.</div> : <div className="space-y-3">{bookings.map((booking) => <div key={booking.id} className="flex flex-col gap-3 rounded-xl border p-4 sm:flex-row sm:items-center sm:justify-between"><div><div className="mb-1 flex flex-wrap items-center gap-2"><span className="font-semibold">{serviceLabel[booking.service_type || ""] || "Prestation"}</span><Badge variant="secondary">{statusLabel[booking.status || ""] || booking.status || "—"}</Badge></div><p className="text-sm text-muted-foreground">{booking.dogs?.name ? `Animal : ${booking.dogs.name} · ` : ""}{booking.scheduled_date ? new Date(booking.scheduled_date).toLocaleDateString("fr-FR") : "Date à confirmer"}{booking.scheduled_time ? ` à ${booking.scheduled_time.slice(0, 5)}` : ""}{booking.duration_minutes ? ` · ${booking.duration_minutes} min` : ""}</p>{booking.address && <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground"><MapPin className="h-3.5 w-3.5" /> Zone renseignée pour la mission</p>}</div><Button asChild size="sm" variant="outline"><Link to={`/booking/${booking.id}`}>Voir la mission</Link></Button></div>)}</div>}</CardContent></Card>
+            <Card className={verified ? "border-primary/30 bg-primary/5" : "border-amber-400/40 bg-amber-50"}><CardContent className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between"><div className="flex items-start gap-3">{verified ? <CheckCircle2 className="mt-0.5 h-5 w-5 text-primary" /> : <ShieldAlert className="mt-0.5 h-5 w-5 text-amber-700" />}<div><p className="font-semibold">{verified ? "Profil opérationnel" : "Profil en attente de validation"}</p><p className="text-sm text-muted-foreground">{verified ? "Vous pouvez confirmer ou refuser les demandes qui vous sont directement attribuées." : "Vous ne pouvez pas répondre à une demande tant qu’une validation administrative n’est pas enregistrée."}</p></div></div><Button asChild size="sm" variant="outline"><Link to="/walker/register">Compléter mon dossier</Link></Button></CardContent></Card>
+            <div className="grid gap-4 md:grid-cols-2"><Card><CardHeader className="pb-3"><CardDescription className="flex items-center gap-2"><ClipboardList className="h-4 w-4" /> Missions actives</CardDescription><CardTitle>{activeBookings.length}</CardTitle></CardHeader><CardContent className="text-sm text-muted-foreground">Confirmées ou en cours, sans calcul de revenu ni paiement intégré.</CardContent></Card><Card><CardHeader className="pb-3"><CardDescription className="flex items-center gap-2"><UserRound className="h-4 w-4" /> Disponibilités</CardDescription><CardTitle>À renseigner</CardTitle></CardHeader><CardContent className="text-sm text-muted-foreground">La gestion de disponibilités n’est pas encore active ; confirmez uniquement les créneaux que vous pouvez assurer.</CardContent></Card></div>
+            <Card><CardHeader><CardTitle className="flex items-center gap-2"><CalendarDays className="h-5 w-5 text-primary" /> Réservations attribuées</CardTitle><CardDescription>Les coordonnées détaillées restent limitées aux participants de la mission.</CardDescription></CardHeader><CardContent>{bookings.length === 0 ? <div className="rounded-xl border border-dashed p-8 text-center text-muted-foreground"><Dog className="mx-auto mb-3 h-8 w-8 text-primary/60" />Aucune réservation ne vous est attribuée actuellement.</div> : <div className="space-y-3">{bookings.map((booking) => <div key={booking.id} className="flex flex-col gap-3 rounded-xl border p-4 sm:flex-row sm:items-center sm:justify-between"><div><div className="mb-1 flex flex-wrap items-center gap-2"><span className="font-semibold">{serviceLabel[booking.service_type || ""] || "Prestation"}</span><Badge variant="secondary">{statusLabel[booking.status || ""] || booking.status || "—"}</Badge></div><p className="text-sm text-muted-foreground">{booking.dogs?.name ? `Animal : ${booking.dogs.name} · ` : ""}{booking.scheduled_date ? new Date(booking.scheduled_date).toLocaleDateString("fr-FR") : "Date à confirmer"}{booking.scheduled_time ? ` à ${booking.scheduled_time.slice(0, 5)}` : ""}{booking.duration_minutes ? ` · ${booking.duration_minutes} min` : ""}</p>{booking.address && <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground"><MapPin className="h-3.5 w-3.5" /> Zone renseignée pour la mission</p>}</div><div className="flex flex-wrap gap-2"><Button asChild size="sm" variant="outline"><Link to={`/booking/${booking.id}`}>Voir la mission</Link></Button>{booking.status === "pending" && verified && <><Button size="sm" disabled={respondingId === booking.id} onClick={() => void respondToBooking(booking.id, "accept")}>Accepter</Button><Button size="sm" variant="destructive" disabled={respondingId === booking.id} onClick={() => void respondToBooking(booking.id, "decline")}>Refuser</Button></>}</div></div>)}</div>}</CardContent></Card>
           </div>
         )}
       </main>

@@ -22,6 +22,22 @@ import RoleChoiceDialog from "@/components/dashboard/shared/RoleChoiceDialog";
 
 import heroImage from "@/assets/hero-dog-walking.jpg";
 
+const isOAuthEnabled = import.meta.env.VITE_ENABLE_OAUTH === 'true';
+
+const getSafeInternalPath = (value: string | null): string | null => {
+  if (!value) return null;
+
+  try {
+    const candidate = decodeURIComponent(value).trim();
+    if (!candidate.startsWith('/') || candidate.startsWith('//') || candidate.startsWith('/\\') || candidate.includes('\\') || candidate.includes('\0')) {
+      return null;
+    }
+    return candidate;
+  } catch {
+    return null;
+  }
+};
+
 const GoogleIcon = () => (
   <svg className="w-5 h-5" viewBox="0 0 24 24">
     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -44,8 +60,8 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const defaultTab = searchParams.get('type') === 'owner' ? 'register' : 'login';
-  const redirectUrl = searchParams.get('redirect');
+  const defaultTab = searchParams.get('mode') === 'register' || searchParams.get('type') === 'owner' ? 'register' : 'login';
+  const redirectUrl = getSafeInternalPath(searchParams.get('redirect'));
   const roleFromParams = searchParams.get('role') as UserType | null;
   
   const [selectedUserType, setSelectedUserType] = useState<UserType | null>(roleFromParams);
@@ -66,11 +82,14 @@ const Auth = () => {
     if (pendingBooking) {
       const { returnUrl } = JSON.parse(pendingBooking);
       storage.removeItem('pendingBooking');
-      navigate(returnUrl);
-      return;
+      const safeReturnUrl = getSafeInternalPath(returnUrl);
+      if (safeReturnUrl) {
+        navigate(safeReturnUrl);
+        return;
+      }
     }
     if (redirectUrl) {
-      navigate(decodeURIComponent(redirectUrl));
+      navigate(redirectUrl);
       return;
     }
     const { data: { session } } = await supabase.auth.getSession();
@@ -155,8 +174,7 @@ const Auth = () => {
       setLoading(false);
     } else {
       toast({ title: "Connexion réussie", description: "Bienvenue sur DogWalking !" });
-      const path = await resolveDashboardPath(selectedUserType);
-      navigate(path);
+      await handlePostAuthRedirect();
     }
   };
 
@@ -210,9 +228,15 @@ const Auth = () => {
         variant: "destructive",
       });
       setLoading(false);
+    } else if (data.session) {
+      toast({ title: "Inscription réussie", description: `Bienvenue en tant que ${selectedUserType === 'owner' ? 'Propriétaire' : 'Accompagnateur'} !` });
+      await handlePostAuthRedirect();
     } else {
-      toast({ title: "Inscription réussie !", description: `Bienvenue en tant que ${selectedUserType === 'owner' ? 'Propriétaire' : 'Accompagnateur'} !` });
-      navigate(selectedUserType === 'walker' ? '/walker/dashboard' : '/dashboard');
+      toast({
+        title: "Confirmez votre adresse e-mail",
+        description: "Un lien de confirmation a été envoyé. Ouvrez-le avant de vous connecter à DogWalking.",
+      });
+      setLoading(false);
     }
   };
 
@@ -264,8 +288,8 @@ const Auth = () => {
       subtitle: "Je promène des chiens",
       description: "Proposez vos services et organisez vos disponibilités",
       features: [
-        { icon: Wallet, text: "Indiquez vos tarifs" },
-        { icon: Calendar, text: "Gérez vos disponibilités" },
+        { icon: Wallet, text: "Renseignez vos tarifs indicatifs" },
+        { icon: Calendar, text: "Consultez vos demandes" },
         { icon: Shield, text: "Suivez vos demandes" },
         { icon: Star, text: "Complétez votre profil" },
       ],
@@ -411,20 +435,23 @@ const Auth = () => {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="pt-0">
-                      {/* Social Login */}
-                      <div className="space-y-2 mb-4">
-                        <Button variant="outline" className="w-full h-11 gap-3 text-sm font-medium" onClick={() => handleSocialLogin('google')} disabled={loading}>
-                          <GoogleIcon /> Continuer avec Google
-                        </Button>
-                        <Button variant="outline" className="w-full h-11 gap-3 text-sm font-medium" onClick={() => handleSocialLogin('apple')} disabled={loading}>
-                          <AppleIcon /> Continuer avec Apple
-                        </Button>
-                      </div>
+                      {isOAuthEnabled && (
+                        <>
+                          <div className="space-y-2 mb-4">
+                            <Button variant="outline" className="w-full h-11 gap-3 text-sm font-medium" onClick={() => handleSocialLogin('google')} disabled={loading}>
+                              <GoogleIcon /> Continuer avec Google
+                            </Button>
+                            <Button variant="outline" className="w-full h-11 gap-3 text-sm font-medium" onClick={() => handleSocialLogin('apple')} disabled={loading}>
+                              <AppleIcon /> Continuer avec Apple
+                            </Button>
+                          </div>
 
-                      <div className="relative mb-4">
-                        <Separator />
-                        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-3 text-xs text-muted-foreground">ou avec email</span>
-                      </div>
+                          <div className="relative mb-4">
+                            <Separator />
+                            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-3 text-xs text-muted-foreground">ou avec email</span>
+                          </div>
+                        </>
+                      )}
 
                       <Tabs defaultValue={defaultTab}>
                         <TabsList className="grid w-full grid-cols-2 mb-4">

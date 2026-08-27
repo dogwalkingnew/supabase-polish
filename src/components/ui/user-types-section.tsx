@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+/** DogWalking — présentation de profils fondée sur les parcours effectivement disponibles. */
 import { 
-  Dog, Briefcase, Check, ArrowRight, Plane, Briefcase as Work, 
-  CreditCard, Clock, Euro, Users, Star, Home, HeartPulse, Accessibility, CloudRain
+  Dog, Briefcase, Check, ArrowRight, Plane, Briefcase as Work,
+  CalendarDays, MessageCircle, FileText, Users, HeartPulse, Accessibility, CloudRain
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -20,23 +21,23 @@ export const UserTypesSection = () => {
   ];
 
   const walkerBenefits = [
-    { text: "Revenus complémentaires attractifs", icon: Euro },
-    { text: "Emploi du temps 100% flexible", icon: Clock },
-    { text: "Paiements rapides et sécurisés", icon: CreditCard },
-    { text: "Badges et reconnaissance", icon: Star },
-    { text: "Formation continue", icon: Users }
+    { text: "Déposez votre candidature", icon: FileText },
+    { text: "Décrivez vos informations de profil", icon: Briefcase },
+    { text: "Répondez aux demandes attribuées après validation", icon: Check },
+    { text: "Échangez avec les participants à une mission", icon: MessageCircle },
+    { text: "Renseignez vos modalités à confirmer", icon: CalendarDays }
   ];
 
-  const ownerStats = [
-    { value: "2 500+", label: "Professionnels actifs" },
-    { value: "4.9/5", label: "Note moyenne" },
-    { value: "< 24h", label: "Temps de réponse" }
+  const ownerHighlights = [
+    { value: "Profil", label: "informations consultables" },
+    { value: "Demande", label: "créneau et consignes" },
+    { value: "Mission", label: "statut suivi" }
   ];
 
-  const walkerStats = [
-    { value: "500-1500€", label: "Revenus moyens/mois" },
-    { value: "87%", label: "Reversé aux Accompagnateurs" },
-    { value: "48h", label: "Profil validé une fois complété" }
+  const walkerHighlights = [
+    { value: "Dossier", label: "soumis à examen" },
+    { value: "Décision", label: "administrative" },
+    { value: "Réponse", label: "à une demande attribuée" }
   ];
 
   return (
@@ -56,8 +57,7 @@ export const UserTypesSection = () => {
             Choisissez votre profil
           </h2>
           <p className="text-base text-muted-foreground max-w-2xl mx-auto">
-            Que vous soyez Propriétaire d’animal ou passionné souhaitant devenir Accompagnateur Certifié, 
-            DogWalking vous offre une expérience unique, sécurisée et transparente.
+            Que vous soyez Propriétaire d’animal ou futur Accompagnateur, DogWalking structure les informations et demandes disponibles dans l’application.
           </p>
         </motion.div>
 
@@ -84,9 +84,9 @@ export const UserTypesSection = () => {
               </div>
 
               <div className="grid grid-cols-3 border-b">
-                {ownerStats.map((stat, index) => (
+                {ownerHighlights.map((stat, index) => (
                   <div key={index} className="p-2 md:p-3 text-center border-r last:border-r-0">
-                    <p className="text-base md:text-lg font-bold text-primary">{stat.value}</p>
+                    <p className="text-sm md:text-base font-bold text-primary">{stat.value}</p>
                     <p className="text-[10px] md:text-xs text-muted-foreground leading-tight">{stat.label}</p>
                   </div>
                 ))}
@@ -94,7 +94,7 @@ export const UserTypesSection = () => {
 
               <CardContent className="p-4 md:p-5 flex flex-col flex-1">
                 <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
-                  La vie ne s'arrête jamais, mais votre animal a toujours besoin d'attention. Voyage, travail, fatigue, maladie ou perte d'autonomie : DogWalking prend le relais à chaque fois que vous ne pouvez pas vous occuper de votre compagnon.
+                  Voyage, travail, fatigue ou changement de routine : décrivez le besoin de votre animal puis confirmez directement les conditions avec l’Accompagnateur concerné.
                 </p>
 
                 <ul className="space-y-2 mb-5">
@@ -153,15 +153,15 @@ export const UserTypesSection = () => {
                   </div>
                   <div className="min-w-0">
                     <h3 className="text-lg md:text-xl font-bold">Accompagnateurs</h3>
-                    <p className="text-white/80 text-xs md:text-sm leading-tight">Gagnez de l'argent en faisant ce que vous aimez</p>
+                    <p className="text-white/80 text-xs md:text-sm leading-tight">Présentez votre dossier et les informations de vos services</p>
                   </div>
                 </div>
               </div>
 
               <div className="grid grid-cols-3 border-b">
-                {walkerStats.map((stat, index) => (
+                {walkerHighlights.map((stat, index) => (
                   <div key={index} className="p-2 md:p-3 text-center border-r last:border-r-0">
-                    <p className="text-base md:text-lg font-bold text-accent">{stat.value}</p>
+                    <p className="text-sm md:text-base font-bold text-accent">{stat.value}</p>
                     <p className="text-[10px] md:text-xs text-muted-foreground leading-tight">{stat.label}</p>
                   </div>
                 ))}
@@ -169,7 +169,7 @@ export const UserTypesSection = () => {
 
               <CardContent className="p-4 md:p-5 flex flex-col flex-1">
                 <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
-                  Rejoignez notre réseau de professionnels passionnés. Fixez vos tarifs, choisissez vos horaires et vos zones d'intervention en toute liberté. Recevez vos paiements rapidement et en toute sécurité.
+                  Déposez un dossier avec vos informations. Après validation administrative, vous pouvez consulter les demandes qui vous sont attribuées et y répondre. Les modalités et le règlement restent à convenir avec le Propriétaire.
                 </p>
 
                 <ul className="space-y-2 mb-5">
@@ -221,14 +221,14 @@ export const UserTypesSection = () => {
           className="text-center mt-10"
         >
           <p className="text-muted-foreground text-sm mb-3">
-            Des questions ? Notre équipe est là pour vous accompagner.
+            Consultez les informations disponibles avant de créer une demande ou un dossier.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <Button size="sm" onClick={() => navigate('/support')}>
               Consulter l'aide
             </Button>
-            <Button variant="secondary" size="sm" className="border border-primary/30" onClick={() => navigate('/support?tab=contact')}>
-              Nous contacter
+            <Button variant="secondary" size="sm" className="border border-primary/30" onClick={() => navigate('/ressources-legales')}>
+              Voir les ressources légales
             </Button>
           </div>
         </motion.div>

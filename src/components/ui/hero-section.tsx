@@ -100,9 +100,9 @@ export const HeroSection = () => {
             variants={itemVariants}
             className="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 md:mb-6 leading-tight"
           >
-            Quelqu'un de confiance{" "}
-            <span className="text-gradient inline-block">
-              pour votre animal, dès aujourd'hui
+              Un accompagnement à organiser{" "}
+              <span className="text-gradient inline-block">
+              pour votre animal
             </span>
           </motion.h1>
 
@@ -110,8 +110,8 @@ export const HeroSection = () => {
             variants={itemVariants}
             className="text-lg md:text-2xl mb-6 md:mb-8 opacity-90 max-w-2xl mx-auto text-center"
           >
-            Promenade, garde, visite — selon les disponibilités près de chez vous.<br />
-            Suivez les informations de votre mission et les preuves partagées par votre Accompagnateur.
+            Promenade, garde, visite : consultez les profils et formulez une demande adaptée à votre besoin.<br />
+            Confirmez les modalités avec l’Accompagnateur avant la mission.
           </motion.p>
 
           <motion.div 
@@ -127,7 +127,7 @@ export const HeroSection = () => {
                 className="text-base md:text-lg px-6 md:px-8 py-3 md:py-4 h-auto w-full sm:w-auto shadow-button" 
                 onClick={() => window.location.href = '/walkers'}
               >
-                Voir les Accompagnateurs Près de Chez Moi
+                Voir les profils Accompagnateur
               </Button>
             </motion.div>
             <motion.div
@@ -156,7 +156,7 @@ export const HeroSection = () => {
           {/* Trust indicators */}
           <div className="mt-8 md:mt-12 grid grid-cols-2 md:flex md:justify-center items-center gap-4 md:gap-8 text-xs md:text-sm">
             {[
-              { icon: Shield, text: "Profils soumis à vérification", color: "text-primary" },
+              { icon: Shield, text: "Candidatures examinées avant activation", color: "text-primary" },
               { icon: Clock, text: "Demandes suivies par statut", color: "text-primary" },
               { icon: Camera, text: "Preuves visuelles selon le service", color: "text-accent" },
             ].map((item, i) => (

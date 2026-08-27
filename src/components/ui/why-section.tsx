@@ -33,7 +33,7 @@ export const WhySection = () => {
     {
       icon: Users,
       title: "Profils renseignés",
-      description: "Les Accompagnateurs présentent leurs services, disponibilités et informations de profil avant la mise en relation.",
+      description: "Les Accompagnateurs présentent les services et informations de profil qu’ils choisissent de renseigner avant la mise en relation.",
       gradient: "from-primary to-accent",
       bgGradient: "from-primary/10 to-accent/10"
     },
@@ -89,7 +89,7 @@ export const WhySection = () => {
             className="inline-flex items-center gap-2 bg-primary/10 text-primary px-5 py-2 rounded-full text-sm font-semibold mb-4 border border-primary/20"
           >
             <Sparkles className="w-4 h-4" />
-            Notre protocole en 5 points
+            Des repères pour organiser une mission
           </motion.span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-5">
             Un cadre clair pour <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">chaque mission</span>

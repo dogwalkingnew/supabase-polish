@@ -2,32 +2,31 @@ import { SEOFAQ } from "./seo-faq";
 import { motion } from "framer-motion";
 import { HelpCircle } from "lucide-react";
 
-// FAQ alignée sur les NOUVELLES sections de la home (déclencheurs + protocole 5 points)
-// Chaque question répond à une objection concrète, sans répétition.
+/** DogWalking — FAQ publique factuelle : ne pas annoncer de contrôle, paiement ou disponibilité non prouvés. */
 const homeFAQs = [
   {
     question: "Et si je tombe sur quelqu'un de pas sérieux ?",
-    answer: "Vous ne tomberez pas dessus : 65% des candidats Accompagnateurs sont refusés. Chaque profil est vérifié manuellement par notre équipe (pièce d'identité, justificatifs, références). Et même si quelque chose se passait mal, le paiement reste bloqué jusqu'à VOTRE validation finale via votre code unique. L'Accompagnateur n'est jamais payé à l'avance."
+    answer: "Consultez les informations renseignées sur le profil et échangez avec l’Accompagnateur avant de confirmer une mission. Les règles de vérification et de modération doivent être publiées par l’éditeur avant toute promesse de contrôle renforcé."
   },
   {
     question: "Concrètement, comment je sais que la promenade a vraiment eu lieu ?",
-    answer: "L'Accompagnateur envoie des photos pendant la mission directement sur votre fil de réservation. À la fin, il vous demande votre code unique à 4 chiffres. Tant que vous ne lui avez pas donné ce code, il ne touche pas un centime. Pas de photo, pas de code transmis = remboursement automatique."
+    answer: "Le statut de la mission est visible par les participants. L’Accompagnateur peut ajouter des photos de preuve pendant la mission ; elles restent accessibles aux seuls participants autorisés."
   },
   {
     question: "C'est combien et qu'est-ce qui est compris dans le prix ?",
-    answer: "Les prix sont libres et fixés par chaque Accompagnateur, à partir de 8€ pour une promenade ou une visite, 10€ pour une garderie, 12€ pour une garde à domicile, 16€ pour une visite sanitaire. Le prix affiché inclut tout : la mission, le suivi photos, la garantie Paiement Sécurisé, le support. Aucun frais caché, aucun abonnement."
+    answer: "Un prix peut être renseigné à titre indicatif. Le montant, la durée, les prestations comprises et le moyen de règlement doivent être confirmés directement entre le Propriétaire et l’Accompagnateur avant la mission."
   },
   {
     question: "Et si j'ai un imprévu et que je dois annuler ?",
-    answer: "Vous annulez en 2 clics depuis votre espace. Tant que la mission n'a pas commencé et que les fonds ne sont pas libérés, vous êtes intégralement remboursé automatiquement. À moins de 3h du début, c'est la médiation au cas par cas avec notre support."
+    answer: "Une demande peut être annulée depuis l’espace concerné selon son état. Les conséquences, conditions d’annulation et modalités de règlement doivent être convenues entre les participants tant qu’une politique officielle n’est pas publiée."
   },
   {
     question: "Vous êtes dispos dans ma ville ?",
-    answer: "Présents partout en France métropolitaine, avec une forte densité en Île-de-France, Lyon, Marseille, Bordeaux, Toulouse, Nantes, Lille et leurs périphéries. Tapez votre adresse dans la recherche en haut de la page : vous voyez immédiatement les Accompagnateurs disponibles autour de vous, avec distance, tarif et premier créneau libre."
+    answer: "La recherche affiche les profils et informations disponibles dans l’application. Les disponibilités ne sont pas encore gérées comme un calendrier partagé : confirmez toujours le créneau avec l’Accompagnateur."
   },
   {
     question: "Je préfère décrire mon besoin et recevoir des propositions, c'est possible ?",
-    answer: "Oui. Plutôt que de chercher manuellement, vous pouvez déposer une annonce libre : vous décrivez votre besoin, vous fixez votre budget (dans le respect des prix planchers), et vous recevez plusieurs propositions d'Accompagnateurs. Vous gardez le choix final."
+    answer: "Vous pouvez déposer une annonce libre en décrivant votre besoin, votre créneau et un prix indicatif. L’envoi de candidatures par les Accompagnateurs n’est pas encore disponible dans ce parcours ; consultez aussi les profils pour une demande directe."
   }
 ];
 
@@ -49,7 +48,7 @@ export const HomeFAQSection = () => {
             Réponses directes, sans langue de bois
           </h2>
           <p className="text-base md:text-lg text-muted-foreground">
-            Les 6 questions qu'on nous pose le plus avant la première réservation.
+            Des repères utiles avant de créer une demande ou de déposer une candidature.
           </p>
         </motion.div>
         <div className="max-w-3xl mx-auto">

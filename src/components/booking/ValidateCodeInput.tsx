@@ -1,3 +1,4 @@
+/** DogWalking — confiance canine de proximité : le code clôture la mission, sans gestion de paiement. */
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,7 +17,7 @@ interface ValidateCodeInputProps {
 /**
  * Composant côté ACCOMPAGNATEUR.
  * Saisie du Code Unique à 6 chiffres communiqué par le Propriétaire
- * pour clôturer la mission et déclencher la libération des fonds (CDC §8).
+ * pour clôturer une mission déjà en cours.
  */
 export const ValidateCodeInput = ({ bookingId, onValidated, alreadyValidated }: ValidateCodeInputProps) => {
   const [code, setCode] = useState("");
@@ -30,7 +31,7 @@ export const ValidateCodeInput = ({ bookingId, onValidated, alreadyValidated }: 
           <div>
             <p className="font-semibold">Mission validée</p>
             <p className="text-sm text-muted-foreground">
-              Vos gains (87%) sont en cours de virement vers votre compte.
+              Le code transmis par le Propriétaire a bien été enregistré.
             </p>
           </div>
         </CardContent>
@@ -72,8 +73,8 @@ export const ValidateCodeInput = ({ bookingId, onValidated, alreadyValidated }: 
       }
 
       toast({
-        title: "🎉 Mission validée !",
-        description: "Vos gains (87%) seront virés sous 24-48h.",
+        title: "Mission clôturée",
+        description: "Le code transmis par le Propriétaire a bien été validé.",
       });
       setCode("");
       onValidated?.();
@@ -96,7 +97,7 @@ export const ValidateCodeInput = ({ bookingId, onValidated, alreadyValidated }: 
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground">
             Demandez au Propriétaire son <strong>Code Unique de Validation</strong> à 6 chiffres et
-            saisissez-le ci-dessous pour libérer votre paiement.
+            saisissez-le ci-dessous pour clôturer la mission.
           </p>
 
           <div className="flex justify-center">
@@ -128,7 +129,7 @@ export const ValidateCodeInput = ({ bookingId, onValidated, alreadyValidated }: 
           </Button>
 
           <p className="text-xs text-muted-foreground text-center">
-            🔒 Protocole DogWalking — sans ce code, le paiement reste sécurisé.
+            Protocole DogWalking — ce code confirme la clôture de la mission.
           </p>
         </CardContent>
       </Card>

@@ -7,12 +7,23 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useNavigate } from 'react-router-dom';
 import { toast } from "@/components/ui/use-toast";
-import { Briefcase, Euro, Clock, Shield, CheckCircle, Users } from 'lucide-react';
+import { Briefcase, FileText, Clock, Shield, CheckCircle, Users } from 'lucide-react';
 import { SEOHead } from "@/components/seo/SEOHead";
 import { motion } from "framer-motion";
 import heroImage from "@/assets/services/promenade-chien-parc.jpg";
 import { supabase } from "@/integrations/supabase/client";
-import { useState } from "react";
+import { getSafeSessionStorage } from "@/lib/safeStorage";
+import { useEffect, useState } from "react";
+import { useSearchParams } from 'react-router-dom';
+
+type PendingWalkerApplication = {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  city: string;
+  experience: string;
+  motivation: string;
+};
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -29,7 +40,24 @@ const itemVariants = {
 
 const WalkerRegister = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [submitting, setSubmitting] = useState(false);
+  const [draft, setDraft] = useState<PendingWalkerApplication | null>(null);
+
+  useEffect(() => {
+    const storage = getSafeSessionStorage();
+    const savedDraft = storage.getItem("pendingWalkerApplication");
+    if (!savedDraft) return;
+
+    try {
+      const parsed = JSON.parse(savedDraft) as PendingWalkerApplication;
+      if (parsed.firstName && parsed.lastName && parsed.city && parsed.experience && parsed.motivation) {
+        setDraft(parsed);
+      }
+    } catch {
+      storage.removeItem("pendingWalkerApplication");
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -51,7 +79,7 @@ const WalkerRegister = () => {
       // Si non connecté → on demande la création de compte (user_type=walker)
       // et on stocke la candidature dans sessionStorage pour reprise post-auth.
       if (!session) {
-        sessionStorage.setItem(
+        getSafeSessionStorage().setItem(
           "pendingWalkerApplication",
           JSON.stringify({ firstName, lastName, phone, city, experience, motivation })
         );
@@ -59,65 +87,25 @@ const WalkerRegister = () => {
           title: "Créez votre compte",
           description: "Une dernière étape : créez votre compte Accompagnateur pour finaliser votre candidature.",
         });
-        navigate(`/auth?type=walker&redirect=${encodeURIComponent("/walker/register")}&email=${encodeURIComponent(email)}`);
+        navigate(`/auth?role=walker&mode=register&redirect=${encodeURIComponent("/walker/register")}&email=${encodeURIComponent(email)}`);
         return;
       }
 
-      const userId = session.user.id;
-
-      // 1) Mise à jour du profil (nom, ville, téléphone, type walker)
-      await (supabase as any)
-        .from("profiles")
-        .update({
-          first_name: firstName || null,
-          last_name: lastName || null,
-          phone: phone || null,
-          city: city || null,
-          user_type: "walker",
-        })
-        .eq("id", userId);
-
-      // 2) Création/Upsert du walker_profile (verified=false → en attente d'examen admin)
-      const { error: wpError } = await (supabase as any)
-        .from("walker_profiles")
-        .upsert(
-          {
-            user_id: userId,
-            verified: false,
-            experience_years: 0,
-            hourly_rate: 15,
-          },
-          { onConflict: "user_id" }
-        );
-      if (wpError) throw wpError;
-
-      // 3) Notification aux admins (best-effort)
-      try {
-        const { data: admins } = await (supabase as any)
-          .from("user_roles")
-          .select("user_id")
-          .eq("role", "admin");
-        if (admins?.length) {
-          await (supabase as any).from("notifications").insert(
-            admins.map((a: any) => ({
-              user_id: a.user_id,
-              title: "🆕 Nouvelle candidature Accompagnateur",
-              message: `${firstName} ${lastName} (${city || "ville non renseignée"}) souhaite devenir Accompagnateur.`,
-              type: "admin",
-              link: "/admin",
-              metadata: { applicant_id: userId, experience, motivation },
-            }))
-          );
-        }
-      } catch (notifErr) {
-        console.warn("[walker-register] notif admin échouée:", notifErr);
-      }
+      const { error: applicationError } = await (supabase as any).rpc("submit_walker_application", {
+        p_first_name: firstName,
+        p_last_name: lastName,
+        p_phone: phone,
+        p_city: city,
+        p_experience: experience,
+        p_motivation: motivation,
+      });
+      if (applicationError) throw applicationError;
 
       toast({
         title: "Candidature envoyée ✓",
         description: "Votre dossier est enregistré et reste en attente d’une décision administrative.",
       });
-      sessionStorage.removeItem("pendingWalkerApplication");
+      getSafeSessionStorage().removeItem("pendingWalkerApplication");
       navigate('/');
     } catch (err: any) {
       toast({
@@ -132,9 +120,9 @@ const WalkerRegister = () => {
 
   const advantages = [
     {
-      icon: Euro,
-      title: "Tarifs renseignés",
-      description: "Indiquez un tarif de référence pour vos demandes ; les modalités restent à confirmer avec chaque Propriétaire."
+      icon: FileText,
+      title: "Dossier renseigné",
+      description: "Décrivez vos informations et votre expérience afin de préparer l’examen administratif de votre candidature."
     },
     {
       icon: Clock,
@@ -291,28 +279,28 @@ const WalkerRegister = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <motion.div whileFocus={{ scale: 1.02 }}>
                         <Label htmlFor="firstName">Prénom *</Label>
-                        <Input id="firstName" name="firstName" required placeholder="Jean" />
+                        <Input id="firstName" name="firstName" required placeholder="Jean" defaultValue={draft?.firstName} />
                       </motion.div>
                       <div>
                         <Label htmlFor="lastName">Nom *</Label>
-                        <Input id="lastName" name="lastName" required placeholder="Dupont" />
+                        <Input id="lastName" name="lastName" required placeholder="Dupont" defaultValue={draft?.lastName} />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="email">Email *</Label>
-                        <Input id="email" name="email" type="email" required placeholder="jean@email.com" />
+                        <Input id="email" name="email" type="email" required placeholder="jean@email.com" defaultValue={searchParams.get("email") || ""} />
                       </div>
                       <div>
                         <Label htmlFor="phone">Téléphone *</Label>
-                        <Input id="phone" name="phone" type="tel" required placeholder="06 12 34 56 78" />
+                        <Input id="phone" name="phone" type="tel" required placeholder="06 12 34 56 78" defaultValue={draft?.phone} />
                       </div>
                     </div>
 
                     <div>
                       <Label htmlFor="city">Ville d'intervention *</Label>
-                      <Input id="city" name="city" required placeholder="Paris, Lyon, Marseille..." />
+                      <Input id="city" name="city" required placeholder="Paris, Lyon, Marseille..." defaultValue={draft?.city} />
                     </div>
 
                     <div>
@@ -323,6 +311,7 @@ const WalkerRegister = () => {
                         placeholder="Décrivez votre expérience : possédez-vous des animaux ? Avez-vous des formations ? Quelle est votre approche de la sécurité ?"
                         rows={4}
                         required
+                        defaultValue={draft?.experience}
                       />
                     </div>
 
@@ -334,6 +323,7 @@ const WalkerRegister = () => {
                         placeholder="Pourquoi souhaitez-vous proposer vos services sur DogWalking ?"
                         rows={4}
                         required
+                        defaultValue={draft?.motivation}
                       />
                     </div>
 

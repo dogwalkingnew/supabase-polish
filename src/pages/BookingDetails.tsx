@@ -1,3 +1,4 @@
+/** DogWalking — confiance canine de proximité : détail lisible et contrôle de mission sans paiement intégré. */
 import { useEffect, useState } from 'react';
 import { Header } from "@/components/ui/header";
 import { Footer } from "@/components/ui/footer";
@@ -69,14 +70,17 @@ const BookingDetails = () => {
 
       if (error) throw error;
 
-      // Fetch walker info (sans téléphone — passe par RPC sécurisée get_booking_contact)
-      const { data: walker, error: walkerError } = await supabase
-        .from('profiles')
-        .select('first_name, city')
-        .eq('id', data.walker_id as string)
-        .single();
+      let walker = null;
+      if (data.walker_id) {
+        const { data: walkerData, error: walkerError } = await supabase
+          .from('profiles')
+          .select('first_name, city')
+          .eq('id', data.walker_id as string)
+          .single();
 
-      if (walkerError) throw walkerError;
+        if (walkerError) throw walkerError;
+        walker = walkerData;
+      }
 
       setBooking({ ...data, walker });
       
@@ -207,7 +211,7 @@ const BookingDetails = () => {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Date</p>
-                      <p className="font-semibold">{new Date(booking.booking_date).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                      <p className="font-semibold">{new Date(booking.scheduled_date ?? booking.booking_date).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -216,7 +220,7 @@ const BookingDetails = () => {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Heure et durée</p>
-                      <p className="font-semibold">{booking.start_time} - {booking.duration_minutes} minutes</p>
+                      <p className="font-semibold">{booking.scheduled_time ?? booking.start_time} — {booking.duration_minutes} minutes</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -224,8 +228,8 @@ const BookingDetails = () => {
                       <Euro className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Prix</p>
-                      <p className="font-semibold text-lg text-primary">{Number(booking.total_price).toFixed(2)}€</p>
+                      <p className="text-sm text-muted-foreground">Montant indicatif</p>
+                      <p className="font-semibold text-lg text-primary">{Number(booking.price ?? booking.total_price ?? 0).toFixed(2)} €</p>
                     </div>
                   </div>
                 </CardContent>
@@ -276,7 +280,7 @@ const BookingDetails = () => {
               <CardContent className="space-y-4">
                 <div>
                   <p className="text-sm text-muted-foreground">Nom</p>
-                  <p className="font-semibold text-lg">{booking.walker?.first_name}</p>
+                  <p className="font-semibold text-lg">{booking.walker?.first_name || "À confirmer"}</p>
                 </div>
                 {booking.walker?.city && (
                   <div className="flex items-center gap-2">
@@ -313,25 +317,21 @@ const BookingDetails = () => {
             </motion.div>
           )}
           
-          {/* Walk Proofs Section - Viewer for owner, Upload for walker */}
-          {booking.status !== 'pending' && booking.status !== 'cancelled' && (
+          {currentUserId === booking.owner_id && booking.status !== 'pending' && booking.status !== 'cancelled' && (
             <motion.div variants={itemVariants} className="mt-6">
-              {currentUserId === booking.owner_id ? (
-                <MissionProofViewer
-                  bookingId={booking.id}
-                  isOwner={true}
-                  onProofValidated={fetchBooking}
-                />
-              ) : (
-                <WalkProofUpload
-                  bookingId={booking.id}
-                  walkerId={booking.walker_id}
-                  existingProofs={walkProofs}
-                  isWalker={currentUserId === booking.walker_id}
-                  onProofUploaded={fetchWalkProofs}
-                  onProofValidated={fetchWalkProofs}
-                />
-              )}
+              <MissionProofViewer bookingId={booking.id} isOwner={true} onProofValidated={fetchBooking} />
+            </motion.div>
+          )}
+
+          {currentUserId === booking.walker_id && booking.status === 'in_progress' && (
+            <motion.div variants={itemVariants} className="mt-6">
+              <WalkProofUpload
+                bookingId={booking.id}
+                walkerId={booking.walker_id}
+                existingProofs={walkProofs}
+                isWalker
+                onProofUploaded={fetchWalkProofs}
+              />
             </motion.div>
           )}
 
@@ -360,8 +360,8 @@ const BookingDetails = () => {
               </motion.div>
             )}
 
-          {/* Mission Start/End Button for walker */}
-          {currentUserId === booking.walker_id && (booking.status === 'confirmed' || booking.status === 'in_progress') && (
+          {/* Démarrage : une photo de prise en charge déclenche la transition atomique. */}
+          {currentUserId === booking.walker_id && booking.status === 'confirmed' && (
             <motion.div variants={itemVariants} className="mt-6">
               <Card className="shadow-card">
                 <CardHeader>
@@ -372,10 +372,8 @@ const BookingDetails = () => {
                     bookingId={booking.id}
                     walkerId={booking.walker_id}
                     dogName={booking.dogs?.name || 'Chien'}
-                    ownerName="Propriétaire"
                     status={booking.status}
                     onMissionStarted={fetchBooking}
-                    onMissionEnded={fetchBooking}
                   />
                 </CardContent>
               </Card>

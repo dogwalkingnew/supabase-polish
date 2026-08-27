@@ -40,6 +40,23 @@
 - [x] Désactiver explicitement les parcours d’interface non opérationnels qui donnent une impression de disponibilité, de revenus, de finance ou de messagerie active.
 - [x] Retirer les derniers appels de remboursement ou de paiement obsolètes dans l’annulation de réservation.
 - [x] Recontrôler les flux corrigés, le responsive, le build et les prérequis externes avant synchronisation finale GitHub.
-- [ ] Unifier le modèle de candidature Accompagnateur (`walker_profiles` et `walker_applications`) et rendre l’approbation documentaire atomique avant toute validation de production.
-- [ ] Implémenter et tester la réponse Accompagnateur aux demandes directes ainsi que la contre-proposition versionnée avant d’annoncer ce parcours comme actif.
+- [x] Rendre atomiques la soumission et la revue de candidature Accompagnateur, avec création ou mise à jour contrôlée du profil activé.
+- [ ] Unifier davantage le modèle documentaire Accompagnateur et définir une politique documentaire complète avant toute ouverture au public.
+- [x] Implémenter et tester la réponse Accompagnateur « accepter/refuser » aux demandes directes, avec notification au Propriétaire.
+- [ ] Implémenter une contre-proposition versionnée et une résolution de conflit de créneau avant de présenter cette option comme disponible.
 - [ ] Mettre en œuvre une disponibilité réellement enregistrée et vérifiée lors d’une candidature, au lieu d’un simple affichage de profil.
+- [x] Établir l’inventaire technique de production : variables, Auth, Storage, migrations, CI, audit et procédures de retour arrière documentés.
+- [ ] Renseigner et vérifier le domaine, l’hébergement final, les sauvegardes et l’observabilité avec les informations réelles de l’éditeur.
+- [x] Rendre atomiques les flux de candidature et d’activation Accompagnateur ; la validation documentaire complète reste à définir.
+- [x] Implémenter les décisions explicites de demande directe ; la contre-proposition avec historique reste un chantier distinct.
+- [ ] Définir et appliquer les règles de disponibilité, annulation, litige, preuve et rétention de données avant ouverture au public.
+- [x] Vérifier par scénarios QA réversibles les politiques Supabase, les nouvelles fonctions atomiques et la confidentialité des preuves privées.
+- [ ] Activer le contrôle des mots de passe compromis, confirmer les paramètres Auth de domaine et vérifier les limites d’API dans le compte de production.
+- [ ] Obtenir les informations légales, opérationnelles et de contact nécessaires à la publication réelle.
+- [x] Produire une checklist de lancement, un plan de retour arrière et un dossier de validation finale de production.
+- [x] Éliminer les vulnérabilités hautes et basses de production par résolutions verrouillées ; la migration majeure React Router reste à planifier pour les deux alertes modérées restantes.
+- [x] Ajouter une CI GitHub qui contrôle l’installation verrouillée, le typecheck, le build et les vulnérabilités hautes ou critiques.
+- [x] Ajouter l’exclusion explicite des fichiers `.env*` et documenter les variables de production sans les committer.
+- [x] Remplacer les valeurs Supabase codées en dur par une configuration d’environnement obligatoire hors prévisualisation.
+- [x] Auditer et durcir les politiques Storage des preuves de mission privées ; l’exposition publique des photos de chien reste une décision RGPD à prendre.
+- [x] Corriger les avertissements RLS de performance à faible risque et conserver les index historiques non utilisés jusqu’à une période d’observation mesurée.

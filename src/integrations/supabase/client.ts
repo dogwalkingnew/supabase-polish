@@ -29,23 +29,30 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
 
 
 function createSupabaseClient() {
-  // Use import.meta.env for client-side (Vite build-time replacement)
-  // Fall back to process.env for SSR (server-side rendering)
+  // Les valeurs de prévisualisation ne sont admises qu'en développement. Toute construction
+  // de production doit déclarer ses variables, sans URL ni clé intégrée au bundle.
+  const previewDefaults = import.meta.env.DEV
+    ? {
+        url: "https://aqitjhaotpautjywoeys.supabase.co",
+        publishableKey: "sb_publishable_6IBm8ZjwBOIlPq2GmDTBbw_PaywttiK",
+      }
+    : { url: undefined, publishableKey: undefined };
+
   const SUPABASE_URL =
     import.meta.env['VITE_SUPABASE_URL'] ||
     process.env['SUPABASE_URL'] ||
-    "https://aqitjhaotpautjywoeys.supabase.co";
+    previewDefaults.url;
   const SUPABASE_PUBLISHABLE_KEY =
     import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY'] ||
     process.env['SUPABASE_PUBLISHABLE_KEY'] ||
-    "sb_publishable_6IBm8ZjwBOIlPq2GmDTBbw_PaywttiK";
+    previewDefaults.publishableKey;
 
   if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
     const missing = [
       ...(!SUPABASE_URL ? ['SUPABASE_URL'] : []),
       ...(!SUPABASE_PUBLISHABLE_KEY ? ['SUPABASE_PUBLISHABLE_KEY'] : []),
     ];
-    const message = `Missing Supabase environment variable(s): ${missing.join(', ')}. Connect Supabase in Lovable Cloud.`;
+    const message = `Missing Supabase environment variable(s): ${missing.join(', ')}. Define VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY for production.`;
     console.error(`[Supabase] ${message}`);
     throw new Error(message);
   }

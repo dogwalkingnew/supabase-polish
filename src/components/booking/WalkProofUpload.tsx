@@ -1,3 +1,4 @@
+/** DogWalking — confiance canine de proximité : photos privées, sans promesse de paiement. */
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -40,7 +41,7 @@ export const WalkProofUpload: React.FC<WalkProofUploadProps> = ({
 }) => {
   const [uploading, setUploading] = useState(false);
   const [caption, setCaption] = useState("");
-  const [photoType, setPhotoType] = useState<"start" | "during" | "end">("during");
+  const photoType = "during";
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -89,19 +90,14 @@ export const WalkProofUpload: React.FC<WalkProofUploadProps> = ({
       }
 
       // Upload to Supabase Storage
-      const fileExt = selectedFile.name.split(".").pop();
+      const fileExt = selectedFile.type.split("/")[1]?.replace(/[^a-z0-9]/gi, "") || "jpg";
       const fileName = `${walkerId}/${bookingId}/${Date.now()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from("walk-proofs")
-        .upload(fileName, selectedFile);
+        .upload(fileName, selectedFile, { contentType: selectedFile.type });
 
       if (uploadError) throw uploadError;
-
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from("walk-proofs")
-        .getPublicUrl(fileName);
 
       // Insert proof record
       const { data: { session } } = await supabase.auth.getSession();
@@ -113,7 +109,7 @@ export const WalkProofUpload: React.FC<WalkProofUploadProps> = ({
         .insert({
           booking_id: bookingId,
           walker_id: walkerId,
-          photo_url: publicUrl,
+          photo_url: fileName,
           photo_type: photoType,
           caption: caption || null,
           location_lat: location.lat,
@@ -124,7 +120,7 @@ export const WalkProofUpload: React.FC<WalkProofUploadProps> = ({
 
       toast({
         title: "Photo envoyée !",
-        description: "Le Propriétaire sera notifié pour validation"
+        description: "Le Propriétaire peut consulter cette preuve privée depuis la réservation."
       });
 
       // Reset form
@@ -271,20 +267,6 @@ export const WalkProofUpload: React.FC<WalkProofUploadProps> = ({
           <div className="space-y-4 border-t pt-4">
             <h4 className="font-medium">Ajouter une photo</h4>
 
-            {/* Photo type selector */}
-            <div className="flex flex-wrap gap-2">
-              {(["start", "during", "end"] as const).map((type) => (
-                <Button
-                  key={type}
-                  variant={photoType === type ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setPhotoType(type)}
-                >
-                  {photoTypeLabels[type]}
-                </Button>
-              ))}
-            </div>
-
             {/* Preview */}
             <AnimatePresence>
               {previewUrl ? (
@@ -391,7 +373,7 @@ export const WalkProofUpload: React.FC<WalkProofUploadProps> = ({
           <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
             <AlertCircle className="h-5 w-5 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">
-              Le Accompagnateur Certifié n'a pas encore envoyé de photos pour cette promenade.
+              L’Accompagnateur n’a pas encore ajouté de photo pour cette promenade.
             </p>
           </div>
         )}
