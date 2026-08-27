@@ -1,3 +1,7 @@
+/**
+ * DogWalking — Confiance canine de proximité : l’authentification ne doit pas
+ * perturber la lecture publique ni les routes directes, quel que soit le support.
+ */
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,7 +21,26 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const prerenderAuthContext: AuthContextType = {
+  session: null,
+  user: null,
+  profile: null,
+  loading: false,
+  profileError: false,
+  signUp: async () => ({ error: new Error("L’authentification est disponible après le chargement de l’application.") }),
+  signIn: async () => ({ error: new Error("L’authentification est disponible après le chargement de l’application.") }),
+  signOut: async () => {},
+  refreshProfile: async () => {},
+};
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  // Le build SPA pré-rend un shell sans navigateur. Ne pas initialiser Supabase
+  // dans ce contexte : les variables publiques restent obligatoires au runtime
+  // client, mais l’absence de secrets dans la CI ne doit pas produire un 500 SSR.
+  if (typeof window === "undefined") {
+    return <AuthContext.Provider value={prerenderAuthContext}>{children}</AuthContext.Provider>;
+  }
+
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Tables<"profiles"> | null>(null);

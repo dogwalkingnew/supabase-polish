@@ -9,6 +9,8 @@
 
 L’application utilise `BrowserRouter` et des écrans importés dynamiquement. Un accès direct à une route nécessite donc que l’hébergement serve d’abord le document de démarrage de l’application ; sinon, le serveur peut traiter la route comme une ressource inconnue ou tenter un rendu serveur qui échoue avant l’hydratation. Le mode SPA de TanStack Start génère spécifiquement ce shell et prévoit une réécriture de tous les `404` vers lui. [1]
 
+La première tentative de CI de cette correction a confirmé un second problème lié au pré-rendu : le shell recevait une réponse `500` pour `/` lorsque les variables Supabase n’étaient pas présentes dans la CI. La correction empêche désormais `AuthProvider` d’initialiser Supabase **uniquement pendant le pré-rendu sans navigateur**. Dès que l’application s’exécute dans un navigateur, l’initialisation reste identique : l’absence de `VITE_SUPABASE_URL` ou de `VITE_SUPABASE_PUBLISHABLE_KEY` provoque toujours une erreur de configuration explicite, sans clé intégrée au code.
+
 La configuration `vite.config.ts` active `tanstackStart.spa.enabled`. La règle publiée est :
 
 ```text
@@ -22,6 +24,7 @@ Le changement reste volontairement limité au routage et au build. Aucun flux de
 | Élément testé | Résultat |
 |---|---|
 | TypeScript et build de production | Réussis après activation du mode SPA. |
+| Build sans variables Supabase de production | Réussi après la barrière de pré-rendu Auth ; le shell est généré sans utiliser de valeur de remplacement. |
 | Artefact produit | `.output/public/_shell.html` et `.output/public/_redirects` générés. |
 | Rechargement direct `/walkers` | Le contenu et les assets se chargent depuis le shell SPA dans un navigateur réel. |
 | Rechargement direct `/support` | Le contenu et les assets se chargent depuis le shell SPA dans un navigateur réel. |
