@@ -11,6 +11,8 @@ L’application utilise `BrowserRouter` et des écrans importés dynamiquement. 
 
 La première tentative de CI de cette correction a confirmé un second problème lié au pré-rendu : le shell recevait une réponse `500` pour `/` lorsque les variables Supabase n’étaient pas présentes dans la CI. La correction empêche désormais `AuthProvider` d’initialiser Supabase **uniquement pendant le pré-rendu sans navigateur**. Dès que l’application s’exécute dans un navigateur, l’initialisation reste identique : l’absence de `VITE_SUPABASE_URL` ou de `VITE_SUPABASE_PUBLISHABLE_KEY` provoque toujours une erreur de configuration explicite, sans clé intégrée au code.
 
+Un second facteur de risque mobile a été identifié dans l’artefact historique : un service worker avec des caches `dogwalking-v2` et `dogwalking-static-v2` utilisait une stratégie cache-first pour les assets. Bien qu’aucun nouvel enregistrement ne soit actif dans le code actuel, un téléphone ayant déjà visité une version antérieure peut garder ce contrôleur et demander des chunks devenus obsolètes. Au premier montage client, DogWalking désinscrit désormais les workers du même domaine et efface uniquement les caches dont le nom commence par `dogwalking-`.
+
 La configuration `vite.config.ts` active `tanstackStart.spa.enabled`. La règle publiée est :
 
 ```text
@@ -31,10 +33,11 @@ Le changement reste volontairement limité au routage et au build. Aucun flux de
 | Rechargement direct `/ressources-legales` | La page se charge depuis le shell SPA. |
 | Rechargement direct `/services/garde` | La route à import dynamique se charge depuis le shell SPA. |
 | Rechargement direct `/dashboard` en visiteur | Redirection vers `/auth?redirect=%2Fdashboard`, sans erreur de plateforme. |
+| Nettoyage du cache historique | Exécuté dans un effet client après montage ; il ne touche ni Supabase, ni les caches d’un autre domaine. |
 
 ## Limite de vérification Lovable
 
-L’URL lisible dans la capture, `kle-polish.lovable.app`, retourne actuellement **« Project not found »** lors du contrôle ; le sous-domaine exact qui affichait l’erreur ne peut donc pas être rechargé ici. Le correctif est néanmoins présent dans l’artefact que doit déployer Lovable. Après publication de ce commit dans le projet Lovable, les routes ci-dessus devront être testées directement sur le domaine final, à partir d’un nouvel onglet et après rechargement de page.
+L’URL lisible dans la capture, `kle-polish.lovable.app`, retourne actuellement **« Project not found »** lors du contrôle ; le sous-domaine exact qui affichait l’erreur ne peut donc pas être rechargé ici. Le correctif est néanmoins présent dans l’artefact que doit déployer Lovable. Après publication de ce commit dans le projet Lovable, les routes ci-dessus devront être testées directement sur le domaine final, à partir d’un nouvel onglet et après rechargement de page. Lors de cette première ouverture, le nettoyage de l’ancien cache est automatique.
 
 La capture a aussi révélé que certaines pages historiques conservent des promesses non factuelles dans leurs contenus, par exemple la route `/services/garde`. Cette observation est distincte du défaut de chargement ; elle est documentée, mais aucune modification de contenu n’est incluse ici afin de ne pas introduire de régression dans une correction de compatibilité.
 

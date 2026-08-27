@@ -13,7 +13,9 @@
 | Rechargement direct d’un espace protégé | `/dashboard` redirige vers `/auth?redirect=%2Fdashboard` depuis le shell SPA, au lieu d’afficher une erreur d’hébergement. | Conforme : la barrière d’accès est conservée. |
 | Rechargement direct d’une route profonde | `/ressources-legales` rend le contenu et les assets depuis le shell SPA. | Conforme : le repli fonctionne au-delà des seules routes d’accueil et de recherche. |
 | Route de service à import dynamique | `/services/garde` se charge depuis le shell SPA avec son contenu et ses assets. | Conforme sur le repli de route ; les contenus factuels de cette page restent un chantier distinct. |
-| Cache PWA | Aucune référence de code à un service worker ou à son enregistrement n’a été trouvée. | Aucun cache applicatif n’est identifié comme cause du défaut de route. |
+| Cache PWA | Un service worker historique `public/sw.js` est livré avec des caches `dogwalking-v2` non versionnés ; son hook d’enregistrement n’est plus utilisé, mais un contrôleur déjà installé peut rester actif sur les téléphones. | Un nettoyage client retire désormais les anciens workers de même origine et les caches `dogwalking-*` après le montage de l’application. |
+| Validation après redémarrage | L’accueil commence sur le chargeur de montage puis rend son contenu intégral et ses actions dans l’aperçu redémarré. | Conforme : aucun écran d’erreur ni écran blanc persistant n’est observé après hydratation. |
+| Validation ciblée après redémarrage | L’accès direct à `/walkers` affiche brièvement le spinner de chargement puis rend la page complète de recherche des Accompagnateurs et ses actions. | Conforme : l’écran d’erreur « Impossible d’afficher cette page » n’est pas reproduit dans l’aperçu de travail. |
 | Manifeste PWA | Le manifeste contient encore une description ancienne évoquant paiement et suivi GPS. | Métadonnée à assainir dans une vague de contenu dédiée ; elle n’est pas modifiée par le correctif de routage. |
 
 > Aucune livraison de correction ne sera déclarée résolue tant que les rechargements directs des routes principales n’auront pas été vérifiés sur un support équivalent à l’hébergement cible.

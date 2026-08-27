@@ -1,5 +1,10 @@
-import { lazy, Suspense } from "react";
+/**
+ * DogWalking — Confiance canine de proximité : montage client sobre et fiable
+ * pour que chaque route se charge après une mise à jour, y compris sur mobile.
+ */
+import { lazy, Suspense, useEffect } from "react";
 import { ClientOnly } from "@tanstack/react-router";
+import { retireLegacyServiceWorker } from "./lib/retire-legacy-service-worker";
 
 const App = lazy(() => import("./App"));
 
@@ -11,11 +16,11 @@ function Splash() {
   );
 }
 
-/**
- * Monte l'application (React Router) côté client uniquement.
- * Toute la navigation interne est gérée par BrowserRouter dans App.tsx.
- */
 export function LegacyApp() {
+  useEffect(() => {
+    retireLegacyServiceWorker();
+  }, []);
+
   return (
     <ClientOnly fallback={<Splash />}>
       <Suspense fallback={<Splash />}>
