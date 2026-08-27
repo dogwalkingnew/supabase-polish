@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, profileError } = useAuth();
   const location = useLocation();
   const [adminCheck, setAdminCheck] = useState<"idle" | "checking" | "ok" | "denied">("idle");
 
@@ -41,6 +41,10 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
     return <Navigate to={`/auth?redirect=${encodeURIComponent(location.pathname + location.search)}`} replace />;
   }
 
+  if (requiredRole !== "admin" && profileError) {
+    return <Navigate to="/auth?error=profil-indisponible" replace />;
+  }
+
   // Admin : strict, basé sur la table user_roles côté serveur
   if (requiredRole === "admin") {
     if (adminCheck === "denied") {
@@ -55,7 +59,7 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
     }
   }
 
-  // Owner / Walker : check soft (autorise 'both')
+  // Owner / Walker : le rôle est vérifié avant tout affichage de l’espace privé.
   if (requiredRole && requiredRole !== "admin" && profile?.user_type) {
     if (profile.user_type !== requiredRole && profile.user_type !== "both") {
       return <Navigate to={profile.user_type === "walker" ? "/walker/dashboard" : "/dashboard"} replace />;

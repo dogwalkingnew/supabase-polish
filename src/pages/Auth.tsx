@@ -69,6 +69,16 @@ const Auth = () => {
   const [showRoleChoice, setShowRoleChoice] = useState(false);
 
   useEffect(() => {
+    if (searchParams.get('error') === 'profil-indisponible') {
+      toast({
+        title: "Profil indisponible",
+        description: "Votre profil n’a pas pu être chargé. Reconnectez-vous ou contactez le support si le problème persiste.",
+        variant: "destructive",
+      });
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         void handlePostAuthRedirect();

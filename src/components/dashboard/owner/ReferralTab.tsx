@@ -72,7 +72,7 @@ const ReferralTab = () => {
       if (allReferrals && allReferrals.length > 0) {
         // Enrich with referred user profiles
         const referredIds = allReferrals.filter(r => r.referred_id).map(r => r.referred_id);
-        let profilesMap = new Map();
+        const profilesMap = new Map();
         
         if (referredIds.length > 0) {
           const { data: profiles } = await supabase

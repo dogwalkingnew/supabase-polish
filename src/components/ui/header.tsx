@@ -111,14 +111,14 @@ export const Header = () => {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 shrink-0">
-          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-            <span className="text-xl">🐕</span>
+          <div className="dogwalking-brand-mark w-10 h-10" aria-hidden="true">
+            <Dog className="h-5 w-5" strokeWidth={2.4} />
           </div>
-          <span className="text-xl font-bold text-primary">DogWalking</span>
+          <span className="dogwalking-wordmark text-xl">Dog<span>Walking</span></span>
         </Link>
 
-        {/* ========== DESKTOP NAV — toujours visible sur md+ ========== */}
-        <nav className="hidden md:flex items-center gap-1 lg:gap-4">
+        {/* ========== NAVIGATION LARGE ÉCRAN — menu latéral avant le seuil tablette ========== */}
+        <nav className="hidden lg:flex items-center gap-1 lg:gap-4">
           {navLinks.map((link) =>
             link.isDropdown ? (
               <div key={link.label} className="relative" ref={dropdownRef}>
@@ -172,7 +172,7 @@ export const Header = () => {
           {isAuthenticated && <NotificationCenter />}
 
           {/* Desktop auth buttons */}
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-2">
             <Button
               variant="ghost"
               size="sm"
@@ -188,21 +188,23 @@ export const Header = () => {
             )}
           </div>
 
-          {/* ========== MOBILE HAMBURGER — visible sous md ========== */}
+          {/* ========== MENU COMPACT — visible sous lg pour préserver les cibles tactiles ========== */}
           <Sheet open={isOpen} onOpenChange={(open) => {
             setIsOpen(open);
             if (!open) setMobileOpenDropdown(null);
           }}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
+              <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Ouvrir le menu de navigation">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[350px]">
               <div className="flex flex-col h-full">
                 <div className="flex items-center gap-2 pb-6 border-b">
-                  <span className="text-xl">🐕</span>
-                  <span className="text-xl font-bold text-primary">DogWalking</span>
+                  <div className="dogwalking-brand-mark h-9 w-9" aria-hidden="true">
+                    <Dog className="h-4 w-4" strokeWidth={2.4} />
+                  </div>
+                  <span className="dogwalking-wordmark text-xl">Dog<span>Walking</span></span>
                 </div>
 
                 <nav className="flex-1 py-6 space-y-1 overflow-y-auto">

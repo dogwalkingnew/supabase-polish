@@ -25,6 +25,7 @@ import WalkerApplicationsTab from "@/components/admin/WalkerApplicationsTab";
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalOwners: 0,
@@ -70,22 +71,24 @@ const AdminDashboard = () => {
 
   const fetchAdminStats = async () => {
     try {
+      setLoading(true);
+      setErrorMessage(null);
       // Fetch Profiles
-      const { data: profilesData } = await supabase.from('profiles').select('user_type');
+      const { data: profilesData, error: profilesError } = await supabase.from('profiles').select('user_type');
       const owners = profilesData?.filter(p => p.user_type === 'owner').length || 0;
       const walkers = profilesData?.filter(p => p.user_type === 'walker').length || 0;
 
       // Fetch Walker Profiles
-      const { data: walkerProfiles } = await supabase.from('walker_profiles').select('verified');
+      const { data: walkerProfiles, error: walkerProfilesError } = await supabase.from('walker_profiles').select('verified');
       const activeWalkers = walkerProfiles?.filter(w => w.verified).length || 0;
       const pendingWalkers = walkerProfiles?.filter(w => !w.verified).length || 0;
 
       // Bookings stats
-      const { data: bookingsData } = await supabase.from('bookings').select('status, price, created_at');
+      const { data: bookingsData, error: bookingsError } = await supabase.from('bookings').select('status, price, created_at');
       const completed = bookingsData?.filter(b => b.status === 'completed') || [];
 
       // Recent bookings
-      const { data: recentBookingsData } = await supabase
+      const { data: recentBookingsData, error: recentBookingsError } = await supabase
         .from('bookings')
         .select('*, dogs(name)')
         .order('created_at', { ascending: false })
@@ -93,7 +96,7 @@ const AdminDashboard = () => {
       setRecentBookings(recentBookingsData || []);
 
       // Recent users
-      const { data: recentUsersData } = await supabase
+      const { data: recentUsersData, error: recentUsersError } = await supabase
         .from('profiles')
         .select('*')
         .order('created_at', { ascending: false })
@@ -101,21 +104,32 @@ const AdminDashboard = () => {
       setRecentUsers(recentUsersData || []);
 
       // Pending documents
-      const { data: docsData } = await supabase
+      const { data: docsData, error: docsError } = await supabase
         .from('walker_documents')
         .select('*')
         .eq('verification_status', 'pending');
       setPendingDocuments(docsData || []);
 
       // Open disputes
-      const { data: disputesData } = await supabase
+      const { data: disputesData, error: disputesError } = await supabase
         .from('disputes')
         .select('*')
         .eq('status', 'open');
       setOpenDisputes(disputesData || []);
 
+      const firstError = [
+        profilesError,
+        walkerProfilesError,
+        bookingsError,
+        recentBookingsError,
+        recentUsersError,
+        docsError,
+        disputesError,
+      ].find(Boolean);
+      if (firstError) throw firstError;
+
       setStats({
-        totalUsers: owners + walkers,
+        totalUsers: profilesData?.length || 0,
         totalOwners: owners,
         totalWalkers: walkers,
         activeWalkers,
@@ -129,6 +143,7 @@ const AdminDashboard = () => {
       setLoading(false);
     } catch (error) {
       console.error('Error fetching stats:', error);
+      setErrorMessage("Les données d’administration ne sont pas disponibles pour le moment. Aucune statistique n’est affichée afin d’éviter toute information erronée.");
       setLoading(false);
     }
   };
@@ -196,6 +211,26 @@ DOCUMENTS EN ATTENTE: ${pendingDocuments.length}
         <Header />
         <main className="container mx-auto px-4 py-24">
           <div className="h-64 bg-muted rounded animate-pulse" />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (errorMessage) {
+    return (
+      <div className="min-h-dvh bg-background">
+        <Header />
+        <main className="container mx-auto max-w-3xl px-4 py-28">
+          <Card className="border-destructive/30 bg-destructive/5">
+            <CardHeader>
+              <CardTitle>Impossible de charger le tableau de bord</CardTitle>
+              <CardDescription>{errorMessage}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button onClick={fetchAdminStats}>Réessayer</Button>
+            </CardContent>
+          </Card>
         </main>
         <Footer />
       </div>

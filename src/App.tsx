@@ -11,7 +11,6 @@ import { HelmetProvider } from "react-helmet-async";
 import { useEffect, lazy, Suspense } from "react";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
-import { PushNotificationPrompt } from "@/components/notifications/PushNotificationPrompt";
 import { AuthProvider } from "@/contexts/AuthContext";
 
 // Critical pages loaded eagerly
@@ -21,10 +20,8 @@ import AuthCallback from "./pages/AuthCallback";
 import NotFound from "./pages/NotFound";
 
 // Lazy-loaded pages
-const OwnerDashboard = lazy(() => import("./pages/dashboard/OwnerDashboard"));
 const OwnerDashboardV3 = lazy(() => import("./pages/dashboard/OwnerDashboardV3"));
 const WalkerDashboardV3 = lazy(() => import("./pages/dashboard/WalkerDashboardV3"));
-const WalkerDashboardPage = lazy(() => import("./pages/dashboard/WalkerDashboard"));
 const ServicePage = lazy(() => import("./pages/ServicePage"));
 const BookingDetails = lazy(() => import("./pages/BookingDetails"));
 const BookWalk = lazy(() => import("./pages/BookWalk"));
@@ -75,7 +72,6 @@ const App = () => (
         <BrowserRouter>
           <ScrollToTop />
           <InstallPrompt />
-          <PushNotificationPrompt />
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -102,7 +98,7 @@ const App = () => (
               <Route path="/dashboard" element={<ProtectedRoute requiredRole="owner"><OwnerDashboardV3 /></ProtectedRoute>} />
               <Route path="/dashboard-proprietaire" element={<ProtectedRoute requiredRole="owner"><OwnerDashboardV3 /></ProtectedRoute>} />
               <Route path="/mon-espace" element={<ProtectedRoute requiredRole="owner"><OwnerDashboardV3 /></ProtectedRoute>} />
-              <Route path="/dashboard-legacy" element={<ProtectedRoute requiredRole="owner"><OwnerDashboard /></ProtectedRoute>} />
+              <Route path="/dashboard-legacy" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dogs/add" element={<Navigate to="/dashboard?tab=chiens" replace />} />
               <Route path="/bookings" element={<Navigate to="/dashboard?tab=reservations" replace />} />
               <Route path="/referral" element={<Navigate to="/dashboard?tab=parrainage" replace />} />
@@ -111,7 +107,7 @@ const App = () => (
               <Route path="/walker/dashboard" element={<ProtectedRoute requiredRole="walker"><WalkerDashboardV3 /></ProtectedRoute>} />
               <Route path="/dashboard-promeneur" element={<ProtectedRoute requiredRole="walker"><WalkerDashboardV3 /></ProtectedRoute>} />
               <Route path="/espace-promeneur" element={<ProtectedRoute requiredRole="walker"><WalkerDashboardV3 /></ProtectedRoute>} />
-              <Route path="/walker-dashboard-legacy" element={<ProtectedRoute requiredRole="walker"><WalkerDashboardPage /></ProtectedRoute>} />
+              <Route path="/walker-dashboard-legacy" element={<Navigate to="/walker/dashboard" replace />} />
               <Route path="/walker/earnings" element={<Navigate to="/walker/dashboard?tab=gains" replace />} />
               {/* Standalone pages */}
               <Route path="/walkers" element={<FindWalkers />} />

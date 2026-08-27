@@ -8,6 +8,7 @@ interface AuthContextType {
   user: User | null;
   profile: Tables<"profiles"> | null;
   loading: boolean;
+  profileError: boolean;
   signUp: (email: string, password: string, metadata?: { first_name?: string; last_name?: string; user_type?: string }) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
@@ -21,14 +22,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Tables<"profiles"> | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileError, setProfileError] = useState(false);
 
   const fetchProfile = async (userId: string) => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("profiles")
       .select("*")
       .eq("id", userId)
-      .single();
-    setProfile(data);
+      .maybeSingle();
+    setProfile(data ?? null);
+    setProfileError(Boolean(error || !data));
   };
 
   const refreshProfile = async () => {
@@ -37,23 +40,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      (_event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         if (session?.user) {
-          setTimeout(() => fetchProfile(session.user.id), 0);
+          setLoading(true);
+          setTimeout(() => {
+            void fetchProfile(session.user.id).finally(() => setLoading(false));
+          }, 0);
         } else {
           setProfile(null);
+          setProfileError(false);
+          setLoading(false);
         }
-        setLoading(false);
       }
     );
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      if (session?.user) fetchProfile(session.user.id);
-      setLoading(false);
+      if (session?.user) {
+        setLoading(true);
+        void fetchProfile(session.user.id).finally(() => setLoading(false));
+      } else {
+        setProfile(null);
+        setProfileError(false);
+        setLoading(false);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -79,7 +92,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ session, user, profile, loading, signUp, signIn, signOut, refreshProfile }}>
+    <AuthContext.Provider value={{ session, user, profile, loading, profileError, signUp, signIn, signOut, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   );

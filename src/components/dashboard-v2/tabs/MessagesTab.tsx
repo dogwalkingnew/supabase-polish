@@ -15,8 +15,10 @@ const playNotificationSound = () => {
   try {
     const audio = new Audio(NOTIFICATION_SOUND_URL);
     audio.volume = 0.4;
-    audio.play().catch(() => {});
-  } catch {}
+    void audio.play().catch(() => undefined);
+  } catch (error) {
+    console.warn("Lecture du son de notification impossible", error);
+  }
 };
 
 // Check if content is an image message
