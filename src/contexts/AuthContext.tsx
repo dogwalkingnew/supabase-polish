@@ -2,7 +2,7 @@
  * DogWalking — Confiance canine de proximité : l’authentification ne doit pas
  * perturber la lecture publique ni les routes directes, quel que soit le support.
  */
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useState, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
@@ -21,33 +21,16 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const prerenderAuthContext: AuthContextType = {
-  session: null,
-  user: null,
-  profile: null,
-  loading: false,
-  profileError: false,
-  signUp: async () => ({ error: new Error("L’authentification est disponible après le chargement de l’application.") }),
-  signIn: async () => ({ error: new Error("L’authentification est disponible après le chargement de l’application.") }),
-  signOut: async () => {},
-  refreshProfile: async () => {},
-};
-
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  // Le build SPA pré-rend un shell sans navigateur. Ne pas initialiser Supabase
-  // dans ce contexte : les variables publiques restent obligatoires au runtime
-  // client, mais l’absence de secrets dans la CI ne doit pas produire un 500 SSR.
-  if (typeof window === "undefined") {
-    return <AuthContext.Provider value={prerenderAuthContext}>{children}</AuthContext.Provider>;
-  }
-
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Tables<"profiles"> | null>(null);
   const [loading, setLoading] = useState(true);
   const [profileError, setProfileError] = useState(false);
+  const isBrowser = typeof window !== "undefined";
 
-  const fetchProfile = async (userId: string) => {
+  const fetchProfile = useCallback(async (userId: string) => {
+    if (!isBrowser) return;
     const { data, error } = await supabase
       .from("profiles")
       .select("*")
@@ -55,13 +38,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       .maybeSingle();
     setProfile(data ?? null);
     setProfileError(Boolean(error || !data));
-  };
+  }, [isBrowser]);
 
   const refreshProfile = async () => {
     if (user) await fetchProfile(user.id);
   };
 
   useEffect(() => {
+    // Le build SPA pré-rend un shell sans navigateur. Ne pas initialiser
+    // Supabase dans ce contexte : les variables publiques restent obligatoires
+    // au runtime client, mais l’absence de secrets dans la CI ne produit pas de 500 SSR.
+    if (!isBrowser) return;
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session);
@@ -93,7 +81,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [fetchProfile, isBrowser]);
 
   const signUp = async (email: string, password: string, metadata?: { first_name?: string; last_name?: string; user_type?: string }) => {
     const { error } = await supabase.auth.signUp({
