@@ -2,7 +2,7 @@
  * Design DogWalking : parcours d’accès clair, accueillant et contrasté, avec les accents rose Propriétaire et vert Accompagnateur.
  * Toute information de compte affichée ici doit provenir de l’état réel renvoyé par Supabase Auth.
  */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { SEOHead } from "@/components/seo/SEOHead";
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -38,6 +38,13 @@ const getSafeInternalPath = (value: string | null): string | null => {
   }
 };
 
+const getAuthCallbackUrl = (options: { redirect?: string | null; reset?: boolean } = {}): string => {
+  const callbackUrl = new URL('/auth/callback', window.location.origin);
+  if (options.redirect) callbackUrl.searchParams.set('redirect', options.redirect);
+  if (options.reset) callbackUrl.searchParams.set('reset', '1');
+  return callbackUrl.toString();
+};
+
 const GoogleIcon = () => (
   <svg className="w-5 h-5" viewBox="0 0 24 24">
     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -62,6 +69,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const defaultTab = searchParams.get('mode') === 'register' || searchParams.get('type') === 'owner' ? 'register' : 'login';
   const redirectUrl = getSafeInternalPath(searchParams.get('redirect'));
+  const isPasswordRecovery = searchParams.get('mode') === 'reset';
   const roleFromParams = searchParams.get('role') as UserType | null;
   
   const [selectedUserType, setSelectedUserType] = useState<UserType | null>(roleFromParams);
@@ -78,15 +86,7 @@ const Auth = () => {
     }
   }, [searchParams]);
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        void handlePostAuthRedirect();
-      }
-    });
-  }, [navigate]);
-
-  const handlePostAuthRedirect = async () => {
+  const handlePostAuthRedirect = useCallback(async () => {
     const storage = getSafeSessionStorage();
     const pendingBooking = storage.getItem('pendingBooking');
     if (pendingBooking) {
@@ -119,7 +119,16 @@ const Auth = () => {
       return;
     }
     navigate(userType === 'walker' ? '/walker/dashboard' : '/dashboard');
-  };
+  }, [navigate, redirectUrl]);
+
+  useEffect(() => {
+    if (isPasswordRecovery) return;
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        void handlePostAuthRedirect();
+      }
+    });
+  }, [handlePostAuthRedirect, isPasswordRecovery]);
 
   const handleRoleChoice = (role: 'owner' | 'walker') => {
     setShowRoleChoice(false);
@@ -144,6 +153,16 @@ const Auth = () => {
     firstName: z.string().trim().min(1, "Prénom requis").max(50),
     lastName: z.string().trim().min(1, "Nom requis").max(50),
     phone: z.string().trim().regex(/^[+0-9\s().-]{6,20}$/, "Téléphone invalide").optional().or(z.literal("")),
+  });
+
+  const resetPasswordSchema = z.object({
+    password: z.string().min(8, "8 caractères minimum").max(72)
+      .regex(/[A-Za-z]/, "Doit contenir au moins une lettre")
+      .regex(/[0-9]/, "Doit contenir au moins un chiffre"),
+    confirmation: z.string(),
+  }).refine((data) => data.password === data.confirmation, {
+    path: ['confirmation'],
+    message: 'Les mots de passe ne correspondent pas.',
   });
 
   const resolveDashboardPath = async (fallback: UserType): Promise<string> => {
@@ -196,10 +215,35 @@ const Auth = () => {
       return;
     }
     const { error } = await supabase.auth.resetPasswordForEmail(parsed.data, {
-      redirectTo: `${window.location.origin}/auth/callback?reset=1`,
+      redirectTo: getAuthCallbackUrl({ reset: true }),
     });
     if (error) toast({ title: "Erreur", description: error.message, variant: "destructive" });
     else toast({ title: "Email envoyé", description: "Vérifiez votre boîte mail pour réinitialiser votre mot de passe." });
+  };
+
+  const handlePasswordUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const parsed = resetPasswordSchema.safeParse({
+      password: formData.get('password'),
+      confirmation: formData.get('confirmation'),
+    });
+
+    if (!parsed.success) {
+      toast({ title: 'Champs invalides', description: parsed.error.issues[0].message, variant: 'destructive' });
+      return;
+    }
+
+    setLoading(true);
+    const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
+    if (error) {
+      toast({ title: 'Mot de passe non modifié', description: error.message, variant: 'destructive' });
+      setLoading(false);
+      return;
+    }
+
+    toast({ title: 'Mot de passe mis à jour', description: 'Vous pouvez maintenant accéder à votre espace.' });
+    await handlePostAuthRedirect();
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -222,7 +266,7 @@ const Auth = () => {
     const { data, error } = await supabase.auth.signUp({
       email, password,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: getAuthCallbackUrl({ redirect: redirectUrl }),
         data: { first_name: firstName, last_name: lastName, user_type: selectedUserType, phone: phone || null }
       }
     });
@@ -256,7 +300,7 @@ const Auth = () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: getAuthCallbackUrl({ redirect: redirectUrl }),
         queryParams: { user_type: selectedUserType }
       }
     });
@@ -310,6 +354,50 @@ const Auth = () => {
       buttonClass: "bg-stat-green hover:bg-stat-green/90 text-white",
     },
   ];
+
+  if (isPasswordRecovery) {
+    return (
+      <>
+        <SEOHead
+          title="Nouveau mot de passe | DogWalking"
+          description="Choisissez un nouveau mot de passe pour votre compte DogWalking."
+          canonical="https://dogwalking.fr/auth?mode=reset"
+          noindex={true}
+        />
+        <div className="min-h-dvh flex items-center justify-center p-4 bg-background">
+          <motion.div className="w-full max-w-md" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+            <Button variant="ghost" className="mb-4" onClick={() => navigate('/auth')}>
+              <ArrowLeft className="h-4 w-4 mr-2" /> Retour à la connexion
+            </Button>
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Shield className="h-8 w-8 text-primary" />
+              </div>
+              <h1 className="text-2xl font-bold mb-1">Choisissez un nouveau mot de passe</h1>
+              <p className="text-muted-foreground text-sm">Utilisez au moins 8 caractères, avec une lettre et un chiffre.</p>
+            </div>
+            <Card className="border-0 shadow-xl">
+              <CardContent className="pt-6">
+                <form onSubmit={handlePasswordUpdate} className="space-y-4">
+                  <div>
+                    <Label htmlFor="recovery-password" className="text-sm">Nouveau mot de passe</Label>
+                    <Input id="recovery-password" name="password" type="password" autoComplete="new-password" required className="mt-1 h-10" />
+                  </div>
+                  <div>
+                    <Label htmlFor="recovery-confirmation" className="text-sm">Confirmer le mot de passe</Label>
+                    <Input id="recovery-confirmation" name="confirmation" type="password" autoComplete="new-password" required className="mt-1 h-10" />
+                  </div>
+                  <Button type="submit" className="w-full h-11 text-base font-semibold bg-primary hover:bg-primary/90 text-white" disabled={loading}>
+                    {loading ? 'Mise à jour...' : 'Mettre à jour mon mot de passe'}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>

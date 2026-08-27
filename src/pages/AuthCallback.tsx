@@ -1,10 +1,28 @@
+/**
+ * DogWalking — Confiance canine de proximité : callback d’accès sobre et sûr.
+ * Les retours restent strictement internes ; une récupération ne redirige jamais vers un espace avant le choix d’un nouveau mot de passe.
+ */
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 
+const getSafeInternalPath = (value: string | null): string | null => {
+  if (!value) return null;
+  try {
+    const candidate = decodeURIComponent(value).trim();
+    if (!candidate.startsWith('/') || candidate.startsWith('//') || candidate.startsWith('/\\') || candidate.includes('\\') || candidate.includes('\0')) return null;
+    return candidate;
+  } catch {
+    return null;
+  }
+};
+
 const AuthCallback = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectUrl = getSafeInternalPath(searchParams.get('redirect'));
+  const isPasswordRecovery = searchParams.get('reset') === '1';
 
   useEffect(() => {
     const handleCallback = async () => {
@@ -13,6 +31,16 @@ const AuthCallback = () => {
       
       if (error || !session) {
         navigate('/auth');
+        return;
+      }
+
+      if (isPasswordRecovery) {
+        navigate('/auth?mode=reset', { replace: true });
+        return;
+      }
+
+      if (redirectUrl) {
+        navigate(redirectUrl, { replace: true });
         return;
       }
 
@@ -43,7 +71,7 @@ const AuthCallback = () => {
     };
 
     handleCallback();
-  }, [navigate]);
+  }, [isPasswordRecovery, navigate, redirectUrl]);
 
   return (
     <div className="min-h-dvh flex items-center justify-center bg-background">

@@ -28,7 +28,7 @@ const FindWalkersHero = () => {
             Consultez les profils<br className="hidden sm:block" /> Accompagnateur
           </h1>
           <p className="text-white/85 text-sm md:text-lg mb-4 md:mb-5 max-w-xl mx-auto drop-shadow-sm">
-            Consultez les profils et services renseignés, puis confirmez directement le créneau qui vous convient.
+            Consultez les profils et services renseignés, puis envoyez une demande à l’Accompagnateur qui vous convient.
           </p>
 
           <motion.div

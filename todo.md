@@ -64,6 +64,6 @@
 - [x] **Vague 009 — Cohérence métier :** masquer les contre-propositions, conflits de créneaux et disponibilités persistées tant qu’un modèle de données, des règles métier et une recette dédiée n’ont pas été approuvés.
 - [x] **Vague 010 — Durcissement production :** migrer React Router vers 7.18.2, contrôler les routes SSR et restreindre les droits Storage privés et d’écriture au rôle authentifié.
 - [x] **Vague 010 — Durcissement production :** activer les protections GitHub de `main` après la première CI réparée ; les réglages Supabase Auth, le domaine et les politiques de photos de chien restent à valider avec l’éditeur.
-- [ ] **Vague 011 — Recette et exploitation :** exécuter une recette de bout en bout documentée avec comptes QA, analyser les erreurs applicatives et préparer le plan de lancement et de retour arrière final.
+- [x] **Vague 011 — Recette et exploitation :** consigner les contrôles de navigation, Auth, build, audit, conseillers Supabase, limites de lint et plan de lancement/retour arrière ; les validations par e-mail et Admin réel restent ouvertes.
 - [ ] **Vague 011 — Livraison :** produire les archives, rapports, checkpoint et synchronisation GitHub vérifiée après chaque vague, sans secrets ni données QA non autorisées.
 - [ ] Exécuter les vagues 009, 010 et 011 à la suite lorsque les contrôles restent non destructifs et sans attendre une confirmation intermédiaire, puis signaler sans masquer les prérequis externes non levés.
