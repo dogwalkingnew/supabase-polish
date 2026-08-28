@@ -137,8 +137,8 @@ const OwnerDashboardV3 = () => {
         )}
       </motion.div>
 
-      <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-[#EFEAE0] z-50 pb-[env(safe-area-inset-bottom)]">
-        <div className="max-w-lg mx-auto flex items-center justify-around h-16">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/40 bg-background/95 pb-[env(safe-area-inset-bottom)] shadow-elevated backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-lg items-center justify-around px-1">
           {items.map((it) => {
             const Icon = it.icon;
             const active = tab === it.key;
@@ -146,9 +146,10 @@ const OwnerDashboardV3 = () => {
               <motion.button
                 key={it.key}
                 onClick={() => handleTabChange(it.key)}
-                whileTap={{ scale: 0.95 }}
-                className={`flex flex-col items-center justify-center gap-1 w-16 py-1 rounded-lg transition-colors ${
-                  active ? "text-[#1DB584]" : "text-[#8A8A99]"
+                whileTap={{ scale: 0.9 }}
+                whileHover={{ y: -2 }}
+                className={`relative flex min-w-[60px] flex-col items-center justify-center gap-0.5 rounded-xl px-3 py-2 transition-all duration-200 ${
+                  active ? "bg-primary/10 text-primary shadow-sm" : "text-muted-foreground hover:bg-muted/60"
                 }`}
               >
                 <Icon size={20} strokeWidth={active ? 2.5 : 2} />

@@ -392,6 +392,36 @@
   background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
 }
 
+/* Référence project-gem-v2 : surfaces vitrées, profondeur légère et interactions tactiles. */
+.dashboard-glass {
+  border: 1px solid hsl(var(--border) / 0.55);
+  background: hsl(var(--background) / 0.92);
+  box-shadow: var(--shadow-elevated);
+  backdrop-filter: blur(18px);
+}
+
+.dashboard-gradient {
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+}
+
+.dashboard-interactive {
+  transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 200ms cubic-bezier(0.23, 1, 0.32, 1), border-color 200ms ease;
+}
+
+.dashboard-interactive:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: hsl(var(--primary) / 0.28);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-interactive,
+  .dashboard-interactive:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
 /* DogWalking : itinéraire de promenade discret, utilisé seulement dans les sections éditoriales. */
 .dogwalking-route {
   height: 26px;

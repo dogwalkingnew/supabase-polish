@@ -70,7 +70,7 @@ export const HeroSection = () => {
         }}
       >
         <motion.div 
-          className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"
+          className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/60 to-emerald-950/40"
           style={{ opacity }}
         />
       </motion.div>
@@ -90,7 +90,7 @@ export const HeroSection = () => {
           {/* Badge */}
           <motion.div 
             variants={itemVariants}
-            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-6"
+            className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-slate-950/35 px-4 py-2 mb-6 shadow-lg shadow-slate-950/20 backdrop-blur-md"
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
@@ -100,10 +100,10 @@ export const HeroSection = () => {
 
           <motion.h1 
             variants={itemVariants}
-            className="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 md:mb-6 leading-tight"
+            className="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 md:mb-6 leading-tight drop-shadow-[0_3px_18px_rgba(0,0,0,0.55)]"
           >
               Un accompagnement à organiser{" "}
-              <span className="text-gradient inline-block">
+              <span className="inline-block bg-gradient-to-r from-emerald-200 via-white to-cyan-200 bg-clip-text text-transparent">
               pour votre animal
             </span>
           </motion.h1>
@@ -126,7 +126,7 @@ export const HeroSection = () => {
             >
               <Button 
                 size="lg" 
-                className="text-base md:text-lg px-6 md:px-8 py-3 md:py-4 h-auto w-full sm:w-auto shadow-button" 
+                className="text-base md:text-lg px-6 md:px-8 py-3 md:py-4 h-auto w-full sm:w-auto bg-gradient-primary text-white shadow-glow-primary hover:-translate-y-0.5 hover:shadow-elevated transition-all duration-200"
                 onClick={() => navigate('/walkers')}
               >
                 Voir les profils Accompagnateur
@@ -139,7 +139,7 @@ export const HeroSection = () => {
               <Button 
                 variant="outline" 
                 size="lg" 
-                className="text-base md:text-lg px-6 md:px-8 py-3 md:py-4 h-auto bg-white/10 border-white/30 text-white hover:bg-white/20 w-full sm:w-auto backdrop-blur-sm" 
+                className="text-base md:text-lg px-6 md:px-8 py-3 md:py-4 h-auto bg-slate-950/30 border-white/60 text-white hover:bg-white/20 hover:-translate-y-0.5 w-full sm:w-auto backdrop-blur-md transition-all duration-200"
                 onClick={() => navigate('/walker/register')}
               >
                 Devenir Accompagnateur
@@ -168,7 +168,7 @@ export const HeroSection = () => {
                 variants={trustIndicatorVariants}
                 initial="hidden"
                 animate="visible"
-                className="flex items-center gap-2 justify-center bg-white/5 backdrop-blur-sm rounded-full px-3 py-1.5"
+                className="flex items-center gap-2 justify-center rounded-full border border-white/15 bg-slate-950/30 px-3 py-1.5 shadow-md shadow-slate-950/20 backdrop-blur-sm"
                 whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.1)" }}
               >
                 <item.icon className={`h-4 w-4 ${item.color}`} />

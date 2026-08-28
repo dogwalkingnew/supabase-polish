@@ -96,9 +96,12 @@ const WalkerDashboardV3 = () => {
     <div className="min-h-dvh bg-background text-foreground">
       <Header />
       <main className="container max-w-5xl py-24">
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div><p className="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-primary">Espace Accompagnateur</p><h1 className="text-3xl font-bold md:text-4xl">Vos missions et informations</h1><p className="mt-2 max-w-2xl text-muted-foreground">Cet espace affiche uniquement les réservations qui vous sont réellement attribuées dans DogWalking.</p></div>
-          <Button asChild variant="outline"><Link to="/messages">Ouvrir la messagerie</Link></Button>
+        <div className="dashboard-gradient relative mb-8 overflow-hidden rounded-3xl p-6 text-white shadow-elevated md:p-8">
+          <div className="pointer-events-none absolute -right-10 -top-16 h-44 w-44 rounded-full bg-white/10 blur-2xl" />
+          <div className="relative flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+            <div><p className="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-white/75">Espace Accompagnateur</p><h1 className="text-3xl font-bold md:text-4xl">Vos missions et informations</h1><p className="mt-2 max-w-2xl text-white/80">Cet espace affiche uniquement les réservations qui vous sont réellement attribuées dans DogWalking.</p></div>
+            <Button asChild variant="outline" className="border-white/50 bg-white/10 text-white hover:bg-white hover:text-primary"><Link to="/messages">Ouvrir la messagerie</Link></Button>
+          </div>
         </div>
         {loading ? <div className="flex min-h-48 items-center justify-center rounded-2xl border bg-card"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div> : (
           <div className="space-y-6">

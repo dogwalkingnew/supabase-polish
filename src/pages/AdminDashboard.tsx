@@ -242,17 +242,18 @@ DOCUMENTS EN ATTENTE: ${pendingDocuments.length}
       <Header />
       <main className="container mx-auto px-4 py-8 max-w-7xl pb-24">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-4xl font-black text-foreground">Dashboard Administrateur</h1>
-              <p className="text-muted-foreground mt-2">Gestion globale de la plateforme DogWalking</p>
+<div className="dashboard-gradient relative flex flex-col gap-5 overflow-hidden rounded-3xl p-6 text-white shadow-elevated md:flex-row md:items-center md:justify-between md:p-8">
+            <div className="pointer-events-none absolute -right-10 -top-16 h-44 w-44 rounded-full bg-white/10 blur-2xl" />
+            <div className="relative">
+              <h1 className="text-3xl font-black md:text-4xl">Dashboard Administrateur</h1>
+              <p className="mt-2 text-white/80">Gestion globale de la plateforme DogWalking</p>
             </div>
-            <div className="flex items-center gap-3">
-              <Button variant="outline" className="rounded-xl font-bold" onClick={handleGenerateReport}>
-                <BarChart3 className="w-4 h-4 mr-2" />
+            <div className="relative flex flex-wrap items-center gap-3">
+              <Button variant="outline" className="rounded-xl border-white/50 bg-white/10 font-bold text-white hover:bg-white hover:text-primary" onClick={handleGenerateReport}>
+                <BarChart3 className="mr-2 h-4 w-4" />
                 Rapport
               </Button>
-              <Button className="rounded-xl font-bold shadow-lg shadow-primary/20" onClick={handleExportCSV}>
+              <Button className="rounded-xl bg-white font-bold text-primary shadow-lg shadow-black/15 hover:bg-white/90" onClick={handleExportCSV}>
                 Exporter CSV
               </Button>
             </div>

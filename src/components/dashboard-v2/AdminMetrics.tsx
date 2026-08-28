@@ -71,14 +71,14 @@ const AdminMetrics = ({
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.05 }}
-              className={`${metric.bg} rounded-xl p-3 border border-transparent hover:shadow-lg transition-all`}
+              className={`dashboard-interactive ${metric.bg} rounded-2xl border border-border/40 p-3 shadow-card`}
             >
               <div className="flex items-start justify-between mb-2">
-                <div className="w-8 h-8 rounded-lg bg-white/50 flex items-center justify-center">
-                  <Icon className={`w-4 h-4 ${metric.color}`} />
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-primary text-white shadow-glow-primary">
+                  <Icon className="h-4 w-4" />
                 </div>
               </div>
-              <p className={`text-xl font-black ${metric.color} line-clamp-1`}>{metric.value}</p>
+              <p className={`text-xl font-black ${metric.color} line-clamp-1 drop-shadow-sm`}>{metric.value}</p>
               <p className="text-[9px] font-bold text-muted-foreground mt-1 line-clamp-2">{metric.label}</p>
             </motion.div>
           );
