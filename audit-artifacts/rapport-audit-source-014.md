@@ -51,6 +51,12 @@ La même recette a confirmé qu’une ancienne URL secondaire, `/services/visite
 | Administration | La route est protégée par le rôle Administrateur ; les indicateurs ne reposent plus sur un pseudo-funnel. | Connexion avec le compte Administrateur confirmé, après validation de son e-mail. |
 | Lovable | Le build n’exige plus que Lovable injecte deux variables publiques Supabase manquantes. | Confirmation du déploiement automatique par Lovable, inaccessible sans session Lovable active dans le navigateur partagé. |
 
+## Vérification du domaine Lovable après synchronisation
+
+Le 28 août 2026, la branche `main` du dépôt GitHub a été avancée de `c1b88b59` à `a8a49c3f`, puis la CI GitHub `33128104938` a réussi. L’extraction fraîche du domaine `https://supabase-sparkle-polish.lovable.app/` et de `/walkers` sert toutefois encore l’ancien titre Open Graph « promenades et gardes de chiens vérifiées » ainsi que l’écran « Impossible d’afficher cette page ». Ces deux indices démontrent que Lovable n’a pas encore servi le commit `a8a49c3f` au moment du contrôle ; ce résultat ne permet pas de conclure que le correctif est en ligne.
+
+Le projet Lovable associé est `lovp_1tcvy30dwd9trsgp0drtktkwy5`. Il faut y déclencher le redéploiement ou rétablir la synchronisation GitHub, puis vérifier que l’aperçu HTML porte le titre « DogWalking — Demandes de promenade et garde » et que l’accueil comme `/walkers` s’affichent sans écran de repli. Le navigateur connecté à Lovable a expiré pendant ce contrôle et doit être reconnecté pour effectuer cette action dans l’interface.
+
 ## Références
 
 [1] [Supabase — Migrating to publishable and secret API keys](https://supabase.com/docs/guides/getting-started/migrating-to-new-api-keys)
