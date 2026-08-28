@@ -15,14 +15,14 @@ const FindWalkersHero = () => {
 
   return (
     <section className="relative">
-      <div className="relative h-72 md:h-80 flex items-center justify-center overflow-hidden">
+      <div className="relative min-h-[27rem] md:h-80 flex items-center justify-center overflow-hidden">
         <img src={heroImg} alt="Accompagnateur d'Animaux" className="absolute inset-0 w-full h-full object-cover scale-105" />
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/60 via-foreground/50 to-foreground/70" />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="relative z-10 text-center px-4 -mt-8"
+          className="relative z-10 text-center px-4 py-8 md:-mt-8"
         >
           <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-2 md:mb-3 leading-tight drop-shadow-lg">
             Consultez les profils<br className="hidden sm:block" /> Accompagnateur

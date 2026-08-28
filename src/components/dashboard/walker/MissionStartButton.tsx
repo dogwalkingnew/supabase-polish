@@ -132,7 +132,7 @@ export const MissionStartButton: React.FC<MissionStartButtonProps> = ({
         className={cn("gap-2 bg-gradient-to-r from-primary to-accent hover:opacity-90 shadow-lg", className)}
       >
         <Play className="h-4 w-4" />
-        Prise en charge
+        GO · Démarrer la mission
       </Button>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -140,7 +140,7 @@ export const MissionStartButton: React.FC<MissionStartButtonProps> = ({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Play className="h-5 w-5 text-primary" />
-              Prise en charge de {dogName}
+              GO · Prise en charge de {dogName}
             </DialogTitle>
             <DialogDescription>
               Ajoutez une photo pour confirmer la prise en charge du chien.

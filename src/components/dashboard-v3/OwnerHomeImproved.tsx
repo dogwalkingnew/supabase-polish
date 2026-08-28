@@ -93,8 +93,8 @@ const OwnerHomeImproved = ({ pets, nextMission, onReserve, onViewAllPets, onView
                 </div>
               </div>
             </div>
-            <button type="button" onClick={onViewMissionDetails} className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-[#1E7B5F]/30 px-3 py-2.5 text-sm font-bold text-[#1E7B5F] transition-colors hover:bg-[#1E7B5F]/5">
-              Consulter la demande <ArrowRight className="h-4 w-4" />
+            <button type="button" onClick={onViewMissionDetails} aria-label={`Suivre la demande de ${nextMission.walkerName}`} className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-[#1E7B5F]/30 px-3 py-2.5 text-sm font-bold text-[#1E7B5F] transition-colors hover:bg-[#1E7B5F]/5">
+              Suivre la demande <ArrowRight className="h-4 w-4" />
             </button>
           </article>
         </section>
