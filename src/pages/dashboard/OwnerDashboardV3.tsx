@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Home, PawPrint, Briefcase, User } from "lucide-react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import OwnerHomeImproved from "@/components/dashboard-v3/OwnerHomeImproved";
@@ -14,8 +14,17 @@ import { supabase } from "@/integrations/supabase/client";
 
 type Tab = "home" | "pets" | "missions" | "profil";
 
+const tabFromSearch = (search: string): Tab => {
+  const value = new URLSearchParams(search).get("tab");
+  if (value === "chiens" || value === "pets") return "pets";
+  if (value === "reservations" || value === "missions") return "missions";
+  if (value === "profil") return "profil";
+  return "home";
+};
+
 const OwnerDashboardV3 = () => {
-  const [tab, setTab] = useState<Tab>("home");
+  const location = useLocation();
+  const [tab, setTab] = useState<Tab>(() => tabFromSearch(location.search));
   const { user, profile, signOut, refreshProfile } = useAuth();
   const { data, isLoading } = useOwnerDashboard();
   const queryClient = useQueryClient();
@@ -29,6 +38,12 @@ const OwnerDashboardV3 = () => {
   ];
 
   const handleReserve = () => navigate("/walkers");
+
+  const handleTabChange = (nextTab: Tab) => {
+    const tabParam = nextTab === "pets" ? "chiens" : nextTab === "missions" ? "reservations" : nextTab === "profil" ? "profil" : "";
+    navigate(tabParam ? `${location.pathname}?tab=${tabParam}` : location.pathname);
+    setTab(nextTab);
+  };
 
   const handleLogout = async () => {
     await signOut();
@@ -88,8 +103,8 @@ const OwnerDashboardV3 = () => {
               pets={data.pets}
               nextMission={data.nextMission}
               onReserve={handleReserve}
-              onViewAllPets={() => setTab("pets")}
-              onViewAllMissions={() => setTab("missions")}
+              onViewAllPets={() => handleTabChange("pets")}
+              onViewAllMissions={() => handleTabChange("missions")}
               onViewMissionDetails={() => data.nextMission && navigate(`/bookings/${data.nextMission.id}`)}
             />
 
@@ -130,7 +145,7 @@ const OwnerDashboardV3 = () => {
             return (
               <motion.button
                 key={it.key}
-                onClick={() => setTab(it.key)}
+                onClick={() => handleTabChange(it.key)}
                 whileTap={{ scale: 0.95 }}
                 className={`flex flex-col items-center justify-center gap-1 w-16 py-1 rounded-lg transition-colors ${
                   active ? "text-[#1DB584]" : "text-[#8A8A99]"

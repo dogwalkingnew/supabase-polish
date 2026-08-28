@@ -88,7 +88,7 @@ const App = () => (
               <Route path="/services/pet-sitting" element={<Navigate to="/services/garde-multi-animaux" replace />} />
               <Route path="/services/dog-walking" element={<Navigate to="/services/promenade" replace />} />
               <Route path="/services/home-visit" element={<Navigate to="/services/visite" replace />} />
-              <Route path="/services/boarding" element={<Navigate to="/services/hebergement" replace />} />
+              <Route path="/services/boarding" element={<Navigate to="/services/garde" replace />} />
               <Route path="/services/:slug" element={<NotFound />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
