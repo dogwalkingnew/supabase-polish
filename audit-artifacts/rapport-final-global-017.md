@@ -109,3 +109,13 @@ La prochaine étape recommandée est de connecter les comptes QA autorisés et d
 
 [1]: https://tanstack.com/router/latest/docs/guide/history-types "TanStack Router — History types"
 [2]: https://supabase.com/docs/guides/api/api-keys "Supabase — API keys"
+
+## 11. Résultat de la recette globale 017
+
+La recette CDP a couvert 57 URL : routes publiques, six services, alias historiques, authentification, redirections des espaces Propriétaire et Accompagnateur, administration, support, ressources légales, profils, missions et erreurs 404. Les routes testées après hydratation ne présentent pas d’exception JavaScript, d’erreur console ni de spinner persistant. Les protections anonymes redirigent vers Auth.
+
+La capture mobile a révélé un rognage du titre de recherche Accompagnateur sous la hauteur fixe du héros. Le héros a été corrigé par une hauteur minimale mobile et un espacement positif ; une capture dédiée confirme que le titre, les indicateurs, le bouton d’annonce et le formulaire restent visibles.
+
+Les labels d’action sont désormais explicites : `GO · Démarrer la mission` pour l’Accompagnateur et `Suivre la demande` pour le Propriétaire. Les composants historiques non importés et porteurs de contenu simulé ont été retirés. Le rapport distingue ces sources supprimées des fonctionnalités métier réelles.
+
+Le checkpoint final est `e153e5a3`. Le push contrôlé a été effectué avec `force-with-lease` borné au SHA distant précédent `c7d4befabd0cf56de87c0a777411f3928571ebd1`. Le SHA actuellement confirmé sur `main` est `e153e5a3f42d4daa31f930bb710076f06bebcc4a`. La branche n’est pas protégée par GitHub, conformément à la demande de pushes directs. La CI `33173062678` est terminée avec succès ; les annotations restantes sont des avertissements de maintenance ou de lint non bloquants.
