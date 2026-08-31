@@ -1,4 +1,5 @@
 /** DogWalking — tableau Propriétaire factuel : animaux et missions réelles, sans suivi, santé ou urgence simulés. */
+/* Direction visuelle : project-gem, interface émeraude/sable, mobile-first ; le desktop respire avec une largeur maîtrisée et des surfaces lisibles. */
 import { CalendarDays, MapPin, User2, Clock, Euro, ArrowRight } from "lucide-react";
 import OwnerHeroImproved from "./OwnerHeroImproved";
 import GoButton from "./GoButton";
@@ -39,7 +40,7 @@ interface OwnerHomeImprovedProps {
 const OwnerHomeImproved = ({ pets, nextMission, onReserve, onViewAllPets, onViewAllMissions, onViewMissionDetails }: OwnerHomeImprovedProps) => (
   <div className="bg-[#F9F7F4] min-h-dvh pb-28">
     <OwnerHeroImproved alt="Propriétaire avec son chien" />
-    <main className="px-4 -mt-3 max-w-lg mx-auto space-y-6">
+    <main className="mx-auto -mt-3 w-full max-w-7xl space-y-6 px-4 sm:px-6 lg:px-10">
       <div className="pt-2">
         <GoButton label="Consulter les Accompagnateurs" onClick={onReserve} />
       </div>
@@ -51,7 +52,7 @@ const OwnerHomeImproved = ({ pets, nextMission, onReserve, onViewAllPets, onView
             Ajoutez un animal avant de formuler une demande ; chaque mission reste rattachée au profil concerné.
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             {pets.slice(0, 2).map((pet) => (
               <article key={pet.id} className="overflow-hidden rounded-2xl bg-white p-2.5 shadow-[0_2px_10px_rgba(26,26,46,0.06)]">
                 <img src={pet.photo} alt={pet.name} className="h-24 w-full rounded-xl object-cover" loading="lazy" />

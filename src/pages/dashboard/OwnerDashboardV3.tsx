@@ -1,4 +1,5 @@
 import { useState } from "react";
+/* Direction visuelle : project-gem, tableau émeraude/sable, surfaces larges sur desktop et navigation compacte sur mobile. */
 import { Home, PawPrint, Briefcase, User } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -95,8 +96,8 @@ const OwnerDashboardV3 = () => {
   };
 
   return (
-    <div className="bg-[#F9F7F4] min-h-screen">
-      <motion.div key={tab} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+    <div className="min-h-dvh w-full bg-[#F9F7F4]">
+      <motion.div key={tab} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-10">
         {tab === "home" && (
           <div className="space-y-6 pb-32">
             <OwnerHomeImproved
@@ -138,7 +139,7 @@ const OwnerDashboardV3 = () => {
       </motion.div>
 
       <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/40 bg-background/95 pb-[env(safe-area-inset-bottom)] shadow-elevated backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-lg items-center justify-around px-1">
+        <div className="mx-auto flex h-16 w-full max-w-4xl items-center justify-around gap-2 px-1 sm:gap-8">
           {items.map((it) => {
             const Icon = it.icon;
             const active = tab === it.key;

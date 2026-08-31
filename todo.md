@@ -73,7 +73,8 @@
 - [ ] **Configuration Lovable bloquante — 27 août 2026 :** le diagnostic navigateur de `https://supabase-sparkle-polish.lovable.app/walkers` confirme l’absence de `VITE_SUPABASE_URL` et `VITE_SUPABASE_PUBLISHABLE_KEY` dans le build Lovable. Renseigner ces valeurs publiques dans les secrets/variables du projet Lovable, déclencher un redéploiement puis contrôler l’accueil, `/walkers` et `/dashboard`.
 - [ ] **Validation de publication Lovable — 28 août 2026 :** vérifier la présence des variables publiques Supabase dans Lovable, confirmer le SHA GitHub réellement déployé et contrôler l’accueil ainsi qu’une route profonde sans écran de repli.
 - [ ] **Propagation Lovable bloquée — 28 août 2026 :** le 28 août 2026, après la CI GitHub réussie du commit `a8a49c3f`, le domaine `supabase-sparkle-polish.lovable.app` sert encore un ancien build (ancien titre « vérifiées » et écran de repli). Déclencher ou attendre le redéploiement depuis le projet Lovable `lovp_1tcvy30dwd9trsgp0drtktkwy5`, puis recontrôler l’accueil et `/walkers`.
-- [x] **Recette exhaustive des interfaces — 28 août 2026 :** inventorier toutes les routes, sections et boutons, puis contrôler les destinations et états de chaque action publique et privée ; vérifier explicitement le bouton « GO » Accompagnateur et le suivi Propriétaire.
+- [ ] **Recette utilisateur 018 — 28 août 2026 : tester chaque bouton et chaque transition des parcours Public, Propriétaire, Accompagnateur et Admin ; les mutations restent à exécuter avec des sessions QA réelles.
+- [ ] **Recette exhaustive des interfaces — 28 août 2026 :** inventorier toutes les routes, sections et boutons, puis contrôler les destinations et états de chaque action publique et privée ; vérifier explicitement le bouton « GO » Accompagnateur et le suivi Propriétaire.
 - [x] **Actions métier explicites — 28 août 2026 :** afficher « GO · Démarrer la mission » sur l’action Accompagnateur qui ouvre la preuve de prise en charge et « Suivre la demande » sur l’action Propriétaire qui ouvre le détail de la mission réelle.
 - [x] **Responsive recherche — 28 août 2026 :** corriger le héros mobile de `/walkers` afin que le titre, les indicateurs et le bouton d’annonce ne soient jamais rognés par la hauteur fixe ou le décalage vertical.
 - [x] **Compilation Propriétaire — 28 août 2026 :** vérifier l’import de `useState` dans `OwnerDashboardV3.tsx`, puis relancer typecheck, lint et build avant la livraison.
@@ -105,3 +106,27 @@
 - [x] **Services génériques historiques — 28 août 2026 :** supprimer ou neutraliser la route attrape-tout `/services/:slug`, son composant `ServicePage` et `servicesData` tant qu’ils comportent des assurances, certifications, soins, disponibilités, paiements et statistiques non établis.
 - [x] **État 404 silencieux — 28 août 2026 :** supprimer le journal `console.error` de la page introuvable pour que les routes retirées affichent un état 404 propre sans alerte parasite dans la recette navigateur.
 - [x] **Métadonnées d’accueil factuelles — 28 août 2026 :** remplacer les titres et aperçus Open Graph de la route d’accueil qui qualifient les promenades ou gardes de « vérifiées » sans élément de preuve public et maintenu.
+
+## Vague 019 — correction desktop et QA Propriétaire
+- [ ] Identifier les pages desktop qui n’occupent pas correctement la largeur ou la hauteur disponible.
+- [ ] Corriger la composition desktop sans dégrader le breakpoint mobile déjà validé.
+- [ ] Vérifier les débordements, espaces vides, conteneurs trop étroits et contrastes sur les pages publiques et Propriétaire.
+- [ ] Tester la session Propriétaire réelle et l’action « Suivre ».
+- [ ] Capturer les prévisualisations desktop et mobile après correction.
+- [ ] Mettre à jour le rapport, sauvegarder un checkpoint et préparer la source complète.
+
+## Vague 019 — état de contrôle
+- [x] Identifier la cause du cadrage desktop étroit dans les vues Propriétaire (`max-w-lg` mobile conservé sur desktop).
+- [x] Élargir le shell, l’accueil et le profil Propriétaire avec des conteneurs desktop responsifs.
+- [x] Adapter la grille des animaux pour les grands écrans sans modifier le mobile.
+- [x] Contrôler les captures desktop 1440×900 et mobile 390×844 des pages publiques.
+- [x] Passer typecheck, build et lint sans erreur bloquante.
+- [ ] Rejouer le clic réel « Suivre la demande » dans la session Propriétaire, actuellement bloqué par le délai du navigateur partagé.
+
+## Vague 020 — synchronisation GitHub et reprise du polish
+- [ ] Comparer l’état local avec `origin/main` du dépôt `dogwalkingnew/supabase-polish`.
+- [ ] Vérifier les fichiers sensibles exclus et l’absence de secrets avant transfert.
+- [ ] Effectuer un push forcé contrôlé avec `--force-with-lease` uniquement après validation de l’alignement.
+- [ ] Confirmer le SHA distant et le statut CI après le push.
+- [ ] Reprendre les tâches restantes réalisables dans le dépôt et distinguer les validations externes nécessaires.
+- [ ] Mettre à jour le rapport et sauvegarder un checkpoint après les corrections réellement livrées.
