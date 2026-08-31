@@ -2,6 +2,7 @@
  * Design DogWalking — tableau Accompagnateur factuel : fond clair, vert forêt pour les états,
  * aucune donnée de démonstration, aucun revenu, avis, paiement ou disponibilité non calculés.
  */
+/* Direction visuelle : project-gem, tableau émeraude/sable, largeur fluide sur desktop et densité tactile sur mobile. */
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { CalendarDays, CheckCircle2, ClipboardList, Dog, Loader2, MapPin, ShieldAlert, UserRound } from "lucide-react";
@@ -95,7 +96,7 @@ const WalkerDashboardV3 = () => {
   return (
     <div className="min-h-dvh bg-background text-foreground">
       <Header />
-      <main className="container max-w-5xl py-24">
+      <main className="container w-full max-w-7xl py-24">
         <div className="dashboard-gradient relative mb-8 overflow-hidden rounded-3xl p-6 text-white shadow-elevated md:p-8">
           <div className="pointer-events-none absolute -right-10 -top-16 h-44 w-44 rounded-full bg-white/10 blur-2xl" />
           <div className="relative flex flex-col gap-5 md:flex-row md:items-end md:justify-between">

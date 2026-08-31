@@ -41,9 +41,10 @@ const OwnerHomeImproved = ({ pets, nextMission, onReserve, onViewAllPets, onView
   <div className="bg-[#F9F7F4] min-h-dvh pb-28">
     <OwnerHeroImproved alt="Propriétaire avec son chien" />
     <main className="mx-auto -mt-3 w-full max-w-7xl space-y-6 px-4 sm:px-6 lg:px-10">
-      <div className="pt-2">
-        <GoButton label="Consulter les Accompagnateurs" onClick={onReserve} />
-      </div>
+      <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
+        <div className="pt-2 lg:col-span-2">
+          <GoButton label="Consulter les Accompagnateurs" onClick={onReserve} />
+        </div>
 
       <section>
         <SectionTitle title="Mes animaux" actionLabel={pets.length > 0 ? "Gérer" : "Ajouter"} onAction={onViewAllPets} />
@@ -100,6 +101,7 @@ const OwnerHomeImproved = ({ pets, nextMission, onReserve, onViewAllPets, onView
           </article>
         </section>
       )}
+      </div>
     </main>
   </div>
 );

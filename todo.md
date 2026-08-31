@@ -130,3 +130,28 @@
 - [ ] Confirmer le SHA distant et le statut CI après le push.
 - [ ] Reprendre les tâches restantes réalisables dans le dépôt et distinguer les validations externes nécessaires.
 - [ ] Mettre à jour le rapport et sauvegarder un checkpoint après les corrections réellement livrées.
+
+## Vague 020 — clôture du transfert
+- [x] Comparer l’état local avec la branche `main` du dépôt GitHub sélectionné.
+- [x] Vérifier par les chemins suivis que les artefacts générés et fichiers sensibles ne sont pas transférés.
+- [x] Effectuer le push forcé contrôlé avec `--force-with-lease`.
+- [x] Confirmer le SHA distant final `5c04845d7645c8299e5cf5dbe9a598d5fff06f62`.
+- [x] Confirmer la CI GitHub verte sur le SHA final.
+- [x] Ajouter une archive source complète sans artefacts de build au dépôt GitHub.
+- [ ] Traiter les prérequis externes Lovable, Auth, juridique et QA navigateur avec les accès correspondants.
+
+## Vague 021 — optimisation desktop et inventaire QA
+- [ ] Auditer les conteneurs, espacements et hauteurs des écrans desktop publics et Propriétaire.
+- [ ] Corriger les zones qui restent trop étroites ou laissent un espace vide excessif sur ordinateur.
+- [ ] Vérifier les onglets Propriétaire Accueil, Animaux, Missions et Profil à grand écran.
+- [ ] Contrôler le responsive mobile après les changements desktop.
+- [ ] Documenter précisément les scénarios QA encore non exécutés avec une session authentifiée réelle.
+- [ ] Mettre à jour le rapport et préparer un checkpoint après validation.
+
+## Vague 021 — résultats
+- [x] Auditer les contraintes de largeur sur les tableaux Propriétaire et Accompagnateur actifs.
+- [x] Restructurer l’accueil Propriétaire en grille desktop sans modifier l’empilement mobile.
+- [x] Élargir le tableau Accompagnateur actif jusqu’à `max-w-7xl`.
+- [x] Contrôler les captures desktop 1440×900 et mobile 390×844.
+- [x] Documenter les scénarios QA restant à exécuter avec des comptes authentifiés réels.
+- [ ] Rejouer les mutations Propriétaire, Accompagnateur et Administrateur avec les comptes QA et données RLS autorisées.
