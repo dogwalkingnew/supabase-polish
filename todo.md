@@ -155,3 +155,10 @@
 - [x] Contrôler les captures desktop 1440×900 et mobile 390×844.
 - [x] Documenter les scénarios QA restant à exécuter avec des comptes authentifiés réels.
 - [ ] Rejouer les mutations Propriétaire, Accompagnateur et Administrateur avec les comptes QA et données RLS autorisées.
+
+## Vague 021 — preuve navigateur Propriétaire
+- [x] Ouvrir la réservation réelle depuis « Suivre ma demande ».
+- [x] Vérifier l’URL `/bookings/:id`, le statut, les informations du chien, l’Accompagnateur et la section des preuves.
+- [x] Vérifier la présence des actions de code masqué sans révéler ni copier le secret.
+- [x] Vérifier la présence de « Signaler un incident » sans déclencher de déclaration.
+- [ ] Tester « Signaler un incident » uniquement avec une confirmation explicite et un scénario QA prévu.

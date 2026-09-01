@@ -63,3 +63,7 @@ La composition de l’accueil Propriétaire utilise maintenant une grille à deu
 | Sécurité | À rejouer en session | RLS avec propriétaire, accompagnateur associé, administrateur et tiers non associé ; aucun accès croisé |
 | Lovable | Externe | Variables publiques Supabase, redéploiement, accueil et route profonde sur le domaine publié |
 | Exploitation/légal | Externe | Email Admin, mots de passe compromis, informations éditeur, RGPD, domaine, sauvegardes et observabilité |
+
+## Preuve QA observée — Propriétaire / Suivre ma demande
+
+Le 2 septembre 2026, la session Propriétaire a ouvert avec succès la route réelle `/bookings/b2e7d2a2-58e4-468e-8407-a0ef3e9c7b64` après l’action « Suivre ma demande ». La page affiche le titre « Détails de la réservation », le statut « Confirmée », la date du mercredi 9 septembre 2026 à 10:00 pour 60 minutes, le chien `QA_TEMP_Nova`, l’Accompagnateur Hamid, une section « Preuves de la promenade » vide, un code unique masqué avec les actions « Afficher le code » et « Copier le code », ainsi que « Signaler un incident ». La navigation desktop et les deux colonnes d’informations sont visibles sans débordement dans la capture fournie et dans la session consultée. Le code n’a pas été révélé ni copié afin de préserver le secret de validation. Le clic de l’action « Signaler un incident » n’a pas été déclenché, car il s’agit d’une mutation/déclaration nécessitant une intention explicite.
