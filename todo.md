@@ -185,3 +185,12 @@
 - [ ] Contrôler Admin séparément et conserver ses permissions propres.
 - [ ] Tester desktop, tablette, mobile, navigation, états vides, erreurs et actions métier.
 - [ ] Documenter, sauvegarder et synchroniser la version adaptée.
+
+## Vague 024 — audit couleurs global
+- [ ] Cartographier les pages actives et les couleurs actuellement utilisées.
+- [ ] Conserver le vert principal de l’accueil comme token de marque.
+- [ ] Compléter les tokens secondaires et les états succès/attention/erreur/information.
+- [ ] Vérifier les cartes, pictogrammes, badges, boutons, onglets et champs.
+- [ ] Corriger les pages qui restent blanches, monochromes ou incohérentes.
+- [ ] Contrôler toutes les routes publiques et tableaux en desktop/mobile.
+- [ ] Documenter, sauvegarder et synchroniser la passe couleur.

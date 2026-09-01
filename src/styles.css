@@ -395,9 +395,34 @@
 /* Référence project-gem-v2 : surfaces vitrées, profondeur légère et interactions tactiles. */
 .dashboard-glass {
   border: 1px solid hsl(var(--border) / 0.55);
-  background: hsl(var(--background) / 0.92);
+  background: linear-gradient(145deg, hsl(var(--background) / 0.97), hsl(var(--warm-beige) / 0.86));
   box-shadow: var(--shadow-elevated);
   backdrop-filter: blur(18px);
+}
+
+.dashboard-card-primary {
+  border-color: hsl(var(--primary) / 0.24);
+  background: linear-gradient(145deg, hsl(var(--sage-green-light) / 0.86), hsl(var(--background) / 0.96));
+}
+
+.dashboard-card-info {
+  border-color: hsl(var(--accent) / 0.24);
+  background: linear-gradient(145deg, hsl(var(--ocean-blue-light) / 0.8), hsl(var(--background) / 0.96));
+}
+
+.dashboard-card-warning {
+  border-color: hsl(var(--stat-yellow) / 0.32);
+  background: linear-gradient(145deg, hsl(var(--stat-yellow-light) / 0.82), hsl(var(--background) / 0.96));
+}
+
+.dashboard-card-danger {
+  border-color: hsl(var(--destructive) / 0.3);
+  background: linear-gradient(145deg, hsl(var(--stat-red-light) / 0.82), hsl(var(--background) / 0.96));
+}
+
+.dashboard-card-success {
+  border-color: hsl(var(--stat-green) / 0.28);
+  background: linear-gradient(145deg, hsl(var(--stat-green-light) / 0.82), hsl(var(--background) / 0.96));
 }
 
 .dashboard-gradient {
