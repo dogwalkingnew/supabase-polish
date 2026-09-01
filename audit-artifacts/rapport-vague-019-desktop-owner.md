@@ -67,3 +67,11 @@ La composition de l’accueil Propriétaire utilise maintenant une grille à deu
 ## Preuve QA observée — Propriétaire / Suivre ma demande
 
 Le 2 septembre 2026, la session Propriétaire a ouvert avec succès la route réelle `/bookings/b2e7d2a2-58e4-468e-8407-a0ef3e9c7b64` après l’action « Suivre ma demande ». La page affiche le titre « Détails de la réservation », le statut « Confirmée », la date du mercredi 9 septembre 2026 à 10:00 pour 60 minutes, le chien `QA_TEMP_Nova`, l’Accompagnateur Hamid, une section « Preuves de la promenade » vide, un code unique masqué avec les actions « Afficher le code » et « Copier le code », ainsi que « Signaler un incident ». La navigation desktop et les deux colonnes d’informations sont visibles sans débordement dans la capture fournie et dans la session consultée. Le code n’a pas été révélé ni copié afin de préserver le secret de validation. Le clic de l’action « Signaler un incident » n’a pas été déclenché, car il s’agit d’une mutation/déclaration nécessitant une intention explicite.
+
+## Correctif sécurité dépendances — vague 021
+
+La CI du 1er septembre 2026 a révélé deux alertes hautes sur `browserslist@4.26.3`, transitive via Babel/TanStack. Le champ `pnpm.overrides` du manifeste étant ignoré par pnpm 11, l’override a été placé dans `pnpm-workspace.yaml` avec `browserslist: 4.28.8`. Le lockfile a été régénéré, puis les contrôles locaux `typecheck`, `build` et `pnpm audit --prod --audit-level=high` sont passés. La CI GitHub du SHA `5f78a707f5c1b7fd7ec61b9c6d8333ebceb01682` est verte sur les cinq étapes. Les annotations de lint existantes et l’avertissement Node.js des actions GitHub restent non bloquants.
+
+## QA navigateur — résultat complémentaire
+
+L’action Propriétaire « Suivre ma demande » a été vérifiée en session réelle : la navigation ouvre la réservation `b2e7d2a2-58e4-468e-8407-a0ef3e9c7b64` sur `/bookings/:id`. La fiche affiche le statut confirmée, les informations de promenade, le chien, l’Accompagnateur, les preuves absentes, le code masqué et l’action « Signaler un incident ». Le code n’a pas été révélé/copier et aucune déclaration n’a été soumise.

@@ -162,3 +162,9 @@
 - [x] Vérifier la présence des actions de code masqué sans révéler ni copier le secret.
 - [x] Vérifier la présence de « Signaler un incident » sans déclencher de déclaration.
 - [ ] Tester « Signaler un incident » uniquement avec une confirmation explicite et un scénario QA prévu.
+
+## Vague 021 — sécurité et QA complémentaire
+- [x] Corriger l’alerte haute `browserslist` par override workspace vers `4.28.8`.
+- [x] Vérifier `typecheck`, build, audit production et CI GitHub verte sur `5f78a70`.
+- [x] Vérifier en navigateur la transition Propriétaire « Suivre ma demande » vers `/bookings/:id`.
+- [ ] Tester le bouton « Signaler un incident » avec une confirmation explicite si ce scénario est souhaité.
