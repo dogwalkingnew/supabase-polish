@@ -168,3 +168,20 @@
 - [x] Vérifier `typecheck`, build, audit production et CI GitHub verte sur `5f78a70`.
 - [x] Vérifier en navigateur la transition Propriétaire « Suivre ma demande » vers `/bookings/:id`.
 - [ ] Tester le bouton « Signaler un incident » avec une confirmation explicite si ce scénario est souhaité.
+
+## Vague 022 — référence pet-people-connect
+- [ ] Extraire et inventorier le ZIP de référence fourni.
+- [ ] Identifier son point d’entrée, ses routes et ses assets visuels.
+- [ ] Lancer une prévisualisation temporaire séparée de la référence.
+- [ ] Faire valider par l’utilisateur que cette version est bien la direction visuelle à reproduire.
+- [ ] Ne commencer l’adaptation DogWalking qu’après validation explicite.
+
+## Vague 023 — adaptation visuelle validée
+- [x] Inventorier les tokens visuels et composants réutilisables du fichier de référence.
+- [x] Comparer la couverture des pages publiques DogWalking avec la structure de la référence.
+- [x] Centraliser couleurs, surfaces, ombres, rayons, typographies et motifs sans réintroduire de fausses données.
+- [x] Adapter les pages publiques sans modifier les routes ni les actions réelles.
+- [x] Embellir les tableaux Propriétaire et Accompagnateur sans déplacer leurs fonctionnalités.
+- [ ] Contrôler Admin séparément et conserver ses permissions propres.
+- [ ] Tester desktop, tablette, mobile, navigation, états vides, erreurs et actions métier.
+- [ ] Documenter, sauvegarder et synchroniser la version adaptée.

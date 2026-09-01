@@ -75,8 +75,8 @@ const OwnerDashboardV3 = () => {
 
   if (isLoading || !data || !profile) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-[#F9F7F4]">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#1DB584]" />
+      <div className="flex min-h-dvh items-center justify-center bg-warm/70">
+        <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-primary" />
       </div>
     );
   }
@@ -96,7 +96,7 @@ const OwnerDashboardV3 = () => {
   };
 
   return (
-    <div className="min-h-dvh w-full bg-[#F9F7F4]">
+    <div className="min-h-dvh w-full bg-warm/70">
       <motion.div key={tab} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-10">
         {tab === "home" && (
           <div className="space-y-6 pb-32">
