@@ -505,6 +505,19 @@ const Auth = () => {
                     ))}
                   </div>
 
+                  <div className="mt-5 border-t border-border/70 pt-5">
+                    <button
+                      type="button"
+                      data-testid="temporary-admin-login"
+                      onClick={() => navigate('/auth?role=owner&redirect=%2Fadmin')}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
+                    >
+                      <Shield className="h-4 w-4" />
+                      Connexion Admin <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">temporaire</span>
+                    </button>
+                    <p className="mt-2 text-center text-[11px] text-muted-foreground">Accès de recette uniquement — le rôle Admin reste vérifié après connexion.</p>
+                  </div>
+
                   <p className="text-xs text-center text-muted-foreground mt-6">
                     Le choix du rôle vous oriente vers le parcours adapté à votre utilisation de DogWalking.
                   </p>

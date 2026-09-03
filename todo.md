@@ -202,3 +202,14 @@
 - [ ] Valider typecheck, build, lint, liens et redirections protégées.
 - [ ] Synchroniser l’intégralité du code vers le clone GitHub et pousser `main` avec `--force-with-lease`.
 - [ ] Vérifier le SHA distant, la CI et documenter les limites QA authentifiées restantes.
+
+## Vague 026 — accès Admin temporaire
+- [ ] Ajouter un bouton « Connexion Admin » sur la page Auth.
+- [ ] Conserver la protection `requiredRole="admin"` sur `/admin`.
+- [ ] Vérifier le rendu desktop/mobile et la redirection.
+- [ ] Documenter le retrait du bouton à la clôture du projet.
+
+## Vague 026 — livraison GitHub obligatoire
+- [ ] Synchroniser toutes les évolutions du bouton Admin et du suivi vers le dépôt GitHub.
+- [ ] Effectuer le push forcé sécurisé sur `main` après validation technique.
+- [ ] Vérifier que le SHA local et le SHA distant sont identiques.
