@@ -194,3 +194,11 @@
 - [ ] Corriger les pages qui restent blanches, monochromes ou incohérentes.
 - [ ] Contrôler toutes les routes publiques et tableaux en desktop/mobile.
 - [ ] Documenter, sauvegarder et synchroniser la passe couleur.
+
+## Vague 025 — audit exhaustif et push intégral
+- [ ] Inventorier toutes les routes actives, pages, sections et actions cliquables.
+- [ ] Vérifier les layouts desktop/mobile des pages publiques et des trois tableaux de rôles.
+- [ ] Contrôler les débordements horizontaux, conteneurs trop étroits, cartes, champs et navigation tactile.
+- [ ] Valider typecheck, build, lint, liens et redirections protégées.
+- [ ] Synchroniser l’intégralité du code vers le clone GitHub et pousser `main` avec `--force-with-lease`.
+- [ ] Vérifier le SHA distant, la CI et documenter les limites QA authentifiées restantes.
