@@ -42,4 +42,14 @@ jobs:
         run: pnpm run build
 
       - name: Audit production dependencies
-        run: pnpm run audit:prod
+        run: |
+          for attempt in 1 2 3; do
+            if pnpm run audit:prod; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "Audit npm indisponible ou échoué, nouvelle tentative dans 15 secondes (tentative $((attempt + 1))/3)."
+              sleep 15
+            fi
+          done
+          exit 1

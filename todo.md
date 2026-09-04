@@ -213,3 +213,10 @@
 - [ ] Synchroniser toutes les évolutions du bouton Admin et du suivi vers le dépôt GitHub.
 - [ ] Effectuer le push forcé sécurisé sur `main` après validation technique.
 - [ ] Vérifier que le SHA local et le SHA distant sont identiques.
+
+## Vague 027 — finalisation maximale
+- [ ] Vérifier l’état de la CI, du dépôt GitHub et de la prévisualisation.
+- [ ] Rechercher les blocages techniques sûrs sans modifier les protections métier.
+- [ ] Compléter l’audit des routes, pages, sections et responsive.
+- [ ] Mettre à jour les rapports et pousser les évolutions sur `main`.
+- [ ] Revalider le SHA distant et lister honnêtement les validations externes restantes.
