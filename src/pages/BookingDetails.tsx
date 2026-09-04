@@ -117,6 +117,7 @@ const BookingDetails = () => {
     const statusMap: Record<string, { label: string; variant: any }> = {
       pending: { label: 'En attente', variant: 'secondary' },
       confirmed: { label: 'Confirmée', variant: 'default' },
+      in_progress: { label: 'En cours', variant: 'default' },
       completed: { label: 'Terminée', variant: 'outline' },
       cancelled: { label: 'Annulée', variant: 'destructive' },
     };

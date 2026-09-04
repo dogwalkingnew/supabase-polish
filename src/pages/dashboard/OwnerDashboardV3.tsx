@@ -51,8 +51,8 @@ const OwnerDashboardV3 = () => {
     navigate("/auth");
   };
 
-  const handleUpdateProfile = async (updated: Record<string, any>) => {
-    if (!user) return;
+  const handleUpdateProfile = async (updated: Record<string, any>): Promise<boolean> => {
+    if (!user) return false;
     const { error } = await supabase
       .from("profiles")
       .update({
@@ -66,11 +66,13 @@ const OwnerDashboardV3 = () => {
         ...(updated.preferences ? { notification_preferences: updated.preferences } : {}),
       })
       .eq("id", user.id);
-    if (error) toast.error("Impossible d'enregistrer le profil.");
-    else {
-      toast.success("Profil mis à jour.");
-      refreshProfile();
+    if (error) {
+      toast.error("Impossible d'enregistrer le profil.");
+      return false;
     }
+
+    refreshProfile();
+    return true;
   };
 
   if (isLoading || !data || !profile) {

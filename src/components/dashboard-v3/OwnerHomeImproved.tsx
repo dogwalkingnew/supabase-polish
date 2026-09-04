@@ -23,7 +23,7 @@ interface NextMission {
   walkerName: string;
   walkerPhoto?: string;
   walkerRole: string;
-  status: "Confirmée" | "En attente";
+  status: "Confirmée" | "En cours" | "En attente";
   estimatedDuration?: number;
   indicativePrice?: number;
 }
@@ -82,7 +82,7 @@ const OwnerHomeImproved = ({ pets, nextMission, onReserve, onViewAllPets, onView
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-2">
                   <p className="truncate text-sm font-bold text-foreground">{nextMission.walkerName}</p>
-                  <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">{nextMission.status}</span>
+                  <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${nextMission.status === "En cours" ? "bg-sky-100 text-sky-700" : nextMission.status === "Confirmée" ? "bg-primary/10 text-primary" : "bg-amber-100 text-amber-700"}`}>{nextMission.status}</span>
                 </div>
                 <p className="mt-0.5 text-xs text-muted-foreground">{nextMission.walkerRole}</p>
                 <div className="mt-3 space-y-1.5 text-xs text-muted-foreground">

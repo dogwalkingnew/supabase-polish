@@ -34,7 +34,7 @@ export interface OwnerDashboardData {
     walkerName: string;
     walkerPhoto?: string;
     walkerRole: string;
-    status: "Confirmée" | "En attente";
+    status: "Confirmée" | "En cours" | "En attente";
     estimatedDuration?: number;
     indicativePrice?: number;
     validationCode?: string | null;
@@ -120,7 +120,7 @@ export const useOwnerDashboard = () => {
       const today = new Date().toISOString().slice(0, 10);
 
       const upcoming = bookings
-        .filter((b) => (b.status === "confirmed" || b.status === "pending") && b.scheduled_date >= today)
+        .filter((b) => (b.status === "confirmed" || b.status === "in_progress" || b.status === "pending") && b.scheduled_date >= today)
         .sort((a, b) => (a.scheduled_date + (a.scheduled_time ?? "")).localeCompare(b.scheduled_date + (b.scheduled_time ?? "")))[0];
 
       const upcomingWalker = upcoming?.walker_id ? walkerById.get(upcoming.walker_id) : undefined;
@@ -134,7 +134,7 @@ export const useOwnerDashboard = () => {
             walkerName: formatWalkerName(upcoming.walker_id, "En attente d'attribution"),
             walkerPhoto: upcomingWalker?.avatar_url ?? undefined,
             walkerRole: "Accompagnateur",
-            status: upcoming.status === "confirmed" ? ("Confirmée" as const) : ("En attente" as const),
+            status: upcoming.status === "confirmed" ? ("Confirmée" as const) : upcoming.status === "in_progress" ? ("En cours" as const) : ("En attente" as const),
             estimatedDuration: upcoming.duration_minutes ?? undefined,
             indicativePrice: upcoming.price ?? undefined,
             validationCode: upcoming.validation_code,

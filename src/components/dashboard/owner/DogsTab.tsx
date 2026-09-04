@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dog as DogIcon, Plus, Edit2, Trash2, Heart, Info, Save, X } from 'lucide-react';
+import { Dog as DogIcon, Plus, Edit2, Trash2, Heart, Info, Save, X, Loader2 } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
@@ -98,7 +98,11 @@ const DogsTab = () => {
     setSubmitting(true);
 
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return;
+    if (!session) {
+      setSubmitting(false);
+      toast({ title: "Session expirée", description: "Reconnectez-vous pour enregistrer cet animal.", variant: "destructive" });
+      return;
+    }
 
     const dogData = {
       name: formData.name,
@@ -323,8 +327,8 @@ const DogsTab = () => {
                 <X className="h-4 w-4" />
                 Annuler
               </Button>
-              <Button type="submit" className="flex-1 gap-2" disabled={submitting}>
-                {submitting ? 'Enregistrement...' : (
+              <Button type="submit" className="flex-1 gap-2" disabled={submitting} aria-busy={submitting}>
+                {submitting ? <><Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />Enregistrement...</> : (
                   <>
                     <Save className="h-4 w-4" />
                     {editingDog ? 'Enregistrer' : 'Ajouter'}

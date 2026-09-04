@@ -16,7 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import {
   Calendar, Clock, Dog, MapPin, Shield, Lock, CheckCircle,
-  ArrowLeft, ArrowRight, Sparkles, Star, MessageCircle, Key
+  ArrowLeft, ArrowRight, Sparkles, Star, MessageCircle, Key, Loader2
 } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
 
@@ -581,13 +581,17 @@ export const BookingSteps = ({
             Retour
           </Button>
         )}
-        <Button 
+        <Button
           onClick={step === 4 ? handleSubmit : handleNext}
           disabled={!canProceed() || loading}
+          aria-busy={loading}
           className="flex-1 gap-2 shadow-lg"
         >
           {loading ? (
-            "Envoi en cours..."
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+              Envoi en cours...
+            </>
           ) : step === 4 ? (
             <>
               <CheckCircle className="h-4 w-4" />

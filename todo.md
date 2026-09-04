@@ -220,3 +220,10 @@
 - [ ] Compléter l’audit des routes, pages, sections et responsive.
 - [ ] Mettre à jour les rapports et pousser les évolutions sur `main`.
 - [ ] Revalider le SHA distant et lister honnêtement les validations externes restantes.
+
+## Vague 028 — formulaires et réservations
+- [ ] Cartographier les formulaires des dashboards et leurs mutations Supabase.
+- [ ] Ajouter des états de chargement accessibles et des confirmations de succès.
+- [ ] Vérifier les transitions création, réponse, confirmation, suivi et erreur des réservations.
+- [ ] Contrôler le responsive et les boutons désactivés pendant les mutations.
+- [ ] Mettre à jour le rapport et synchroniser la correction vers `main`.
